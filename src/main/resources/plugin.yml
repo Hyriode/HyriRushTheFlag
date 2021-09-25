@@ -5,3 +5,8 @@ version: 0.0.1 SNAPSHOT
 name: HyriRushTheFlag
 
 author: Calyx
+
+commands:
+  test:
+    usage: Erreur
+    description: test
