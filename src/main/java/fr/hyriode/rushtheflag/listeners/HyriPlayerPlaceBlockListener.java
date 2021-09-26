@@ -8,6 +8,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class HyriPlayerPlaceBlockListener implements Listener {
 
     private final JavaPlugin javaPlugin;
@@ -31,24 +34,26 @@ public class HyriPlayerPlaceBlockListener implements Listener {
     }
 
     private boolean locationIsAllow(Location location) {
-        if(location.getX() > hyriRTFconfiguration.getTeamLocation( "blueStartFlagProtect").getX() && location.getY() > hyriRTFconfiguration.getTeamLocation( "blueStartFlagProtect").getY() && location.getZ() > hyriRTFconfiguration.getTeamLocation( "blueStartFlagProtect").getZ()) {
-            if(location.getX() < hyriRTFconfiguration.getTeamLocation( "blueEndFlagProtect").getX() && location.getY() < hyriRTFconfiguration.getTeamLocation( "blueEndFlagProtect").getY() && location.getZ() < hyriRTFconfiguration.getTeamLocation( "blueEndFlagProtect").getZ()) {
-                return false;
-            }
-        }
-        if(location.getX() > hyriRTFconfiguration.getTeamLocation( "redStartFlagProtect").getX() && location.getY() > hyriRTFconfiguration.getTeamLocation( "redStartFlagProtect").getY() && location.getZ() > hyriRTFconfiguration.getTeamLocation( "redStartFlagProtect").getZ()) {
-            if(location.getX() <  hyriRTFconfiguration.getTeamLocation( "redEndFlagProtect").getX() && location.getY() < hyriRTFconfiguration.getTeamLocation( "redEndFlagProtect").getY() && location.getZ() <  hyriRTFconfiguration.getTeamLocation( "redEndFlagProtect").getZ()) {
-                return false;
-            }
-        }
-        if(location.getX() >  hyriRTFconfiguration.getTeamLocation( "blueStartSpawnProtect").getX() && location.getY() > hyriRTFconfiguration.getTeamLocation( "blueStartSpawnProtect").getY() && location.getZ() > hyriRTFconfiguration.getTeamLocation( "blueStartSpawnProtect").getZ()) {
-            if(location.getX() < hyriRTFconfiguration.getTeamLocation( "blueEndSpawnProtect").getX() && location.getY() < hyriRTFconfiguration.getTeamLocation( "blueEndSpawnProtect").getY() && location.getZ() < hyriRTFconfiguration.getTeamLocation( "blueEndSpawnProtect").getZ()) {
-                return false;
-            }
-        }
-        if(location.getX() > hyriRTFconfiguration.getTeamLocation( "redStartSpawnProtect").getX() && location.getY() > hyriRTFconfiguration.getTeamLocation( "redStartSpawnProtect").getY() && location.getZ() > hyriRTFconfiguration.getTeamLocation( "redStartSpawnProtect").getZ()) {
-            if(location.getX() < hyriRTFconfiguration.getTeamLocation( "redEndSpawnProtect").getX() && location.getY() < hyriRTFconfiguration.getTeamLocation( "redEndSpawnProtect").getY() && location.getZ() < hyriRTFconfiguration.getTeamLocation( "redEndSpawnProtect").getZ()) {
-                return false;
+
+        List<Location> startLocations = Arrays.asList(
+            hyriRTFconfiguration.getLocation("blueStartFlagProtect"),
+            hyriRTFconfiguration.getLocation("redStartFlagProtect"),
+            hyriRTFconfiguration.getLocation("blueStartSpawnProtect"),
+            hyriRTFconfiguration.getLocation("redStartSpawnProtect")
+        );
+
+        List<Location> endLocations = Arrays.asList(
+                hyriRTFconfiguration.getLocation("blueEndFlagProtect"),
+                hyriRTFconfiguration.getLocation("redEndFlagProtect"),
+                hyriRTFconfiguration.getLocation("blueEndSpawnProtect"),
+                hyriRTFconfiguration.getLocation("redEndSpawnProtect")
+        );
+
+        for(Location location1 : startLocations) {
+            if(location.getX() > location1.getX() && location.getY() > location1.getY() && location.getZ() > location1.getZ()) {
+                if(location.getX() < endLocations.get(startLocations.indexOf(location1)) .getX() && location.getY() < endLocations.get(startLocations.indexOf(location1)).getY() && location.getZ() < endLocations.get(startLocations.indexOf(location1)).getZ()) {
+                    return false;
+                }
             }
         }
         return true;

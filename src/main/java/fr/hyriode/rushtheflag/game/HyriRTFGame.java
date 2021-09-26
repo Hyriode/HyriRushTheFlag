@@ -48,7 +48,7 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
     }
 
     private void registerTeams() {
-        this.registerTeam(new HyriGameTeam("CalyxTeam", new LanguageMessage("calyx.team").addValue(Language.FR, "La team de Calyx"), HyriGameTeamColor.BLUE, 1));
-        this.registerTeam(new HyriGameTeam("2IQTeam", new LanguageMessage("2IQ.team").addValue(Language.FR, "La team de 2IQ"), HyriGameTeamColor.RED, 1));
+        this.registerTeam(new HyriGameTeam(Teams.BLUE.getTeamName(), Teams.BLUE.getDisplayName(), Teams.BLUE.getColor(), Teams.BLUE.getTeamSize()));
+        this.registerTeam(new HyriGameTeam(Teams.RED.getTeamName(), Teams.RED.getDisplayName(), Teams.RED.getColor(), Teams.RED.getTeamSize()));
     }
 }
