@@ -14,6 +14,7 @@ public enum Teams {
     private final HyriGameTeamColor color;
     private final int teamSize;
 
+
     Teams(String teamName, LanguageMessage displayName, HyriGameTeamColor color, int teamSize) {
         this.teamName = teamName;
         this.displayName = displayName;

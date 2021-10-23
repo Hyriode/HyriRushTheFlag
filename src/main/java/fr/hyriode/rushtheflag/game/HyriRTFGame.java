@@ -1,22 +1,21 @@
 package fr.hyriode.rushtheflag.game;
 
 import fr.hyriode.hyrame.game.HyriGame;
+import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
-import fr.hyriode.hyrame.game.team.HyriGameTeamColor;
 import fr.hyriode.hyrame.game.util.HyriGameItems;
-import fr.hyriode.hyrame.language.Language;
-import fr.hyriode.hyrame.language.LanguageMessage;
 import fr.hyriode.rushtheflag.HyriRTF;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.*;
 
 public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
-    private final HyriRTF rtf;
+    private final HyriRTF hyriRTF;
 
-    public HyriRTFGame(HyriRTF rtf) {
-        super(rtf.getHyrame(), "rtf", "Rush The Flag", HyriRTFGamePlayer.class);
-        this.rtf = rtf;
+    public HyriRTFGame(HyriRTF hyriRTF) {
+        super(hyriRTF.getHyrame(), "rtf", "Rush The Flag", HyriRTFGamePlayer.class);
+        this.hyriRTF = hyriRTF;
 
         this.registerTabListManager();
         this.setMinPlayers(2);
@@ -29,22 +28,36 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
         super.handleLogin(player);
 
         player.getInventory().clear();
-        player.getInventory().setItem(0, HyriGameItems.CHOOSE_TEAM.apply(this.rtf.getHyrame(), this.getPlayer(player.getUniqueId()), 0));
+        player.getInventory().setItem(0, HyriGameItems.CHOOSE_TEAM.apply(this.hyriRTF.getHyrame(), this.getPlayer(player.getUniqueId()), 0));
         player.getInventory().setItem(8, HyriGameItems.LEAVE.apply(player));
+        player.setHealth(20);
+
         player.setGameMode(GameMode.ADVENTURE);
         player.setCanPickupItems(false);
+
+
     }
 
     @Override
     public void startGame() {
         super.startGame();
-        this.teams.forEach(HyriGameTeam::teleportToSpawn);
 
-        System.out.println("sucess");
+        Bukkit.getScheduler().runTaskLater(this.hyriRTF, () -> {
+            Scoreboard scoreboard = hyriRTF.getHyriRTFMethods().refreshScoreboard();
 
-        Location worldSpawn = players.get(0).getPlayer().getPlayer().getWorld().getSpawnLocation();
-
-
+            for (HyriGameTeam team : teams) {
+                team.setSpawnLocation(hyriRTF.getHyriRTFconfiguration().getLocation(team.getName() + ".spawnLocation"));
+                team.teleportToSpawn();
+                for(HyriGamePlayer hyriGamePlayer : team.getPlayers()) {
+                    hyriRTF.getHyriRTFMethods().spawnPlayer(hyriGamePlayer);
+                    hyriGamePlayer.getPlayer().getPlayer().setFoodLevel(20);
+                    hyriGamePlayer.getPlayer().getPlayer().setSaturation(7f);
+                    hyriGamePlayer.getPlayer().getPlayer().setScoreboard(scoreboard);
+                }
+                new HyriRTFFlag(hyriRTF, team);
+            }
+            System.out.println("sucess");
+        }, 1L);
     }
 
     private void registerTeams() {

@@ -1,33 +1,26 @@
 package fr.hyriode.rushtheflag.utils;
 
-import fr.hyriode.hyrame.Hyrame;
 import fr.hyriode.hyrame.configuration.HyriConfiguration;
-import fr.hyriode.hyrame.game.team.HyriGameTeam;
-import fr.hyriode.rushtheflag.HyriRTF;
 import fr.hyriode.rushtheflag.game.Teams;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Team;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class HyriRTFconfiguration extends HyriConfiguration {
 
     private final JavaPlugin javaPlugin;
-    private final HyriRTF hyriRTF;
-    private final Map<String, Location> teamsLocations;
 
     public HyriRTFconfiguration(JavaPlugin plugin) {
         super(plugin);
         this.javaPlugin = plugin;
-        this.teamsLocations = this.teamsLocations();
-        this.hyriRTF = (HyriRTF)javaPlugin;
     }
 
     private Map<String, Location> teamsLocations() {
@@ -44,6 +37,8 @@ public class HyriRTFconfiguration extends HyriConfiguration {
                 "endFlagProtect",
                 "startSpawnProtect",
                 "endSpawnProtect",
+                "startFlagPlace",
+                "endFlagPlace",
                 "spawnLocation",
                 "flagLocation"
         };
@@ -75,5 +70,58 @@ public class HyriRTFconfiguration extends HyriConfiguration {
 
     public Map<String, Location> getTeamsLocations() {
         return this.teamsLocations();
+    }
+    
+
+
+    public void setHotbar(Player player, int swordSlot, int gappleSword, int pickaxeSlot) {
+        final File file = new File(javaPlugin.getDataFolder() + "/hotbars.yml");
+        final YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+
+        configuration.set("hotbars." + player.getUniqueId() + ".swordSlot", swordSlot);
+        configuration.set("hotbars." + player.getUniqueId() + ".gappleSlot", gappleSword);
+        configuration.set("hotbars." + player.getUniqueId() + ".pickaxeSlot", pickaxeSlot);
+
+        try {
+            configuration.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int swordSlot(Player player) {
+        final File file = new File(javaPlugin.getDataFolder() + "/hotbars.yml");
+        if(file.exists()) {
+            final YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+            final ConfigurationSection configurationSection = configuration.getConfigurationSection("hotbars.");
+            if(configurationSection.get(player.getUniqueId().toString()) != null) {
+                return configurationSection.getInt(player.getUniqueId().toString() + ".swordSlot");
+            }
+        }
+        return 0;
+    }
+
+    public int gappleSlot(Player player) {
+        final File file = new File(javaPlugin.getDataFolder() + "/hotbars.yml");
+        if(file.exists()) {
+            final YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+            final ConfigurationSection configurationSection = configuration.getConfigurationSection("hotbars.");
+            if(configurationSection.get(player.getUniqueId().toString()) != null) {
+                return configurationSection.getInt(player.getUniqueId().toString() + ".gappleSlot");
+            }
+        }
+        return 1;
+    }
+
+    public int pickaxeSlot(Player player) {
+        final File file = new File(javaPlugin.getDataFolder() + "/hotbars.yml");
+        if(file.exists()) {
+            final YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+            final ConfigurationSection configurationSection = configuration.getConfigurationSection("hotbars.");
+            if(configurationSection.get(player.getUniqueId().toString()) != null) {
+                return configurationSection.getInt(player.getUniqueId().toString() + ".pickaxeSlot");
+            }
+        }
+        return 2;
     }
 }
