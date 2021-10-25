@@ -16,7 +16,7 @@ public class HyriClickInventoryListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if(!hyriRTF.getHyrame().getGameManager().getCurrentGame().getState().equals(HyriGameState.PLAYING)) {
+        if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
             event.setCancelled(true);
         }else {
             if(hyriRTF.getBlueFlag().flagIsTaken) {

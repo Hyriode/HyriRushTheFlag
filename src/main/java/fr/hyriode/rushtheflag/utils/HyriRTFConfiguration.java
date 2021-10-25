@@ -1,6 +1,7 @@
 package fr.hyriode.rushtheflag.utils;
 
 import fr.hyriode.hyrame.configuration.HyriConfiguration;
+import fr.hyriode.hyrame.game.scoreboard.HyriGameWaitingScoreboard;
 import fr.hyriode.rushtheflag.game.Teams;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,11 +15,20 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HyriRTFconfiguration extends HyriConfiguration {
+public class HyriRTFConfiguration extends HyriConfiguration {
+
+    public static String S_FLAG_PROTECT_KEY = ".startFlagProtect";
+    public static String E_FLAG_PROTECT_KEY = ".endFlagProtect";
+    public static String S_SPAWN_PROTECT_KEY = ".startSpawnProtect";
+    public static String E_SPAWN_PROTECT_KEY = ".endSpawnProtect";
+    public static String S_FLAG_PLACE_KEY = ".startFlagPlace";
+    public static String E_FLAG_PLACE_KEY = ".endFlagPlace";
+    public static String FLAG_LOCATION_KEY = ".flagLocation";
+    public static String SPAWN_LOCATION_KEY = ".spawnLocation";
 
     private final JavaPlugin javaPlugin;
 
-    public HyriRTFconfiguration(JavaPlugin plugin) {
+    public HyriRTFConfiguration(JavaPlugin plugin) {
         super(plugin);
         this.javaPlugin = plugin;
     }
@@ -33,20 +43,20 @@ public class HyriRTFconfiguration extends HyriConfiguration {
         };
 
         String[] varNames = new String[] {
-                "startFlagProtect",
-                "endFlagProtect",
-                "startSpawnProtect",
-                "endSpawnProtect",
-                "startFlagPlace",
-                "endFlagPlace",
-                "spawnLocation",
-                "flagLocation"
+                HyriRTFConfiguration.S_FLAG_PROTECT_KEY,
+                HyriRTFConfiguration.E_FLAG_PROTECT_KEY,
+                HyriRTFConfiguration.S_SPAWN_PROTECT_KEY,
+                HyriRTFConfiguration.E_SPAWN_PROTECT_KEY,
+                HyriRTFConfiguration.S_FLAG_PLACE_KEY,
+                HyriRTFConfiguration.E_FLAG_PLACE_KEY,
+                HyriRTFConfiguration.FLAG_LOCATION_KEY,
+                HyriRTFConfiguration.SPAWN_LOCATION_KEY
         };
 
         for(String teamNames1 : teamsNames) {
             for(String varNames1 : varNames) {
-                this.setDefaultLocation(teamNames1 + "." + varNames1);
-                this.Location(teamsLocations, teamNames1 + "." + varNames1);
+                this.setDefaultLocation(teamNames1 + varNames1);
+                this.location(teamsLocations, teamNames1 + varNames1);
             }
         }
 
@@ -60,7 +70,7 @@ public class HyriRTFconfiguration extends HyriConfiguration {
         this.set(name, "z", 0.0d);
     }
 
-    private void Location(Map<String, Location> teamsLocations, String name) {
+    private void location(Map<String, Location> teamsLocations, String name) {
         teamsLocations.put(name, new Location(Bukkit.getWorld("world"), this.getDouble(name, "x"), this.getDouble(name, "y"), this.getDouble(name, "z")));
     }
 
@@ -71,8 +81,6 @@ public class HyriRTFconfiguration extends HyriConfiguration {
     public Map<String, Location> getTeamsLocations() {
         return this.teamsLocations();
     }
-    
-
 
     public void setHotbar(Player player, int swordSlot, int gappleSword, int pickaxeSlot) {
         final File file = new File(javaPlugin.getDataFolder() + "/hotbars.yml");

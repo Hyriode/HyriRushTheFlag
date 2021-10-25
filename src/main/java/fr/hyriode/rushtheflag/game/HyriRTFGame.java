@@ -5,6 +5,7 @@ import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.game.util.HyriGameItems;
 import fr.hyriode.rushtheflag.HyriRTF;
+import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
@@ -34,8 +35,6 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
         player.setGameMode(GameMode.ADVENTURE);
         player.setCanPickupItems(false);
-
-
     }
 
     @Override
@@ -46,17 +45,16 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
             Scoreboard scoreboard = hyriRTF.getHyriRTFMethods().refreshScoreboard();
 
             for (HyriGameTeam team : teams) {
-                team.setSpawnLocation(hyriRTF.getHyriRTFconfiguration().getLocation(team.getName() + ".spawnLocation"));
+                team.setSpawnLocation(hyriRTF.getHyriRTFconfiguration().getLocation(team.getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY));
                 team.teleportToSpawn();
                 for(HyriGamePlayer hyriGamePlayer : team.getPlayers()) {
                     hyriRTF.getHyriRTFMethods().spawnPlayer(hyriGamePlayer);
                     hyriGamePlayer.getPlayer().getPlayer().setFoodLevel(20);
                     hyriGamePlayer.getPlayer().getPlayer().setSaturation(7f);
-                    hyriGamePlayer.getPlayer().getPlayer().setScoreboard(scoreboard);
+                    new HyriGamePlayingScoreboard(this.hyriRTF, hyriGamePlayer.getPlayer().getPlayer());
                 }
                 new HyriRTFFlag(hyriRTF, team);
             }
-            System.out.println("sucess");
         }, 1L);
     }
 

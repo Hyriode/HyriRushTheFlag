@@ -27,11 +27,11 @@ public class HyriPlayerBreakBlockListener implements Listener {
                 }
             }
         }else if(event.getBlock().getType().equals(Material.WOOL)) {
-            if(hyriRTF.getHyrame().getGameManager().getCurrentGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(Teams.BLUE.getTeamName())) {
+            if(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(Teams.BLUE.getTeamName())) {
                 if(hyriRTF.getRedFlag().getFlagLocation().equals(event.getBlock().getLocation())) {
                     hyriRTF.getRedFlag().playerTakeFlag(event.getPlayer());
                 }
-            }else if(hyriRTF.getHyrame().getGameManager().getCurrentGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(Teams.RED.getTeamName())) {
+            }else if(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(Teams.RED.getTeamName())) {
                 if(hyriRTF.getBlueFlag().getFlagLocation().equals(event.getBlock().getLocation())) {
                     hyriRTF.getBlueFlag().playerTakeFlag(event.getPlayer());
                 }

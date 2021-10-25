@@ -22,7 +22,7 @@ public class HyriVoidListener implements Listener {
             if(event.getEntityType().equals(EntityType.PLAYER)) {
                 event.setCancelled(true);
                 Player player = (Player) event.getEntity();
-                if(!hyriRTF.getHyrame().getGameManager().getCurrentGame().getState().equals(HyriGameState.PLAYING)) {
+                if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
                     player.teleport(player.getWorld().getSpawnLocation());
                 }else {
                     hyriRTF.getHyriRTFMethods().killPlayer(player);

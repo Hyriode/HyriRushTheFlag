@@ -1,9 +1,11 @@
 package fr.hyriode.rushtheflag.game;
 
+import fr.hyriode.common.title.Title;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.game.team.HyriGameTeamColor;
 import fr.hyriode.rushtheflag.HyriRTF;
+import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +21,7 @@ public class HyriRTFFlag {
 
     public HyriRTFFlag(HyriRTF hyriRTF, HyriGameTeam hyriGameTeam) {
         this.hyriRTF = hyriRTF;
-        this.flagLocation = hyriRTF.getHyriRTFconfiguration().getLocation(hyriGameTeam.getName() + ".flagLocation");
+        this.flagLocation = hyriRTF.getHyriRTFconfiguration().getLocation(hyriGameTeam.getName() + HyriRTFConfiguration.FLAG_LOCATION_KEY);
         this.hyriGameTeam = hyriGameTeam;
 
         if(hyriGameTeam.getColor().equals(HyriGameTeamColor.RED)) {
@@ -27,7 +29,7 @@ public class HyriRTFFlag {
             this.hyriRTF.setRedFlag(this);
         }else {
             this.data = DyeColor.BLUE.getData();
-            this.hyriRTF.setBlueFLag(this);
+            this.hyriRTF.setBlueFlag(this);
         }
 
         this.enableFlag();
@@ -44,27 +46,27 @@ public class HyriRTFFlag {
 
         player.setGameMode(GameMode.ADVENTURE);
 
-        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getHyrame().getGameManager().getCurrentGame().getTeam(Teams.BLUE.getTeamName()).getPlayers()) {
+        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName()).getPlayers()) {
             if (this.hyriGameTeam.getColor().equals(HyriGameTeamColor.RED)) {
-                hyriRedGamePlayer.getPlayer().getPlayer().sendTitle(ChatColor.DARK_PURPLE + player.getName() + ChatColor.GREEN + " a capturé le drapeau adversaire",
+                Title.setTitle(hyriRedGamePlayer.getPlayer().getPlayer(), ChatColor.DARK_PURPLE + player.getName() + ChatColor.GREEN + " a capturé le drapeau adversaire",
                         ChatColor.YELLOW + "Il se trouve en x: " + ChatColor.GREEN + player.getLocation().getX() + ChatColor.YELLOW + " y: " + ChatColor.GREEN + player.getLocation().getY() +
-                                ChatColor.YELLOW + " z: " + ChatColor.GREEN + player.getLocation().getZ() + ChatColor.YELLOW + " escortez le");
+                                ChatColor.YELLOW + " z: " + ChatColor.GREEN + player.getLocation().getZ() + ChatColor.YELLOW + " escortez le", 3, 40, 3);
             }else {
-                hyriRedGamePlayer.getPlayer().getPlayer().sendTitle(ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.RED + " a capturé votre drapeau", ChatColor.DARK_RED + "tuez le vite");
+                Title.setTitle(hyriRedGamePlayer.getPlayer().getPlayer(),ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.RED + " a capturé votre drapeau", ChatColor.DARK_RED + "tuez le vite", 3, 40, 3);
             }
         }
 
-        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getHyrame().getGameManager().getCurrentGame().getTeam(Teams.RED.getTeamName()).getPlayers()) {
+        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(Teams.RED.getTeamName()).getPlayers()) {
             if (this.hyriGameTeam.getColor().equals(HyriGameTeamColor.BLUE)) {
-                hyriRedGamePlayer.getPlayer().getPlayer().sendTitle(ChatColor.DARK_PURPLE + player.getName() + ChatColor.GREEN + " a capturé le drapeau adversaire",
+                Title.setTitle(hyriRedGamePlayer.getPlayer().getPlayer(), ChatColor.DARK_PURPLE + player.getName() + ChatColor.GREEN + " a capturé le drapeau adversaire",
                         ChatColor.YELLOW + "Il se trouve en x: " + ChatColor.GREEN + player.getLocation().getX() + ChatColor.YELLOW + " y: " + ChatColor.GREEN + player.getLocation().getY() +
-                                ChatColor.YELLOW + " z: " + ChatColor.GREEN + player.getLocation().getZ() + ChatColor.YELLOW + " escortez le");
+                                ChatColor.YELLOW + " z: " + ChatColor.GREEN + player.getLocation().getZ() + ChatColor.YELLOW + " escortez le", 3, 40, 3);
             } else {
-                hyriRedGamePlayer.getPlayer().getPlayer().sendTitle(ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.RED + " a capturé votre drapeau", ChatColor.DARK_RED + "tuez le vite");
+                Title.setTitle(hyriRedGamePlayer.getPlayer().getPlayer(), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.RED + " a capturé votre drapeau", ChatColor.DARK_RED + "tuez le vite", 3, 40, 3);
             }
         }
 
-        player.sendTitle(ChatColor.GOLD + "Vous avez capturé le drapeau", "Rapportez le à votre base");
+        Title.setTitle(player, ChatColor.GOLD + "Vous avez capturé le drapeau", "Rapportez le à votre base", 3, 40, 3);
     }
 
     public void playerLooseFlag() {
@@ -73,18 +75,18 @@ public class HyriRTFFlag {
 
         this.enableFlag();
 
-        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getHyrame().getGameManager().getCurrentGame().getTeam(Teams.RED.getTeamName()).getPlayers()) {
+        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(Teams.RED.getTeamName()).getPlayers()) {
             if(!this.hyriGameTeam.getColor().equals(HyriGameTeamColor.RED)) {
-                hyriRedGamePlayer.getPlayer().getPlayer().sendTitle(ChatColor.GREEN + "Vous avez récuperé votre drapeau", "");
+                Title.setTitle(hyriRedGamePlayer.getPlayer().getPlayer(),ChatColor.GREEN + "Vous avez récuperé votre drapeau", "", 2, 30, 2);
             }else {
-                hyriRedGamePlayer.getPlayer().getPlayer().sendTitle(ChatColor.RED + "Vous avez perdu le drapeau adverse", "");
+                Title.setTitle(hyriRedGamePlayer.getPlayer().getPlayer(),ChatColor.RED + "Vous avez perdu le drapeau adverse", "", 2, 30, 2);
             }
         }
-        for(HyriGamePlayer hyriBlueGamePlayer :  this.hyriRTF.getHyrame().getGameManager().getCurrentGame().getTeam(Teams.BLUE.getTeamName()).getPlayers()) {
+        for(HyriGamePlayer hyriBlueGamePlayer :  this.hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName()).getPlayers()) {
             if(this.hyriGameTeam.getColor().equals(HyriGameTeamColor.BLUE)) {
-                hyriBlueGamePlayer.getPlayer().getPlayer().sendTitle(ChatColor.GREEN + "Vous avez récuperé votre drapeau", "");
+                Title.setTitle(hyriBlueGamePlayer.getPlayer().getPlayer(), ChatColor.GREEN + "Vous avez récuperé votre drapeau", "", 2, 30, 2);
             }else {
-                hyriBlueGamePlayer.getPlayer().getPlayer().sendTitle(ChatColor.RED + "Vous avez perdu le drapeau adverse", "");
+                Title.setTitle(hyriBlueGamePlayer.getPlayer().getPlayer(), ChatColor.RED + "Vous avez perdu le drapeau adverse", "", 2, 30, 2);
             }
         }
     }

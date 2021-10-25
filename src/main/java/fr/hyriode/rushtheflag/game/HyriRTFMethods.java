@@ -1,11 +1,13 @@
 package fr.hyriode.rushtheflag.game;
 
+import fr.hyriode.common.title.Title;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.HyriGameState;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.game.team.HyriGameTeamColor;
 import fr.hyriode.hyrame.game.util.HyriGameItems;
 import fr.hyriode.rushtheflag.HyriRTF;
+import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -44,7 +46,7 @@ public class HyriRTFMethods {
     }
 
     public void killPlayer(Player player) {
-        HyriGamePlayer hyriGamePlayer = hyriRTF.getHyrame().getGameManager().getCurrentGame().getPlayer(player.getUniqueId());
+        HyriGamePlayer hyriGamePlayer = hyriRTF.getGame().getPlayer(player.getUniqueId());
         for(PotionEffect potionEffect : player.getActivePotionEffects()) {
             player.removePotionEffect(potionEffect.getType());
         }
@@ -77,30 +79,30 @@ public class HyriRTFMethods {
             player.setGameMode(GameMode.SPECTATOR);
             player.teleport(player.getWorld().getSpawnLocation().add(0, 20, 0));
 
-            player.sendTitle(ChatColor.RED + "Vous êtes mort", ChatColor.YELLOW + "respawn dans " + ChatColor.RED + 5 + ChatColor.YELLOW + " secondes");
+            Title.setTitle(player ,ChatColor.RED + "Vous êtes mort", ChatColor.YELLOW + "respawn dans " + ChatColor.RED + 5 + ChatColor.YELLOW + " secondes", 0, 20,0);
 
-            Bukkit.getScheduler().runTaskLater(hyriRTF, () -> player.teleport(hyriRTF.getHyriRTFconfiguration().getLocation(hyriGamePlayer.getTeam().getName() + ".spawnLocation")), 20L*5);
+            Bukkit.getScheduler().runTaskLater(hyriRTF, () -> player.teleport(hyriRTF.getHyriRTFconfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY)), 20L*5);
 
             for(int i = 4; i > 0; i--) {
                 int finalI = 5-i;
-                Bukkit.getScheduler().runTaskLater(hyriRTF, () -> player.sendTitle(ChatColor.RED + "Vous êtes mort", ChatColor.YELLOW + "respawn dans " + ChatColor.RED + finalI + ChatColor.YELLOW + " secondes"), 20L*i);
+                Bukkit.getScheduler().runTaskLater(hyriRTF, () -> Title.setTitle(player,ChatColor.RED + "Vous êtes mort", ChatColor.YELLOW + "respawn dans " + ChatColor.RED + finalI + ChatColor.YELLOW + " secondes", 0, 20, 0), 20L*i);
             }
 
             Bukkit.getScheduler().runTaskLater(hyriRTF, () -> spawnPlayer(hyriGamePlayer), 20L*5);
         }else {
-            player.sendTitle(ChatColor.RED + "Game terminée", ChatColor.YELLOW + "Vous ne pouvez plus respawn");
+            Title.setTitle(player,ChatColor.RED + "Game terminée", ChatColor.YELLOW + "Vous ne pouvez plus respawn", 5, 70, 5);
             player.getInventory().clear();
             player.getInventory().setItem(4, HyriGameItems.LEAVE.apply(player));
             hyriGamePlayer.setSpectator(true);
             if(hyriGamePlayer.getTeam().getColor().equals(HyriGameTeamColor.BLUE)) {
                 this.finalKilledBlue++;
                 if(hyriGamePlayer.getTeam().getPlayers().size() == finalKilledBlue) {
-                    this.winGame(hyriRTF.getHyrame().getGameManager().getCurrentGame().getTeam(Teams.RED.getTeamName()));
+                    this.winGame(hyriRTF.getGame().getTeam(Teams.RED.getTeamName()));
                 }
             }else {
                 this.finalKilledRed++;
                 if(hyriGamePlayer.getTeam().getPlayers().size() == finalKilledRed) {
-                    this.winGame(hyriRTF.getHyrame().getGameManager().getCurrentGame().getTeam(Teams.BLUE.getTeamName()));
+                    this.winGame(hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName()));
                 }
             }
 
@@ -110,7 +112,7 @@ public class HyriRTFMethods {
     public void spawnPlayer(HyriGamePlayer hyriGamePlayer) {
         Player player = hyriGamePlayer.getPlayer().getPlayer();
 
-        player.teleport(hyriRTF.getHyriRTFconfiguration().getLocation(hyriGamePlayer.getTeam().getName() + ".spawnLocation"));
+        player.teleport(hyriRTF.getHyriRTFconfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY));
         player.setGameMode(GameMode.SURVIVAL);
         player.setHealth(20);
         player.setCanPickupItems(false);
@@ -160,10 +162,10 @@ public class HyriRTFMethods {
 
         Player playerWhoCapture = capturedFlag.playerWhoTookFlag;
         capturedFlag.playerLooseFlag();
-        this.spawnPlayer(hyriRTF.getHyrame().getGameManager().getCurrentGame().getPlayer(playerWhoCapture.getUniqueId()));
+        this.spawnPlayer(hyriRTF.getGame().getPlayer(playerWhoCapture.getUniqueId()));
 
         for(Player player : Bukkit.getOnlinePlayers()) {
-            player.sendTitle("flag captured", whoCapture.getName());
+            Title.setTitle(player, "flag captured", whoCapture.getName(), 3, 45, 3);
         }
 
         if(whoCapture.getColor().equals(HyriGameTeamColor.BLUE)) {
@@ -228,19 +230,19 @@ public class HyriRTFMethods {
     }
 
     public void winGame(HyriGameTeam winner) {
-        HyriGameTeam looser = hyriRTF.getHyrame().getGameManager().getCurrentGame().getTeam(Teams.RED.getTeamName());
+        HyriGameTeam looser = hyriRTF.getGame().getTeam(Teams.RED.getTeamName());
         if(winner.getColor().equals(HyriGameTeamColor.RED)) {
-            looser = hyriRTF.getHyrame().getGameManager().getCurrentGame().getTeam(Teams.BLUE.getTeamName());
+            looser = hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName());
         }
 
-        hyriRTF.getHyrame().getGameManager().getCurrentGame().setState(HyriGameState.ENDED);
+        hyriRTF.getGame().setState(HyriGameState.ENDED);
         for(HyriGamePlayer hyriGamePlayer : winner.getPlayers()) {
-            hyriGamePlayer.getPlayer().getPlayer().sendTitle(ChatColor.GOLD + "VICTOIRE", ChatColor.YELLOW + "Vous avez remporter la partie");
+            Title.setTitle(hyriGamePlayer.getPlayer().getPlayer(),ChatColor.GOLD + "VICTOIRE", ChatColor.YELLOW + "Vous avez remporter la partie", 5, 70, 5);
             hyriGamePlayer.getPlayer().getPlayer().setGameMode(GameMode.CREATIVE);
             hyriGamePlayer.getPlayer().getPlayer().getInventory().clear();
         }
         for(HyriGamePlayer hyriGamePlayer : looser.getPlayers()) {
-            hyriGamePlayer.getPlayer().getPlayer().sendTitle(ChatColor.RED + "DÉFAITE", ChatColor.DARK_RED + "Vous avez perdu la partie");
+            Title.setTitle(hyriGamePlayer.getPlayer().getPlayer() ,ChatColor.RED + "DÉFAITE", ChatColor.DARK_RED + "Vous avez perdu la partie", 5, 70, 10);
             hyriGamePlayer.getPlayer().getPlayer().setGameMode(GameMode.SPECTATOR);
             hyriGamePlayer.getPlayer().getPlayer().getInventory().clear();
         }

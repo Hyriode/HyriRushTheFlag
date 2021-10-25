@@ -6,8 +6,8 @@ import fr.hyriode.hyrame.language.LanguageMessage;
 
 public enum Teams {
 
-    BLUE("blueTeam", new LanguageMessage("team.blue").addValue(Language.FR, "Team bleue"), HyriGameTeamColor.BLUE, 1),
-    RED("redTeam", new LanguageMessage("team.red").addValue(Language.FR, "Team rouge"), HyriGameTeamColor.RED, 1);
+    BLUE("blueTeam", new LanguageMessage("team.blue").addValue(Language.FR, "Bleu"), HyriGameTeamColor.BLUE, 1),
+    RED("redTeam", new LanguageMessage("team.red").addValue(Language.FR, "Rouge"), HyriGameTeamColor.RED, 1);
 
     private final String teamName;
     private final LanguageMessage displayName;

@@ -36,7 +36,7 @@ public class HyriDamageListener implements Listener {
     @EventHandler
     public void onEntityTakeDamage(EntityDamageEvent event) {
         if(event.getEntity().getType().equals(EntityType.PLAYER)) {
-            if(!hyriRTF.getHyrame().getGameManager().getCurrentGame().getState().equals(HyriGameState.PLAYING)) {
+            if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
                 event.setCancelled(true);
             }else {
                 Player player = (Player) event.getEntity();
@@ -51,7 +51,7 @@ public class HyriDamageListener implements Listener {
     @EventHandler
     public void onEntityTakeDamageByBlock(EntityDamageByBlockEvent event) {
         if(event.getEntity().getType().equals(EntityType.PLAYER)) {
-            if(!hyriRTF.getHyrame().getGameManager().getCurrentGame().getState().equals(HyriGameState.PLAYING)) {
+            if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
                 event.setCancelled(true);
             }else {
                 Player player = (Player) event.getEntity();
