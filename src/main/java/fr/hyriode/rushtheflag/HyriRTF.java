@@ -6,7 +6,6 @@ import fr.hyriode.rushtheflag.commands.TestCommand;
 import fr.hyriode.rushtheflag.game.HyriRTFFlag;
 import fr.hyriode.rushtheflag.game.HyriRTFGame;
 import fr.hyriode.rushtheflag.game.HyriRTFMethods;
-import fr.hyriode.rushtheflag.listeners.*;
 import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,25 +18,16 @@ public class HyriRTF extends JavaPlugin {
     private HyriRTFMethods hyriRTFMethods;
     private HyriRTFFlag blueFlag;
     private HyriRTFFlag redFlag;
-    private final HyriRTFGame game = new HyriRTFGame(this);
+    private HyriRTFGame game;
 
     public void onEnable() {
         this.api = HyriAPI.get();
         this.hyrame = new Hyrame(new HyriRTFProvider(this));
         this.hyriRTFconfiguration = new HyriRTFConfiguration(this);
         this.hyriRTFMethods = new HyriRTFMethods(this);
+        this.game = new HyriRTFGame(this);
 
-        this.hyrame.getGameManager().registerGame(new HyriRTFGame(this));
-
-        /*Bukkit.getServer().getPluginManager().registerEvents(new HyriVoidListener(this), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new HyriDamageListener(this), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new HyriPlayerPlaceBlockListener(this), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new HyriPlayerBreakBlockListener(this), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new HyriPlayerMoveListener(this), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new HyriClickInventoryListener(this), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new HyriFoodLevelChangeListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new HyriPlayerDropEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new HyriEntitySpawnListener(), this);*/
+        this.hyrame.getGameManager().registerGame(this.game);
 
         Bukkit.getServer().getPluginManager().registerEvents(new HyriRTFListener(this), this);
 

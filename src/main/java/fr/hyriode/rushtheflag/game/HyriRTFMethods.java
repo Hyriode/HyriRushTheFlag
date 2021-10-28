@@ -6,6 +6,8 @@ import fr.hyriode.hyrame.game.HyriGameState;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.game.team.HyriGameTeamColor;
 import fr.hyriode.hyrame.game.util.HyriGameItems;
+import fr.hyriode.hyrame.language.Language;
+import fr.hyriode.hyrame.language.LanguageMessage;
 import fr.hyriode.rushtheflag.HyriRTF;
 import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
 import org.bukkit.*;
@@ -15,16 +17,26 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class HyriRTFMethods {
+
+    private static final LanguageMessage GAME_OVER_TITLE = (new LanguageMessage("game.over.title")).addValue(Language.FR, ChatColor.RED + "Game terminée").addValue(Language.EN, "Game over");
+    private static final LanguageMessage GAME_OVER_SUB = (new LanguageMessage("game.over.sub")).addValue(Language.FR, ChatColor.YELLOW + "Vous ne pouvez plus respawn").addValue(Language.EN, ChatColor.YELLOW + "You can't respawn");
+    private static final LanguageMessage GAME_RESPAWN_TITLE = (new LanguageMessage("game.respawn.title")).addValue(Language.FR, ChatColor.RED + "Tu es mort").addValue(Language.EN, ChatColor.RED + "You died");
+    private static final LanguageMessage GAME_RESPAWN_SUB_1 = (new LanguageMessage("game.respawn.sub1")).addValue(Language.FR, ChatColor.YELLOW + "respawn dans ").addValue(Language.EN, ChatColor.YELLOW + "respawn in ");
+    private static final LanguageMessage GAME_RESPAWN_SUB_2 = (new LanguageMessage("game.respawn.sub2")).addValue(Language.FR, ChatColor.YELLOW + " secondes").addValue(Language.EN, ChatColor.YELLOW + " seconds");
+    private static final LanguageMessage VICTORY_TITLE = new LanguageMessage("victory.title").addValue(Language.FR, ChatColor.GOLD + "VICTOIRE").addValue(Language.EN, ChatColor.GOLD + "VICTORY");
+    private static final LanguageMessage VICTORY_SUB = new LanguageMessage("victory.sub").addValue(Language.FR, ChatColor.YELLOW + "Vous avez remporter la partie").addValue(Language.EN, ChatColor.YELLOW + "You win the game");
+    private static final LanguageMessage DEFEAT_TITLE = new LanguageMessage("loose.title").addValue(Language.FR, ChatColor.RED + "DÉFAITE").addValue(Language.EN, ChatColor.RED + "DEFEAT");
+    private static final LanguageMessage DEFEAT_SUB = new LanguageMessage("loose.sub").addValue(Language.FR, ChatColor.DARK_RED + "Vous avez perdu la partie").addValue(Language.EN, ChatColor.DARK_RED + "You lost the game");
+    private static final LanguageMessage CAPTURE_ENEMY_TITLE = (new LanguageMessage("game.capture.enemy.title")).addValue(Language.FR, ChatColor.RED + "L'équipe adverse a capturé votre drapeau").addValue(Language.EN, ChatColor.RED + "The opponents captured your flag");
+    private static final LanguageMessage CAPTURE_ENEMY_SUB = (new LanguageMessage("game.capture.enemy.sub")).addValue(Language.FR, ChatColor.DARK_RED + "Vous perdez une vie").addValue(Language.EN, ChatColor.DARK_RED + "You lose a life");
+    private static final LanguageMessage CAPTURE_ALLY_TITLE = (new LanguageMessage("game.capture.ally.title")).addValue(Language.FR, ChatColor.GREEN + "Vous avez capturé le drapeau adverse").addValue(Language.EN, ChatColor.GREEN + "You captured the opposing flag");
+    private static final LanguageMessage CAPTURE_ALLY_SUB = (new LanguageMessage("game.capture.ally.sub")).addValue(Language.FR, ChatColor.DARK_GREEN + "Vous remportez une vie supplémentaire").addValue(Language.EN, ChatColor.DARK_GREEN + "You gain an extra life");
 
     private final HyriRTF hyriRTF;
     private boolean blueTeamCanRespawn = true;
@@ -79,18 +91,18 @@ public class HyriRTFMethods {
             player.setGameMode(GameMode.SPECTATOR);
             player.teleport(player.getWorld().getSpawnLocation().add(0, 20, 0));
 
-            Title.setTitle(player ,ChatColor.RED + "Vous êtes mort", ChatColor.YELLOW + "respawn dans " + ChatColor.RED + 5 + ChatColor.YELLOW + " secondes", 0, 20,0);
+            Title.setTitle(player ,GAME_RESPAWN_TITLE.getForPlayer(player), GAME_RESPAWN_SUB_1.getForPlayer(player) + ChatColor.RED + 5 + GAME_RESPAWN_SUB_2.getForPlayer(player), 0, 20,0);
 
             Bukkit.getScheduler().runTaskLater(hyriRTF, () -> player.teleport(hyriRTF.getHyriRTFconfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY)), 20L*5);
 
             for(int i = 4; i > 0; i--) {
                 int finalI = 5-i;
-                Bukkit.getScheduler().runTaskLater(hyriRTF, () -> Title.setTitle(player,ChatColor.RED + "Vous êtes mort", ChatColor.YELLOW + "respawn dans " + ChatColor.RED + finalI + ChatColor.YELLOW + " secondes", 0, 20, 0), 20L*i);
+                Bukkit.getScheduler().runTaskLater(hyriRTF, () -> Title.setTitle(player,GAME_RESPAWN_TITLE.getForPlayer(player), GAME_RESPAWN_SUB_1.getForPlayer(player) + ChatColor.RED + finalI + GAME_RESPAWN_SUB_2.getForPlayer(player), 0, 20, 0), 20L*i);
             }
 
             Bukkit.getScheduler().runTaskLater(hyriRTF, () -> spawnPlayer(hyriGamePlayer), 20L*5);
         }else {
-            Title.setTitle(player,ChatColor.RED + "Game terminée", ChatColor.YELLOW + "Vous ne pouvez plus respawn", 5, 70, 5);
+            Title.setTitle(player,GAME_OVER_TITLE.getForPlayer(player), GAME_OVER_SUB.getForPlayer(player), 5, 70, 5);
             player.getInventory().clear();
             player.getInventory().setItem(4, HyriGameItems.LEAVE.apply(player));
             hyriGamePlayer.setSpectator(true);
@@ -108,6 +120,7 @@ public class HyriRTFMethods {
 
         }
     }
+
 
     public void spawnPlayer(HyriGamePlayer hyriGamePlayer) {
         Player player = hyriGamePlayer.getPlayer().getPlayer();
@@ -168,7 +181,15 @@ public class HyriRTFMethods {
             Title.setTitle(player, "flag captured", whoCapture.getName(), 3, 45, 3);
         }
 
+
         if(whoCapture.getColor().equals(HyriGameTeamColor.BLUE)) {
+            for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(Teams.RED.getTeamName()).getPlayers()) {
+                Title.setTitle(hyriRedGamePlayer.getPlayer().getPlayer(), CAPTURE_ENEMY_TITLE.getForPlayer(hyriRedGamePlayer.getPlayer().getPlayer()), CAPTURE_ENEMY_SUB.getForPlayer(hyriRedGamePlayer.getPlayer().getPlayer()), 2, 30, 2);
+            }
+            for(HyriGamePlayer hyriBlueGamePlayer :  this.hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName()).getPlayers()) {
+                Title.setTitle(hyriBlueGamePlayer.getPlayer().getPlayer(), CAPTURE_ALLY_TITLE.getForPlayer(hyriBlueGamePlayer.getPlayer().getPlayer()), CAPTURE_ALLY_SUB.getForPlayer(hyriBlueGamePlayer.getPlayer().getPlayer()), 2, 30, 2);
+            }
+
             this.bluePoints++;
             this.redPoints--;
             this.redTeamCanRespawn = this.redPoints != 0;
@@ -180,6 +201,13 @@ public class HyriRTFMethods {
                 }
             }, 1L);
         }else {
+            for(HyriGamePlayer hyriBlueGamePlayer : this.hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName()).getPlayers()) {
+                Title.setTitle(hyriBlueGamePlayer.getPlayer().getPlayer(), CAPTURE_ENEMY_TITLE.getForPlayer(hyriBlueGamePlayer.getPlayer().getPlayer()), CAPTURE_ENEMY_SUB.getForPlayer(hyriBlueGamePlayer.getPlayer().getPlayer()), 2, 30, 2);
+            }
+            for(HyriGamePlayer hyriRedGamePlayer :  this.hyriRTF.getGame().getTeam(Teams.RED.getTeamName()).getPlayers()) {
+                Title.setTitle(hyriRedGamePlayer.getPlayer().getPlayer(), CAPTURE_ALLY_TITLE.getForPlayer(hyriRedGamePlayer.getPlayer().getPlayer()), CAPTURE_ALLY_SUB.getForPlayer(hyriRedGamePlayer.getPlayer().getPlayer()), 2, 30, 2);
+            }
+
             this.bluePoints--;
             this.redPoints++;
             this.blueTeamCanRespawn = this.bluePoints != 0;
@@ -192,37 +220,6 @@ public class HyriRTFMethods {
             }, 1L);
         }
 
-        Scoreboard scoreboard = this.refreshScoreboard();
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.setScoreboard(scoreboard);
-        }
-    }
-
-    public Scoreboard refreshScoreboard() {
-        final Scoreboard scoreboard =  Bukkit.getScoreboardManager().getNewScoreboard();
-        final Objective objective = scoreboard.registerNewObjective("general", "dummy");
-        objective.setDisplayName(ChatColor.DARK_BLUE + "Hyriode");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-        final List<String> strings = Arrays.asList(
-                ChatColor.BLUE + "hyriode.fr",
-                " ",
-                ChatColor.GREEN + "Partie en cours",
-                "  ",
-                ChatColor.BOLD + "" + ChatColor.BLUE + Teams.BLUE.getTeamName() + ChatColor.BLUE + " : " + hyriRTF.getHyriRTFMethods().getBluePoints(),
-                ChatColor.BOLD + "" + ChatColor.RED + Teams.RED.getTeamName() + ChatColor.RED + " : " + (6 - hyriRTF.getHyriRTFMethods().getBluePoints()),
-                ChatColor.UNDERLINE + "" + ChatColor.BOLD + "" + ChatColor.DARK_PURPLE + "Teams :",
-                "   ",
-                ChatColor.GRAY + "RTF par Hyriode"
-        );
-
-        for(String string : strings) {
-            final Score score = objective.getScore(string);
-            score.setScore(strings.indexOf(string));
-        }
-
-        return scoreboard;
     }
 
     public int getBluePoints() {
@@ -237,14 +234,15 @@ public class HyriRTFMethods {
 
         hyriRTF.getGame().setState(HyriGameState.ENDED);
         for(HyriGamePlayer hyriGamePlayer : winner.getPlayers()) {
-            Title.setTitle(hyriGamePlayer.getPlayer().getPlayer(),ChatColor.GOLD + "VICTOIRE", ChatColor.YELLOW + "Vous avez remporter la partie", 5, 70, 5);
+            Title.setTitle(hyriGamePlayer.getPlayer().getPlayer(),VICTORY_TITLE.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), VICTORY_SUB.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), 5, 70, 5);
             hyriGamePlayer.getPlayer().getPlayer().setGameMode(GameMode.CREATIVE);
             hyriGamePlayer.getPlayer().getPlayer().getInventory().clear();
         }
         for(HyriGamePlayer hyriGamePlayer : looser.getPlayers()) {
-            Title.setTitle(hyriGamePlayer.getPlayer().getPlayer() ,ChatColor.RED + "DÉFAITE", ChatColor.DARK_RED + "Vous avez perdu la partie", 5, 70, 10);
+            Title.setTitle(hyriGamePlayer.getPlayer().getPlayer() ,DEFEAT_TITLE.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), DEFEAT_SUB.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), 5, 70, 10);
             hyriGamePlayer.getPlayer().getPlayer().setGameMode(GameMode.SPECTATOR);
             hyriGamePlayer.getPlayer().getPlayer().getInventory().clear();
         }
     }
-}
+
+   }

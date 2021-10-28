@@ -1,7 +1,8 @@
-package fr.hyriode.rushtheflag.listeners;
+package fr.hyriode.rushtheflag;
 
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.HyriGameState;
+import fr.hyriode.hyrame.listener.HyriListener;
 import fr.hyriode.rushtheflag.HyriRTF;
 import fr.hyriode.rushtheflag.game.Teams;
 import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HyriRTFListener implements Listener {
+public class HyriRTFListener extends HyriListener {
 
     private final HyriRTF hyriRTF;
 
@@ -46,12 +47,18 @@ public class HyriRTFListener implements Listener {
         }
     }
 
+    boolean giveB = false;
+
     @EventHandler
     public void onPlayerPlaceBlock(BlockPlaceEvent event) {
         if(!locationIsAllow(event.getBlock().getLocation())) {
             event.setCancelled(true);
         }else {
-            event.getPlayer().getInventory().addItem(new ItemStack(Material.SANDSTONE, 1));
+            if(giveB) {
+                event.getPlayer().getInventory().addItem(new ItemStack(Material.SANDSTONE, 1));
+            }else {
+                giveB = true;
+            }
         }
     }
 
@@ -84,6 +91,7 @@ public class HyriRTFListener implements Listener {
     @EventHandler
     public void onPlayerBreakBlock(BlockBreakEvent event) {
         event.setCancelled(true);
+
         if(event.getBlock().getType().equals(Material.SANDSTONE)) {
             if(!hyriRTF.getBlueFlag().flagIsTaken && !hyriRTF.getRedFlag().flagIsTaken) {
                 event.getBlock().setType(Material.AIR);

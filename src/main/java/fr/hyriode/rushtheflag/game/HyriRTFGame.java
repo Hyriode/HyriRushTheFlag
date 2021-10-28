@@ -42,8 +42,6 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
         super.startGame();
 
         Bukkit.getScheduler().runTaskLater(this.hyriRTF, () -> {
-            Scoreboard scoreboard = hyriRTF.getHyriRTFMethods().refreshScoreboard();
-
             for (HyriGameTeam team : teams) {
                 team.setSpawnLocation(hyriRTF.getHyriRTFconfiguration().getLocation(team.getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY));
                 team.teleportToSpawn();
@@ -51,7 +49,8 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
                     hyriRTF.getHyriRTFMethods().spawnPlayer(hyriGamePlayer);
                     hyriGamePlayer.getPlayer().getPlayer().setFoodLevel(20);
                     hyriGamePlayer.getPlayer().getPlayer().setSaturation(7f);
-                    new HyriGamePlayingScoreboard(this.hyriRTF, hyriGamePlayer.getPlayer().getPlayer());
+                    final HyriGamePlayingScoreboard hyriGamePlayingScoreboard = new HyriGamePlayingScoreboard(this.hyriRTF, hyriGamePlayer.getPlayer().getPlayer());
+                    hyriGamePlayingScoreboard.show();
                 }
                 new HyriRTFFlag(hyriRTF, team);
             }

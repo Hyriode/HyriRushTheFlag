@@ -11,11 +11,11 @@ import java.text.DecimalFormat;
 
 public class HyriGamePlayingScoreboard extends Scoreboard {
 
-    private static final String DASH;
-    private static final LanguageMessage GAME;
-    private static final LanguageMessage MAP;
-    private static final LanguageMessage RED;
-    private static final LanguageMessage BLUE;
+    private static final String DASH = ChatColor.WHITE + " ⁃ ";
+    private static final LanguageMessage GAME = (new LanguageMessage("scoreboard.game")).addValue(Language.FR, "Jeu : ").addValue(Language.EN, "Game: ");
+    private static final LanguageMessage MAP = (new LanguageMessage("scoreboard.map")).addValue(Language.FR, "Carte : ").addValue(Language.EN, "Map: ");
+    private static final LanguageMessage RED  = (new LanguageMessage("scoreboard.red")).addValue(Language.FR, ChatColor.RED + "Rouge" + ChatColor.AQUA + " ⇒ ").addValue(Language.EN, ChatColor.RED + "Red" + ChatColor.AQUA + " ⇒ ");
+    private static final LanguageMessage BLUE = (new LanguageMessage("scoreboard.blue")).addValue(Language.FR, ChatColor.BLUE + "Bleu" + ChatColor.AQUA + " ⇒ ").addValue(Language.EN, ChatColor.RED + "Blue" + ChatColor.AQUA + " ⇒ ");
 
     private final HyriRTF hyriRTF;
     private int hoursIG = 0;
@@ -37,8 +37,12 @@ public class HyriGamePlayingScoreboard extends Scoreboard {
         this.setLine(3, "  ");
         this.setLine(4, DASH + MAP.getForPlayer(this.player) + ChatColor.AQUA + "Aucune");
         this.setLine(5, "   ");
-        this.setLine(6, String.valueOf(BLUE) + hyriRTF.getHyriRTFMethods().getBluePoints());
-        this.setLine(7, String.valueOf(RED) + (6 - hyriRTF.getHyriRTFMethods().getBluePoints()));
+        this.setLine(6, BLUE.getForPlayer(this.player) + hyriRTF.getHyriRTFMethods().getBluePoints(), (scoreboardLine) -> {
+            scoreboardLine.setValue(BLUE.getForPlayer(this.player) + hyriRTF.getHyriRTFMethods().getBluePoints());
+        }, 33);
+        this.setLine(7, RED.getForPlayer(this.player) + (6 - hyriRTF.getHyriRTFMethods().getBluePoints()), (scoreboardLine) -> {
+            scoreboardLine.setValue(RED.getForPlayer(this.player) + (6 - hyriRTF.getHyriRTFMethods().getBluePoints()));
+        }, 33);
         this.setLine(8, "     ");
         this.setLine(9, ChatColor.DARK_AQUA + "hyriode.fr", new HyriGamePlayingScoreboardIpConsumer("hyriode.fr"), 2);
     }
@@ -55,13 +59,5 @@ public class HyriGamePlayingScoreboard extends Scoreboard {
         }
 
         return ChatColor.GRAY + "" + new DecimalFormat("00").format(this.hoursIG) + "h" + new DecimalFormat("00").format(this.minutesIG) + "m" + new DecimalFormat("00").format(this.secondsIG);
-    }
-
-    static {
-        GAME = (new LanguageMessage("scoreboard.game")).addValue(Language.FR, "Jeu : ").addValue(Language.EN, "Game: ");
-        MAP = (new LanguageMessage("scoreboard.map")).addValue(Language.FR, "Carte : ").addValue(Language.EN, "Map: ");
-        RED = (new LanguageMessage("scoreboard.red")).addValue(Language.FR, ChatColor.RED + "Rouge" + ChatColor.AQUA + " ⇒ ").addValue(Language.EN, ChatColor.RED + "Red" + ChatColor.AQUA + " ⇒ ");
-        BLUE = (new LanguageMessage("scoreboard.blue")).addValue(Language.FR, ChatColor.BLUE + "Bleu" + ChatColor.AQUA + " ⇒ ").addValue(Language.EN, ChatColor.RED + "Blue" + ChatColor.AQUA + " ⇒ ");
-        DASH = ChatColor.WHITE + " ⁃ ";
     }
 }
