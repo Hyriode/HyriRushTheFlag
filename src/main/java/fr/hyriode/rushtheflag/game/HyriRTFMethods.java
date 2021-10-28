@@ -119,6 +119,39 @@ public class HyriRTFMethods {
             }
 
         }
+
+        int swordSlot = 0;
+        int gapSlot = 1;
+        int pickSlot = 2;
+
+        if(!player.getInventory().getItem(0).getType().equals(Material.IRON_SWORD)) {
+            for (int i = 1; i < 9; i++) {
+                if(player.getInventory().getItem(i).getType().equals(Material.IRON_SWORD)) {
+                    swordSlot = i;
+                    break;
+                }
+            }
+        }
+
+        if(!player.getInventory().getItem(1).getType().equals(Material.GOLDEN_APPLE)) {
+            for (int i = 1; i < 9; i++) {
+                if(player.getInventory().getItem(i).getType().equals(Material.GOLDEN_APPLE)) {
+                    gapSlot = i;
+                    break;
+                }
+            }
+        }
+
+        if(!player.getInventory().getItem(1).getType().equals(Material.IRON_PICKAXE)) {
+            for (int i = 1; i < 9; i++) {
+                if(player.getInventory().getItem(i).getType().equals(Material.IRON_PICKAXE)) {
+                    pickSlot = i;
+                    break;
+                }
+            }
+        }
+
+        hyriRTF.getHyriRTFconfiguration().setHotbar(player, swordSlot, gapSlot, pickSlot);
     }
 
 
