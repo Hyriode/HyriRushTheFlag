@@ -1,7 +1,6 @@
 package fr.hyriode.rushtheflag.utils;
 
 import fr.hyriode.hyrame.configuration.HyriConfiguration;
-import fr.hyriode.hyrame.game.scoreboard.HyriGameWaitingScoreboard;
 import fr.hyriode.rushtheflag.game.Teams;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

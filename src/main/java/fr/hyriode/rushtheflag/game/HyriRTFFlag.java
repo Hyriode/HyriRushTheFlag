@@ -14,15 +14,15 @@ import org.bukkit.inventory.ItemStack;
 
 public class HyriRTFFlag {
 
-    private static final LanguageMessage CAPTURE_ALLY_TITLE = (new LanguageMessage("flag.capture.ally.title")).addValue(Language.FR, ChatColor.GREEN + " a capturé le drapeau adversaire").addValue(Language.EN, ChatColor.GREEN + " capture the enemy flag");
-    private static final LanguageMessage CAPTURE_ALLY_SUB1 = (new LanguageMessage("flag.capture.ally.sub1")).addValue(Language.FR, ChatColor.YELLOW + "Il se trouve en ").addValue(Language.EN, ChatColor.YELLOW + " He is in ");
-    private static final LanguageMessage CAPTURE_ALLY_SUB2 = (new LanguageMessage("flag.capture.ally.sub2")).addValue(Language.FR, ChatColor.YELLOW + " escortez le").addValue(Language.EN, ChatColor.YELLOW + "escort him");
-    private static final LanguageMessage CAPTURE_ENEMY_TILE = (new LanguageMessage("flag.capture.enemy.title")).addValue(Language.FR, ChatColor.RED + " a capturé votre drapeau").addValue(Language.EN,ChatColor.RED + " captured your flag");
-    private static final LanguageMessage CAPTURE_ENEMY_SUB = (new LanguageMessage("flag.capture.enemy.sub")).addValue(Language.FR, ChatColor.DARK_RED + "tuez le vite").addValue(Language.EN,ChatColor.DARK_RED + "kill him quickly");
-    private static final LanguageMessage CAPTURE_TITLE = (new LanguageMessage("flag.capture.title")).addValue(Language.FR, ChatColor.GOLD + "Vous avez capturé le drapeau").addValue(Language.EN, ChatColor.GOLD + "You captured the flag");
-    private static final LanguageMessage CAPTURE_SUB = (new LanguageMessage("flag.capture.sub")).addValue(Language.FR,ChatColor.YELLOW + "Rapportez le à votre base").addValue(Language.EN, ChatColor.YELLOW + "Go quickly to your base");
-    private static final LanguageMessage LOOSE_ALLY_TITLE = (new LanguageMessage("flag.loose.ally.title")).addValue(Language.FR, ChatColor.GREEN + "Vous avez récuperé votre drapeau").addValue(Language.EN, ChatColor.GREEN +  "You got your flag back");
-    private static final LanguageMessage LOOSE_ENEMY_TITLE = (new LanguageMessage("flag.loose.enemy.title")).addValue(Language.FR, ChatColor.RED + "Vous avez perdu le drapeau adverse").addValue(Language.EN, ChatColor.RED + "You lost the enemy flag");
+    private static final LanguageMessage CAPTURE_ALLY_TITLE = new LanguageMessage("flag.capture.ally.title").addValue(Language.FR, ChatColor.GREEN + " a capturé le drapeau adversaire").addValue(Language.EN, ChatColor.GREEN + " capture the enemy flag");
+    private static final LanguageMessage CAPTURE_ALLY_SUB1 = new LanguageMessage("flag.capture.ally.sub1").addValue(Language.FR, ChatColor.YELLOW + "Il se trouve en ").addValue(Language.EN, ChatColor.YELLOW + " He is in ");
+    private static final LanguageMessage CAPTURE_ALLY_SUB2 = new LanguageMessage("flag.capture.ally.sub2").addValue(Language.FR, ChatColor.YELLOW + " escortez le").addValue(Language.EN, ChatColor.YELLOW + "escort him");
+    private static final LanguageMessage CAPTURE_ENEMY_TILE = new LanguageMessage("flag.capture.enemy.title").addValue(Language.FR, ChatColor.RED + " a capturé votre drapeau").addValue(Language.EN,ChatColor.RED + " captured your flag");
+    private static final LanguageMessage CAPTURE_ENEMY_SUB = new LanguageMessage("flag.capture.enemy.sub").addValue(Language.FR, ChatColor.DARK_RED + "tuez le vite").addValue(Language.EN,ChatColor.DARK_RED + "kill him quickly");
+    private static final LanguageMessage CAPTURE_TITLE = new LanguageMessage("flag.capture.title").addValue(Language.FR, ChatColor.GOLD + "Vous avez capturé le drapeau").addValue(Language.EN, ChatColor.GOLD + "You captured the flag");
+    private static final LanguageMessage CAPTURE_SUB = new LanguageMessage("flag.capture.sub").addValue(Language.FR,ChatColor.YELLOW + "Rapportez le à votre base").addValue(Language.EN, ChatColor.YELLOW + "Go quickly to your base");
+    private static final LanguageMessage LOOSE_ALLY_TITLE = new LanguageMessage("flag.loose.ally.title").addValue(Language.FR, ChatColor.GREEN + "Vous avez récuperé votre drapeau").addValue(Language.EN, ChatColor.GREEN +  "You got your flag back");
+    private static final LanguageMessage LOOSE_ENEMY_TITLE = new LanguageMessage("flag.loose.enemy.title").addValue(Language.FR, ChatColor.RED + "Vous avez perdu le drapeau adverse").addValue(Language.EN, ChatColor.RED + "You lost the enemy flag");
 
     private final HyriRTF hyriRTF;
     private final Location flagLocation;

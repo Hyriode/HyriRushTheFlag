@@ -35,7 +35,7 @@ public class HyriRTFListener extends HyriListener {
                 if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
                     player.teleport(player.getWorld().getSpawnLocation());
                 }else {
-                    hyriRTF.getHyriRTFMethods().killPlayer(player);
+                    hyriRTF.getGame().killPlayer(player);
                 }
             }
         }
@@ -59,7 +59,7 @@ public class HyriRTFListener extends HyriListener {
             if(hyriRTF.getBlueFlag().isFlagTaken()) {
                 if(hyriRTF.getBlueFlag().getPlayerWhoTookFlag().equals(event.getPlayer())) {
                     if(locationIsCaptured(event.getTo(), hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()))) {
-                        hyriRTF.getHyriRTFMethods().captureFlag(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam());
+                        hyriRTF.getGame().captureFlag(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam());
                     }
                 }
             }
@@ -67,7 +67,7 @@ public class HyriRTFListener extends HyriListener {
             if(hyriRTF.getRedFlag().isFlagTaken()) {
                 if(hyriRTF.getRedFlag().getPlayerWhoTookFlag().equals(event.getPlayer())) {
                     if(locationIsCaptured(event.getTo(), hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()))) {
-                        hyriRTF.getHyriRTFMethods().captureFlag(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam());
+                        hyriRTF.getGame().captureFlag(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam());
                     }
                 }
             }
@@ -136,7 +136,7 @@ public class HyriRTFListener extends HyriListener {
                 Player player = (Player) event.getEntity();
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
                     event.setCancelled(true);
-                    hyriRTF.getHyriRTFMethods().killPlayer((Player) event.getEntity());
+                    hyriRTF.getGame().killPlayer((Player) event.getEntity());
                 }
             }
         }
@@ -153,7 +153,7 @@ public class HyriRTFListener extends HyriListener {
                 Player player = (Player) event.getEntity();
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
                     event.setCancelled(true);
-                    hyriRTF.getHyriRTFMethods().killPlayer((Player) event.getEntity());
+                    hyriRTF.getGame().killPlayer((Player) event.getEntity());
                 }
             }
         }
@@ -170,7 +170,7 @@ public class HyriRTFListener extends HyriListener {
                 Player player = (Player) event.getEntity();
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
                     event.setCancelled(true);
-                    hyriRTF.getHyriRTFMethods().killPlayer((Player) event.getEntity());
+                    hyriRTF.getGame().killPlayer((Player) event.getEntity());
                 }
             }
         }

@@ -7,4 +7,5 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
     public HyriRTFGamePlayer(Player player) {
         super(player);
     }
+
 }

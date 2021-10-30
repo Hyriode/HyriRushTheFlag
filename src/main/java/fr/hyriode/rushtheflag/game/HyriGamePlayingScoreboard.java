@@ -1,6 +1,7 @@
 package fr.hyriode.rushtheflag.game;
 
 import fr.hyriode.common.board.Scoreboard;
+import fr.hyriode.hyrame.game.scoreboard.HyriGameWaitingScoreboardIpConsumer;
 import fr.hyriode.hyrame.language.Language;
 import fr.hyriode.hyrame.language.LanguageMessage;
 import fr.hyriode.rushtheflag.HyriRTF;
@@ -23,7 +24,7 @@ public class HyriGamePlayingScoreboard extends Scoreboard {
     private int secondsIG = 0;
 
     public HyriGamePlayingScoreboard(HyriRTF hyriRTF, Player player) {
-        super(hyriRTF, player, "rtf", ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "RushTheFlag");
+        super(hyriRTF, player, "rtf", ChatColor.DARK_AQUA + "" + ChatColor.BOLD + hyriRTF.getRTF());
         this.hyriRTF = hyriRTF;
         this.addLines();
     }
@@ -37,14 +38,14 @@ public class HyriGamePlayingScoreboard extends Scoreboard {
         this.setLine(3, "  ");
         this.setLine(4, DASH + MAP.getForPlayer(this.player) + ChatColor.AQUA + "Aucune");
         this.setLine(5, "   ");
-        this.setLine(6, BLUE.getForPlayer(this.player) + hyriRTF.getHyriRTFMethods().getBluePoints(), (scoreboardLine) -> {
-            scoreboardLine.setValue(BLUE.getForPlayer(this.player) + hyriRTF.getHyriRTFMethods().getBluePoints());
+        this.setLine(6, BLUE.getForPlayer(this.player) + hyriRTF.getGame().getBluePoints(), (scoreboardLine) -> {
+            scoreboardLine.setValue(BLUE.getForPlayer(this.player) + hyriRTF.getGame().getBluePoints());
         }, 33);
-        this.setLine(7, RED.getForPlayer(this.player) + (6 - hyriRTF.getHyriRTFMethods().getBluePoints()), (scoreboardLine) -> {
-            scoreboardLine.setValue(RED.getForPlayer(this.player) + (6 - hyriRTF.getHyriRTFMethods().getBluePoints()));
+        this.setLine(7, RED.getForPlayer(this.player) + (6 - hyriRTF.getGame().getBluePoints()), (scoreboardLine) -> {
+            scoreboardLine.setValue(RED.getForPlayer(this.player) + (6 - hyriRTF.getGame().getBluePoints()));
         }, 33);
         this.setLine(8, "     ");
-        this.setLine(9, ChatColor.DARK_AQUA + "hyriode.fr", new HyriGamePlayingScoreboardIpConsumer("hyriode.fr"), 2);
+        this.setLine(9, ChatColor.DARK_AQUA + "hyriode.fr", new HyriGameWaitingScoreboardIpConsumer("hyriode.fr"), 2);
     }
 
     private String getCurrentIgTime() {
