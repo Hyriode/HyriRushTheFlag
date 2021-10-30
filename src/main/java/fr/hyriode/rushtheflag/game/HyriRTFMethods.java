@@ -1,5 +1,7 @@
 package fr.hyriode.rushtheflag.game;
 
+import fr.hyriode.common.item.ItemBuilder;
+import fr.hyriode.common.item.ItemNBT;
 import fr.hyriode.common.title.Title;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.HyriGameState;
@@ -75,14 +77,14 @@ public class HyriRTFMethods {
             }
         }
 
-        if(hyriRTF.getBlueFlag().flagIsTaken) {
-            if(hyriRTF.getBlueFlag().playerWhoTookFlag.equals(player)) {
+        if(hyriRTF.getBlueFlag().isFlagTaken()) {
+            if(hyriRTF.getBlueFlag().getPlayerWhoTookFlag().equals(player)) {
                 hyriRTF.getBlueFlag().playerLooseFlag();
             }
         }
 
-        if(hyriRTF.getRedFlag().flagIsTaken) {
-            if(hyriRTF.getRedFlag().playerWhoTookFlag.equals(player)) {
+        if(hyriRTF.getRedFlag().isFlagTaken()) {
+            if(hyriRTF.getRedFlag().getPlayerWhoTookFlag().equals(player)) {
                 hyriRTF.getRedFlag().playerLooseFlag();
             }
         }
@@ -165,15 +167,15 @@ public class HyriRTFMethods {
 
         hyriGamePlayer.getPlayer().getPlayer().getInventory().clear();
 
-        ItemStack sword = new ItemStack(Material.IRON_SWORD);
+        final ItemStack sword = new ItemStack(Material.IRON_SWORD);
         ItemMeta itemMeta = sword.getItemMeta();
         itemMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, false);
         sword.setItemMeta(itemMeta);
 
-        ItemStack pickaxe = new ItemStack(Material.IRON_PICKAXE);
-        ItemMeta itemMeta1 = pickaxe.getItemMeta();
-        itemMeta1.addEnchant(Enchantment.DIG_SPEED, 2, false);
-        pickaxe.setItemMeta(itemMeta1);
+        final ItemStack pickaxe = new ItemBuilder(Material.IRON_PICKAXE)
+                .withEnchant(Enchantment.DIG_SPEED, 2)
+                .nbt().setBoolean("RTFPickaxe", true)
+                .build();
 
         player.getInventory().addItem(new ItemStack(Material.SANDSTONE,64*9));
 
@@ -206,7 +208,7 @@ public class HyriRTFMethods {
             capturedFlag = this.hyriRTF.getBlueFlag();
         }
 
-        Player playerWhoCapture = capturedFlag.playerWhoTookFlag;
+        Player playerWhoCapture = capturedFlag.getPlayerWhoTookFlag();
         capturedFlag.playerLooseFlag();
         this.spawnPlayer(hyriRTF.getGame().getPlayer(playerWhoCapture.getUniqueId()));
 

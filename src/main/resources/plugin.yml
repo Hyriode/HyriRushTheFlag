@@ -10,7 +10,3 @@ commands:
   test:
     usage: Erreur
     description: test
-
-  bypass:
-    usage: Erreur
-    description: bypass command

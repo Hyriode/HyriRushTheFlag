@@ -25,6 +25,8 @@ public class HyriRTFConfiguration extends HyriConfiguration {
     public static String E_FLAG_PLACE_KEY = ".endFlagPlace";
     public static String FLAG_LOCATION_KEY = ".flagLocation";
     public static String SPAWN_LOCATION_KEY = ".spawnLocation";
+    public static String S_BORDER = "border.start";
+    public static String E_BORDER = "border.end";
 
     private final JavaPlugin javaPlugin;
 
@@ -59,6 +61,12 @@ public class HyriRTFConfiguration extends HyriConfiguration {
                 this.location(teamsLocations, teamNames1 + varNames1);
             }
         }
+
+        this.setDefaultLocation(S_BORDER);
+        this.location(teamsLocations, S_BORDER);
+
+        this.setDefaultLocation(E_BORDER);
+        this.location(teamsLocations, E_BORDER);
 
         return teamsLocations;
 

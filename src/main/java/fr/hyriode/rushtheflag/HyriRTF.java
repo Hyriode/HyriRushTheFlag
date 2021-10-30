@@ -6,8 +6,8 @@ import fr.hyriode.rushtheflag.commands.TestCommand;
 import fr.hyriode.rushtheflag.game.HyriRTFFlag;
 import fr.hyriode.rushtheflag.game.HyriRTFGame;
 import fr.hyriode.rushtheflag.game.HyriRTFMethods;
+import fr.hyriode.rushtheflag.game.Teams;
 import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class HyriRTF extends JavaPlugin {
@@ -27,9 +27,10 @@ public class HyriRTF extends JavaPlugin {
         this.hyriRTFMethods = new HyriRTFMethods(this);
         this.game = new HyriRTFGame(this);
 
-        this.hyrame.getGameManager().registerGame(this.game);
+        this.blueFlag = (new HyriRTFFlag(this, this.getGame().getTeam(Teams.BLUE.getTeamName())));
+        this.redFlag = (new HyriRTFFlag(this, this.getGame().getTeam(Teams.RED.getTeamName())));
 
-        Bukkit.getServer().getPluginManager().registerEvents(new HyriRTFListener(this), this);
+        this.hyrame.getGameManager().registerGame(this.game);
 
         getCommand("test").setExecutor(new TestCommand(this));
     }
@@ -69,7 +70,6 @@ public class HyriRTF extends JavaPlugin {
     public void setRedFlag(HyriRTFFlag redFlag) {
         this.redFlag = redFlag;
     }
-
 
     public HyriRTFGame getGame() {
         return game;

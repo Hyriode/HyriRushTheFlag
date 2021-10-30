@@ -14,8 +14,8 @@ public class HyriGamePlayingScoreboard extends Scoreboard {
     private static final String DASH = ChatColor.WHITE + " ⁃ ";
     private static final LanguageMessage GAME = (new LanguageMessage("scoreboard.game")).addValue(Language.FR, "Jeu : ").addValue(Language.EN, "Game: ");
     private static final LanguageMessage MAP = (new LanguageMessage("scoreboard.map")).addValue(Language.FR, "Carte : ").addValue(Language.EN, "Map: ");
-    private static final LanguageMessage RED  = (new LanguageMessage("scoreboard.red")).addValue(Language.FR, ChatColor.RED + "Rouge" + ChatColor.AQUA + " ⇒ ").addValue(Language.EN, ChatColor.RED + "Red" + ChatColor.AQUA + " ⇒ ");
-    private static final LanguageMessage BLUE = (new LanguageMessage("scoreboard.blue")).addValue(Language.FR, ChatColor.BLUE + "Bleu" + ChatColor.AQUA + " ⇒ ").addValue(Language.EN, ChatColor.RED + "Blue" + ChatColor.AQUA + " ⇒ ");
+    private static final LanguageMessage RED  = (new LanguageMessage("scoreboard.red")).addValue(Language.FR, ChatColor.RED + "Rouge" + ChatColor.AQUA + " : ").addValue(Language.EN, ChatColor.RED + "Red" + ChatColor.AQUA + " : ");
+    private static final LanguageMessage BLUE = (new LanguageMessage("scoreboard.blue")).addValue(Language.FR, ChatColor.BLUE + "Bleu" + ChatColor.AQUA + " : ").addValue(Language.EN, ChatColor.RED + "Blue" + ChatColor.AQUA + " : ");
 
     private final HyriRTF hyriRTF;
     private int hoursIG = 0;
@@ -23,7 +23,7 @@ public class HyriGamePlayingScoreboard extends Scoreboard {
     private int secondsIG = 0;
 
     public HyriGamePlayingScoreboard(HyriRTF hyriRTF, Player player) {
-        super(hyriRTF, player, "rtf", ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Hyriode");
+        super(hyriRTF, player, "rtf", ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "RushTheFlag");
         this.hyriRTF = hyriRTF;
         this.addLines();
     }

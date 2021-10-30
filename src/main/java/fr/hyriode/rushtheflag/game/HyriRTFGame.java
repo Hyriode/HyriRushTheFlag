@@ -52,9 +52,11 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
                     final HyriGamePlayingScoreboard hyriGamePlayingScoreboard = new HyriGamePlayingScoreboard(this.hyriRTF, hyriGamePlayer.getPlayer().getPlayer());
                     hyriGamePlayingScoreboard.show();
                 }
-                new HyriRTFFlag(hyriRTF, team);
             }
+            hyriRTF.setBlueFlag(new HyriRTFFlag(hyriRTF, hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName())));
+            hyriRTF.setRedFlag(new HyriRTFFlag(hyriRTF, hyriRTF.getGame().getTeam(Teams.RED.getTeamName())));
         }, 1L);
+
     }
 
     private void registerTeams() {

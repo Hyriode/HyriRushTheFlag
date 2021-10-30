@@ -28,20 +28,19 @@ public class HyriRTFFlag {
     private final Location flagLocation;
     private final HyriGameTeam hyriGameTeam;
     private final byte data;
-    public boolean flagIsTaken = false;
-    public Player playerWhoTookFlag;
+    private boolean flagIsTaken;
+    private Player playerWhoTookFlag;
 
     public HyriRTFFlag(HyriRTF hyriRTF, HyriGameTeam hyriGameTeam) {
         this.hyriRTF = hyriRTF;
         this.flagLocation = hyriRTF.getHyriRTFconfiguration().getLocation(hyriGameTeam.getName() + HyriRTFConfiguration.FLAG_LOCATION_KEY);
         this.hyriGameTeam = hyriGameTeam;
+        this.flagIsTaken = false;
 
-        if(hyriGameTeam.getColor().equals(HyriGameTeamColor.RED)) {
+        if(hyriGameTeam.getName().equalsIgnoreCase(Teams.RED.getTeamName())) {
             this.data = DyeColor.RED.getData();
-            this.hyriRTF.setRedFlag(this);
         }else {
             this.data = DyeColor.BLUE.getData();
-            this.hyriRTF.setBlueFlag(this);
         }
 
         this.enableFlag();
@@ -114,5 +113,13 @@ public class HyriRTFFlag {
 
     public void disableFlag() {
         this.flagLocation.getBlock().setType(Material.AIR);
+    }
+
+    public boolean isFlagTaken() {
+        return this.flagIsTaken;
+    }
+
+    public Player getPlayerWhoTookFlag() {
+        return playerWhoTookFlag;
     }
 }
