@@ -5,7 +5,7 @@ import fr.hyriode.hyrame.language.HyriLanguageMessage;
 import fr.hyriode.hyriapi.settings.HyriLanguage;
 import org.bukkit.ChatColor;
 
-public enum Teams {
+public enum HyriRTFTeams {
 
     BLUE("blueTeam", new HyriLanguageMessage("game.teams.red.displayName").addValue(HyriLanguage.FR, ChatColor.BLUE + "Bleu").addValue(HyriLanguage.EN, ChatColor.BLUE + "Blue"), HyriGameTeamColor.BLUE, 1),
     RED("redTeam", new HyriLanguageMessage("game.teams.blue.displayName").addValue(HyriLanguage.FR, ChatColor.RED + "Rouge").addValue(HyriLanguage.EN, ChatColor.RED + "Red"), HyriGameTeamColor.RED, 1);
@@ -16,7 +16,7 @@ public enum Teams {
     private final int teamSize;
 
 
-    Teams(String teamName, HyriLanguageMessage displayName, HyriGameTeamColor color, int teamSize) {
+    HyriRTFTeams(String teamName, HyriLanguageMessage displayName, HyriGameTeamColor color, int teamSize) {
         this.teamName = teamName;
         this.displayName = displayName;
         this.color = color;

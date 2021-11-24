@@ -33,11 +33,11 @@ public class HyriRTFFlag {
 
     public HyriRTFFlag(HyriRTF hyriRTF, HyriGameTeam hyriGameTeam) {
         this.hyriRTF = hyriRTF;
-        this.flagLocation = hyriRTF.getHyriRTFconfiguration().getLocation(hyriGameTeam.getName() + HyriRTFConfiguration.FLAG_LOCATION_KEY);
+        this.flagLocation = hyriRTF.getConfiguration().getLocation(hyriGameTeam.getName() + HyriRTFConfiguration.FLAG_LOCATION_KEY);
         this.hyriGameTeam = hyriGameTeam;
         this.flagIsTaken = false;
 
-        if(hyriGameTeam.getName().equalsIgnoreCase(Teams.RED.getTeamName())) {
+        if(hyriGameTeam.getName().equalsIgnoreCase(HyriRTFTeams.RED.getTeamName())) {
             this.data = DyeColor.RED.getData();
         }else {
             this.data = DyeColor.BLUE.getData();
@@ -50,6 +50,8 @@ public class HyriRTFFlag {
         this.flagIsTaken = true;
         this.playerWhoTookFlag = player;
 
+        this.hyriRTF.getGame().getPlayer(player.getUniqueId()).setWoolsCaptured(this.hyriRTF.getGame().getPlayer(player.getUniqueId()).getWoolsCaptured() + 1);
+
         player.getInventory().clear();
         player.getInventory().addItem(new ItemStack( Material.WOOL, 64*9, this.data));
         player.getInventory().setHelmet(new ItemStack(Material.WOOL, 1, this.data));
@@ -57,7 +59,7 @@ public class HyriRTFFlag {
 
         player.setGameMode(GameMode.ADVENTURE);
 
-        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName()).getPlayers()) {
+        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(HyriRTFTeams.BLUE.getTeamName()).getPlayers()) {
             if (this.hyriGameTeam.getColor().equals(HyriGameTeamColor.RED)) {
                 Title.sendTitle(hyriRedGamePlayer.getPlayer().getPlayer(), ChatColor.DARK_PURPLE + player.getName() + CAPTURE_ALLY_TITLE.getForPlayer(player), CAPTURE_ALLY_SUB1.getForPlayer(player) + this.location(player) + CAPTURE_ALLY_SUB2.getForPlayer(player), 3, 40, 3);
             }else {
@@ -65,7 +67,7 @@ public class HyriRTFFlag {
             }
         }
 
-        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(Teams.RED.getTeamName()).getPlayers()) {
+        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(HyriRTFTeams.RED.getTeamName()).getPlayers()) {
             if (this.hyriGameTeam.getColor().equals(HyriGameTeamColor.BLUE)) {
             Title.sendTitle(hyriRedGamePlayer.getPlayer().getPlayer(), ChatColor.DARK_PURPLE + player.getName() + ChatColor.GREEN + CAPTURE_ALLY_TITLE.getForPlayer(player), CAPTURE_ALLY_SUB1.getForPlayer(player) + this.location(player) + CAPTURE_ALLY_SUB2.getForPlayer(player), 3, 40, 3);
             } else {
@@ -86,14 +88,14 @@ public class HyriRTFFlag {
 
         this.enableFlag();
 
-        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(Teams.RED.getTeamName()).getPlayers()) {
+        for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(HyriRTFTeams.RED.getTeamName()).getPlayers()) {
             if(!this.hyriGameTeam.getColor().equals(HyriGameTeamColor.RED)) {
                 Title.sendTitle(hyriRedGamePlayer.getPlayer().getPlayer(),LOOSE_ALLY_TITLE.getForPlayer(hyriRedGamePlayer.getPlayer().getPlayer()), "", 2, 30, 2);
             }else {
                 Title.sendTitle(hyriRedGamePlayer.getPlayer().getPlayer(),LOOSE_ENEMY_TITLE.getForPlayer(hyriRedGamePlayer.getPlayer().getPlayer()), "", 2, 30, 2);
             }
         }
-        for(HyriGamePlayer hyriBlueGamePlayer :  this.hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName()).getPlayers()) {
+        for(HyriGamePlayer hyriBlueGamePlayer :  this.hyriRTF.getGame().getTeam(HyriRTFTeams.BLUE.getTeamName()).getPlayers()) {
             if(this.hyriGameTeam.getColor().equals(HyriGameTeamColor.BLUE)) {
                 Title.sendTitle(hyriBlueGamePlayer.getPlayer().getPlayer(), LOOSE_ALLY_TITLE.getForPlayer(hyriBlueGamePlayer.getPlayer().getPlayer()), "", 2, 30, 2);
             }else {

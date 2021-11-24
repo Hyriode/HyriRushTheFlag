@@ -1,7 +1,7 @@
 package fr.hyriode.rushtheflag.utils;
 
 import fr.hyriode.hyrame.configuration.HyriConfiguration;
-import fr.hyriode.rushtheflag.game.Teams;
+import fr.hyriode.rushtheflag.game.HyriRTFTeams;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -39,8 +39,8 @@ public class HyriRTFConfiguration extends HyriConfiguration {
         final Map<String, Location> teamsLocations = new HashMap<>();
 
         String[] teamsNames = new String[] {
-                Teams.BLUE.getTeamName(),
-                Teams.RED.getTeamName()
+                HyriRTFTeams.BLUE.getTeamName(),
+                HyriRTFTeams.RED.getTeamName()
         };
 
         String[] varNames = new String[] {

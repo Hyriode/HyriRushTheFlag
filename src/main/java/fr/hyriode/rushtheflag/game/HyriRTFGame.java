@@ -16,6 +16,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
@@ -37,17 +38,15 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
     private boolean redTeamCanRespawn = true;
     private int bluePoints = 3;
     private int redPoints = 3;
-    private Map<HyriRTFGamePlayer, HyriGamePlayingScoreboard> scoreboards;
+    private final Map<HyriRTFGamePlayer, HyriGamePlayingScoreboard> scoreboards = new HashMap<>();
 
     public HyriRTFGame(IHyrame hyrame, JavaPlugin plugin) {
         super(hyrame, plugin, "rtf", HyriRTF.RTF, HyriRTFGamePlayer.class, true);
         this.hyriRTF = (HyriRTF) plugin;
 
-        //this.registerTabListManager();
         this.minPlayers = 2;
         this.maxPlayers = 2;
         this.registerTeams();
-
     }
 
 
@@ -69,7 +68,7 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
     @Override
     public void handleLogout(Player player) {
         super.handleLogout(player);
-        sendPlayerAPI(hyriRTF.getGame().getPlayer(player.getUniqueId()));
+        sendPlayerAPI(hyriRTF.getGame().getPlayer(player.getUniqueId()), false);
     }
 
     @Override
@@ -77,7 +76,7 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
         super.start();
 
         for (HyriGameTeam team : teams) {
-            team.setSpawnLocation(hyriRTF.getHyriRTFconfiguration().getLocation(team.getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY));
+            team.setSpawnLocation(hyriRTF.getConfiguration().getLocation(team.getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY));
             team.teleportToSpawn();
             for(HyriGamePlayer hyriGamePlayer : team.getPlayers()) {
                 hyriRTF.getGame().getPlayer(hyriGamePlayer.getPlayer().getPlayer().getUniqueId()).spawn();
@@ -88,13 +87,13 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
                 hyriGamePlayingScoreboard.show();
             }
         }
-        hyriRTF.setBlueFlag(new HyriRTFFlag(hyriRTF, hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName())));
-        hyriRTF.setRedFlag(new HyriRTFFlag(hyriRTF, hyriRTF.getGame().getTeam(Teams.RED.getTeamName())));
+        hyriRTF.setBlueFlag(new HyriRTFFlag(hyriRTF, hyriRTF.getGame().getTeam(HyriRTFTeams.BLUE.getTeamName())));
+        hyriRTF.setRedFlag(new HyriRTFFlag(hyriRTF, hyriRTF.getGame().getTeam(HyriRTFTeams.RED.getTeamName())));
     }
 
     private void registerTeams() {
-        this.registerTeam(new HyriGameTeam(Teams.BLUE.getTeamName(), Teams.BLUE.getDisplayName(), Teams.BLUE.getColor(), Teams.BLUE.getTeamSize()));
-        this.registerTeam(new HyriGameTeam(Teams.RED.getTeamName(), Teams.RED.getDisplayName(), Teams.RED.getColor(), Teams.RED.getTeamSize()));
+        this.registerTeam(new HyriGameTeam(HyriRTFTeams.BLUE.getTeamName(), HyriRTFTeams.BLUE.getDisplayName(), HyriRTFTeams.BLUE.getColor(), HyriRTFTeams.BLUE.getTeamSize()));
+        this.registerTeam(new HyriGameTeam(HyriRTFTeams.RED.getTeamName(), HyriRTFTeams.RED.getDisplayName(), HyriRTFTeams.RED.getColor(), HyriRTFTeams.RED.getTeamSize()));
     }
 
     public void captureFlag(HyriGameTeam whoCapture) {
@@ -115,11 +114,11 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
 
         if(whoCapture.getColor().equals(HyriGameTeamColor.BLUE)) {
-            for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(Teams.RED.getTeamName()).getPlayers()) {
+            for(HyriGamePlayer hyriRedGamePlayer : this.hyriRTF.getGame().getTeam(HyriRTFTeams.RED.getTeamName()).getPlayers()) {
                 Title.sendTitle(hyriRedGamePlayer.getPlayer().getPlayer(), CAPTURE_ENEMY_TITLE.getForPlayer(hyriRedGamePlayer.getPlayer().getPlayer()), CAPTURE_ENEMY_SUB.getForPlayer(hyriRedGamePlayer.getPlayer().getPlayer()), 2, 30, 2);
                 hyriRedGamePlayer.getPlayer().getPlayer().playSound(hyriRedGamePlayer.getPlayer().getPlayer().getLocation(), Sound.WOLF_DEATH, 2,2);
             }
-            for(HyriGamePlayer hyriBlueGamePlayer :  this.hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName()).getPlayers()) {
+            for(HyriGamePlayer hyriBlueGamePlayer :  this.hyriRTF.getGame().getTeam(HyriRTFTeams.BLUE.getTeamName()).getPlayers()) {
                 Title.sendTitle(hyriBlueGamePlayer.getPlayer().getPlayer(), CAPTURE_ALLY_TITLE.getForPlayer(hyriBlueGamePlayer.getPlayer().getPlayer()), CAPTURE_ALLY_SUB.getForPlayer(hyriBlueGamePlayer.getPlayer().getPlayer()), 2, 30, 2);
             }
 
@@ -134,11 +133,11 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
                 }
             }, 1L);
         }else {
-            for(HyriGamePlayer hyriBlueGamePlayer : this.hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName()).getPlayers()) {
+            for(HyriGamePlayer hyriBlueGamePlayer : this.hyriRTF.getGame().getTeam(HyriRTFTeams.BLUE.getTeamName()).getPlayers()) {
                 Title.sendTitle(hyriBlueGamePlayer.getPlayer().getPlayer(), CAPTURE_ENEMY_TITLE.getForPlayer(hyriBlueGamePlayer.getPlayer().getPlayer()), CAPTURE_ENEMY_SUB.getForPlayer(hyriBlueGamePlayer.getPlayer().getPlayer()), 2, 30, 2);
                 hyriBlueGamePlayer.getPlayer().getPlayer().playSound(hyriBlueGamePlayer.getPlayer().getPlayer().getLocation(), Sound.WOLF_DEATH, 2,2);
             }
-            for(HyriGamePlayer hyriRedGamePlayer :  this.hyriRTF.getGame().getTeam(Teams.RED.getTeamName()).getPlayers()) {
+            for(HyriGamePlayer hyriRedGamePlayer :  this.hyriRTF.getGame().getTeam(HyriRTFTeams.RED.getTeamName()).getPlayers()) {
                 Title.sendTitle(hyriRedGamePlayer.getPlayer().getPlayer(), CAPTURE_ALLY_TITLE.getForPlayer(hyriRedGamePlayer.getPlayer().getPlayer()), CAPTURE_ALLY_SUB.getForPlayer(hyriRedGamePlayer.getPlayer().getPlayer()), 2, 30, 2);
             }
 
@@ -157,32 +156,40 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
 
     public void winGame(HyriGameTeam winner) {
-        HyriGameTeam looser = hyriRTF.getGame().getTeam(Teams.RED.getTeamName());
+        HyriGameTeam looser = hyriRTF.getGame().getTeam(HyriRTFTeams.RED.getTeamName());
         if(winner.getColor().equals(HyriGameTeamColor.RED)) {
-            looser = hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName());
+            looser = hyriRTF.getGame().getTeam(HyriRTFTeams.BLUE.getTeamName());
         }
 
         hyriRTF.getGame().end();
         for(HyriGamePlayer hyriGamePlayer : winner.getPlayers()) {
+            sendPlayerAPI((HyriRTFGamePlayer) hyriGamePlayer, true);
             Title.sendTitle(hyriGamePlayer.getPlayer().getPlayer(),VICTORY_TITLE.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), VICTORY_SUB.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), 5, 70, 5);
             hyriGamePlayer.getPlayer().getPlayer().setGameMode(GameMode.CREATIVE);
             hyriGamePlayer.getPlayer().getPlayer().getInventory().clear();
         }
         for(HyriGamePlayer hyriGamePlayer : looser.getPlayers()) {
+            sendPlayerAPI((HyriRTFGamePlayer) hyriGamePlayer, false);
             Title.sendTitle(hyriGamePlayer.getPlayer().getPlayer() ,DEFEAT_TITLE.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), DEFEAT_SUB.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), 5, 70, 10);
             hyriGamePlayer.getPlayer().getPlayer().setGameMode(GameMode.SPECTATOR);
             hyriGamePlayer.getPlayer().getPlayer().getInventory().clear();
         }
     }
 
-    public void sendPlayerAPI(HyriRTFGamePlayer player) {
+    public void sendPlayerAPI(HyriRTFGamePlayer player, boolean winGame) {
         if(hyriRTF.getRtfPlayerManager().getPlayer(player.getUUID()) != null) {
             RTFPlayer rtfPlayer = hyriRTF.getRtfPlayerManager().getPlayer(player.getUUID());
+
+            rtfPlayer.setWoolsBroughtBack(rtfPlayer.getWoolsBroughtBack() + player.getWoolsBroughtBack());
+            rtfPlayer.setWoolsCaptured(rtfPlayer.getWoolsCaptured() + player.getWoolsCaptured());
             rtfPlayer.setDeaths(player.getDeath() + rtfPlayer.getDeaths());
             rtfPlayer.setKills(player.getKills() + rtfPlayer.getKills());
             rtfPlayer.setFinalKills(player.getFinalKills() + rtfPlayer.getFinalKills());
             rtfPlayer.setPlayTime(this.scoreboards.get(player).getCurrentIGSeconds() + rtfPlayer.getPlayTime());
             rtfPlayer.setGamesPlayed(rtfPlayer.getGamesPlayed() + 1);
+            rtfPlayer.setVictories(rtfPlayer.getVictories() + (winGame ? 1 : 0));
+        }else {
+            hyriRTF.getRtfPlayerManager().sendPlayer(new RTFPlayer(player.getUUID(), player.getKills(), player.getFinalKills(), player.getDeath(), player.getWoolsCaptured(), player.getWoolsBroughtBack(), winGame ? 1 : 0, 1, this.scoreboards.get(player).getCurrentIGSeconds()));
         }
 
     }

@@ -97,12 +97,16 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         }
 
         if(playerCanRespawn) {
+            if(this.lastDamagerExist) {
+                this.hyriRTF.getGame().getPlayer(this.lastDamager.getUniqueId()).setKills(this.hyriRTF.getGame().getPlayer(this.lastDamager.getUniqueId()).getKills() + 1);
+            }
+
             player.setGameMode(GameMode.SPECTATOR);
             player.teleport(player.getWorld().getSpawnLocation().add(0, 20, 0));
 
             Title.sendTitle(player ,GAME_RESPAWN_TITLE.getForPlayer(player), GAME_RESPAWN_SUB_1.getForPlayer(player) + ChatColor.RED + 5 + GAME_RESPAWN_SUB_2.getForPlayer(player), 0, 20,0);
 
-            Bukkit.getScheduler().runTaskLater(hyriRTF, () -> player.teleport(hyriRTF.getHyriRTFconfiguration().getLocation(this.getTeam().getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY)), 20L*5);
+            Bukkit.getScheduler().runTaskLater(hyriRTF, () -> player.teleport(hyriRTF.getConfiguration().getLocation(this.getTeam().getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY)), 20L*5);
 
             for(int i = 4; i > 0; i--) {
                 int finalI = 5-i;
@@ -111,6 +115,11 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
 
             Bukkit.getScheduler().runTaskLater(hyriRTF, this::spawn, 20L*5);
         }else {
+
+            if(this.lastDamagerExist) {
+                this.hyriRTF.getGame().getPlayer(this.lastDamager.getUniqueId()).setFinalKills(this.hyriRTF.getGame().getPlayer(this.lastDamager.getUniqueId()).getFinalKills() + 1);
+            }
+
             Title.sendTitle(player,GAME_OVER_TITLE.getForPlayer(player), GAME_OVER_SUB.getForPlayer(player), 5, 70, 5);
             player.getInventory().clear();
             HyriGameItems.LEAVE_ITEM.give(this.hyriRTF.getHyrame(), player, 4);
@@ -118,12 +127,12 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
             if(this.getTeam().getColor().equals(HyriGameTeamColor.BLUE)) {
                 this.hyriRTF.getGame().setFinalKilledBlue(this.hyriRTF.getGame().getFinalKilledBlue() + 1);
                 if(this.getTeam().getPlayers().size() == this.hyriRTF.getGame().getFinalKilledBlue()) {
-                    this.hyriRTF.getGame().winGame(hyriRTF.getGame().getTeam(Teams.RED.getTeamName()));
+                    this.hyriRTF.getGame().winGame(hyriRTF.getGame().getTeam(HyriRTFTeams.RED.getTeamName()));
                 }
             }else {
                 this.hyriRTF.getGame().setFinalKilledRed(this.hyriRTF.getGame().getFinalKilledRed() + 1);
                 if(this.getTeam().getPlayers().size() == this.hyriRTF.getGame().getFinalKilledRed()) {
-                    this.hyriRTF.getGame().winGame(hyriRTF.getGame().getTeam(Teams.BLUE.getTeamName()));
+                    this.hyriRTF.getGame().winGame(hyriRTF.getGame().getTeam(HyriRTFTeams.BLUE.getTeamName()));
                 }
             }
 
@@ -160,13 +169,13 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
             }
         }
 
-        hyriRTF.getHyriRTFconfiguration().setHotbar(player, swordSlot, gapSlot, pickSlot);
+        hyriRTF.getConfiguration().setHotbar(player, swordSlot, gapSlot, pickSlot);
     }
 
     public void spawn() {
         Player player = this.getPlayer().getPlayer();
 
-        player.teleport(hyriRTF.getHyriRTFconfiguration().getLocation(this.getTeam().getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY));
+        player.teleport(hyriRTF.getConfiguration().getLocation(this.getTeam().getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY));
         player.setGameMode(GameMode.SURVIVAL);
         player.setHealth(20);
         player.setCanPickupItems(false);
@@ -185,9 +194,9 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
 
         player.getInventory().addItem(new ItemStack(Material.SANDSTONE,64*9));
 
-        player.getInventory().setItem(hyriRTF.getHyriRTFconfiguration().swordSlot(player), sword);
-        player.getInventory().setItem(hyriRTF.getHyriRTFconfiguration().gappleSlot(player), new ItemStack(Material.GOLDEN_APPLE, 64));
-        player.getInventory().setItem(hyriRTF.getHyriRTFconfiguration().pickaxeSlot(player), pickaxe);
+        player.getInventory().setItem(hyriRTF.getConfiguration().swordSlot(player), sword);
+        player.getInventory().setItem(hyriRTF.getConfiguration().gappleSlot(player), new ItemStack(Material.GOLDEN_APPLE, 64));
+        player.getInventory().setItem(hyriRTF.getConfiguration().pickaxeSlot(player), pickaxe);
 
         ArrayList<ItemStack> dyedArmor = new ArrayList<>();
 
@@ -204,10 +213,6 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         }
 
         player.getInventory().setArmorContents(dyedArmor.toArray(new ItemStack[0]));
-    }
-
-    public Player getLastDamager() {
-        return this.lastDamager;
     }
 
     public void setLastDamagerExist(Player newLastDamager) {
@@ -266,10 +271,6 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
 
     public long getDeath() {
         return death;
-    }
-
-    public void setDeath(long death) {
-        this.death = death;
     }
 
     public long getWoolsCaptured() {

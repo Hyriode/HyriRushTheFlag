@@ -14,7 +14,7 @@ public class RTFPlayer {
     private long gamesPlayed;
     private long playTime;
 
-    public RTFPlayer(UUID uuid, long kills, long finalKills, long deaths, long finalDeaths, long woolsCaptured, long woolsBroughtBack, long victories, long gamesPlayed, long playTime) {
+    public RTFPlayer(UUID uuid, long kills, long finalKills, long deaths, long woolsCaptured, long woolsBroughtBack, long victories, long gamesPlayed, long playTime) {
         this.uuid = uuid;
         this.kills = kills;
         this.finalKills = finalKills;

@@ -3,7 +3,7 @@ package fr.hyriode.rushtheflag;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.HyriGameState;
 import fr.hyriode.hyrame.listener.HyriListener;
-import fr.hyriode.rushtheflag.game.Teams;
+import fr.hyriode.rushtheflag.game.HyriRTFTeams;
 import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
 import fr.hyriode.tools.item.ItemNBT;
 import org.bukkit.Location;
@@ -64,6 +64,7 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
                 if(hyriRTF.getBlueFlag().getPlayerWhoTookFlag().equals(event.getPlayer())) {
                     if(locationIsCaptured(event.getTo(), hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()))) {
                         hyriRTF.getGame().captureFlag(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam());
+                        hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).setWoolsBroughtBack(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getWoolsBroughtBack() + 1);
                     }
                 }
             }
@@ -72,6 +73,7 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
                 if(hyriRTF.getRedFlag().getPlayerWhoTookFlag().equals(event.getPlayer())) {
                     if(locationIsCaptured(event.getTo(), hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()))) {
                         hyriRTF.getGame().captureFlag(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam());
+                        hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).setWoolsBroughtBack(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getWoolsBroughtBack() + 1);
                     }
                 }
             }
@@ -105,11 +107,11 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
                 }
             }
         }else if(event.getBlock().getType().equals(Material.WOOL)) {
-            if(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(Teams.BLUE.getTeamName())) {
+            if(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(HyriRTFTeams.BLUE.getTeamName())) {
                 if(hyriRTF.getRedFlag().getFlagLocation().equals(event.getBlock().getLocation())) {
                     hyriRTF.getRedFlag().playerTakeFlag(event.getPlayer());
                 }
-            }else if(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(Teams.RED.getTeamName())) {
+            }else if(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(HyriRTFTeams.RED.getTeamName())) {
                 if(hyriRTF.getBlueFlag().getFlagLocation().equals(event.getBlock().getLocation())) {
                     hyriRTF.getBlueFlag().playerTakeFlag(event.getPlayer());
                 }
@@ -206,8 +208,8 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
     private boolean locationIsCaptured(Location location, HyriGamePlayer hyriGamePlayer) {
         HyriRTF hyriRTF = this.plugin;
 
-        Location startLocation = hyriRTF.getHyriRTFconfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.S_FLAG_PLACE_KEY);
-        Location endLocation = hyriRTF.getHyriRTFconfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.E_FLAG_PLACE_KEY);
+        Location startLocation = hyriRTF.getConfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.S_FLAG_PLACE_KEY);
+        Location endLocation = hyriRTF.getConfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.E_FLAG_PLACE_KEY);
 
         if(location.getX() >= startLocation.getX() && location.getY() >= startLocation.getY() && location.getZ() >= startLocation.getZ()) {
             if(location.getX() <= endLocation.getX() && location.getY() <= endLocation.getY() && location.getZ() <= endLocation.getZ()) {
@@ -225,19 +227,19 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
         ArrayList<Location> endLocations = new ArrayList<>();
 
         List<String> teamNames = Arrays.asList(
-                Teams.BLUE.getTeamName(),
-                Teams.RED.getTeamName()
+                HyriRTFTeams.BLUE.getTeamName(),
+                HyriRTFTeams.RED.getTeamName()
         );
 
         for(String teamName : teamNames) {
-            startLocations.add(hyriRTF.getHyriRTFconfiguration().getLocation(teamName + HyriRTFConfiguration.S_SPAWN_PROTECT_KEY));
-            startLocations.add(hyriRTF.getHyriRTFconfiguration().getLocation(teamName + HyriRTFConfiguration.S_FLAG_PROTECT_KEY));
-            endLocations.add(hyriRTF.getHyriRTFconfiguration().getLocation(teamName + HyriRTFConfiguration.E_SPAWN_PROTECT_KEY));
-            endLocations.add(hyriRTF.getHyriRTFconfiguration().getLocation(teamName + HyriRTFConfiguration.E_FLAG_PROTECT_KEY));
+            startLocations.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.S_SPAWN_PROTECT_KEY));
+            startLocations.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.S_FLAG_PROTECT_KEY));
+            endLocations.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.E_SPAWN_PROTECT_KEY));
+            endLocations.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.E_FLAG_PROTECT_KEY));
         }
 
-        Location s_border = hyriRTF.getHyriRTFconfiguration().getLocation(HyriRTFConfiguration.S_BORDER);
-        Location e_border = hyriRTF.getHyriRTFconfiguration().getLocation(HyriRTFConfiguration.E_BORDER);
+        Location s_border = hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.S_BORDER);
+        Location e_border = hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.E_BORDER);
 
         if(location.getX() < s_border.getX() || location.getY() < s_border.getY() || location.getZ() < s_border.getZ()) {
             return false;

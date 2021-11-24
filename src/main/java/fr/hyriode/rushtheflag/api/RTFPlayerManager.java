@@ -1,8 +1,6 @@
 package fr.hyriode.rushtheflag.api;
 
 import com.google.gson.Gson;
-import fr.hyriode.hyriapi.HyriAPI;
-import redis.clients.jedis.Jedis;
 
 import java.util.UUID;
 
@@ -15,24 +13,19 @@ public class RTFPlayerManager {
     }
 
     public void sendPlayer(RTFPlayer player) {
-        final Jedis jedis = HyriAPI.get().getRedisResource();
-
-        jedis.set(this.getRedisKey(player.getUuid().toString()), new Gson().toJson(player));
-        jedis.close();
+        this.api.getJedisPool().getResource().set(this.getRedisKey(player.getUuid().toString()), new Gson().toJson(player));
+        this.api.getJedisPool().close();
     }
 
     public void removePlayer(RTFPlayer player) {
-        final Jedis jedis = HyriAPI.get().getRedisResource();
-
-        jedis.del(this.getRedisKey(player.getUuid().toString()));
-        jedis.close();
+        this.api.getJedisPool().getResource().del(this.getRedisKey(player.getUuid().toString()));
+        this.api.getJedisPool().close();
     }
 
     public RTFPlayer getPlayer(UUID uuid) {
-        final Jedis jedis = HyriAPI.get().getRedisResource();
-        final String json = jedis.get(this.getRedisKey(uuid.toString()));
+        final String json = this.api.getJedisPool().getResource().get(this.getRedisKey(uuid.toString()));
 
-        jedis.close();
+        this.api.getJedisPool().close();
 
         return new Gson().fromJson(json, RTFPlayer.class);
     }
