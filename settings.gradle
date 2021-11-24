@@ -1,2 +1,3 @@
 rootProject.name = 'HyriRushTheFlag'
+include 'HyriRushTheFlag-API'
 

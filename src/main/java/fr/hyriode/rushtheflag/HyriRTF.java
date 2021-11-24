@@ -1,7 +1,10 @@
 package fr.hyriode.rushtheflag;
 
-import fr.hyriode.hyrame.Hyrame;
+import fr.hyriode.hyrame.HyrameLoader;
+import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyriapi.HyriAPI;
+import fr.hyriode.rushtheflag.api.RTFAPI;
+import fr.hyriode.rushtheflag.api.RTFPlayerManager;
 import fr.hyriode.rushtheflag.game.HyriRTFFlag;
 import fr.hyriode.rushtheflag.game.HyriRTFGame;
 import fr.hyriode.rushtheflag.game.Teams;
@@ -10,19 +13,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class HyriRTF extends JavaPlugin {
 
-    private Hyrame hyrame;
+    private IHyrame hyrame;
     private HyriAPI api;
     private HyriRTFConfiguration hyriRTFconfiguration;
     private HyriRTFFlag blueFlag;
     private HyriRTFFlag redFlag;
     private HyriRTFGame game;
-    private final String RTF = "RushTheFlag";
+    private final RTFAPI rtfapi = new RTFAPI();
+    private final RTFPlayerManager rtfPlayerManager = new RTFPlayerManager(rtfapi);
+
+    public static final String RTF = "RushTheFlag";
 
     public void onEnable() {
         this.api = HyriAPI.get();
-        this.hyrame = new Hyrame(new HyriRTFProvider(this));
+        this.hyrame = HyrameLoader.load(new HyriRTFProvider(this));
         this.hyriRTFconfiguration = new HyriRTFConfiguration(this);
-        this.game = new HyriRTFGame(this);
+        this.game = new HyriRTFGame(this.hyrame, this);
 
         this.blueFlag = new HyriRTFFlag(this, this.getGame().getTeam(Teams.BLUE.getTeamName()));
         this.redFlag = new HyriRTFFlag(this, this.getGame().getTeam(Teams.RED.getTeamName()));
@@ -31,10 +37,10 @@ public class HyriRTF extends JavaPlugin {
     }
 
     public void onDisable() {
-        this.hyrame.getGameManager().unregisterGame();
+        this.hyrame.getGameManager().unregisterGame(this.game);
     }
 
-    public Hyrame getHyrame() {
+    public IHyrame getHyrame() {
         return this.hyrame;
     }
 
@@ -66,7 +72,7 @@ public class HyriRTF extends JavaPlugin {
         return game;
     }
 
-    public String getRTF() {
-        return RTF;
+    public RTFPlayerManager getRtfPlayerManager() {
+        return rtfPlayerManager;
     }
 }

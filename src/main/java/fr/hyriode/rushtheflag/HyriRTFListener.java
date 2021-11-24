@@ -1,11 +1,11 @@
 package fr.hyriode.rushtheflag;
 
-import fr.hyriode.common.item.ItemNBT;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.HyriGameState;
 import fr.hyriode.hyrame.listener.HyriListener;
 import fr.hyriode.rushtheflag.game.Teams;
 import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
+import fr.hyriode.tools.item.ItemNBT;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -22,11 +22,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HyriRTFListener extends HyriListener {
+public class HyriRTFListener extends HyriListener<HyriRTF> {
+
+    public HyriRTFListener(HyriRTF plugin) {
+        super(plugin);
+    }
 
     @EventHandler
     public void onPlayerVoid(EntityDamageEvent event) {
-        HyriRTF hyriRTF = (HyriRTF) this.pluginSupplier.get();
+        HyriRTF hyriRTF = this.plugin;
 
         if(event.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
             if(event.getEntityType().equals(EntityType.PLAYER)) {
@@ -35,7 +39,7 @@ public class HyriRTFListener extends HyriListener {
                 if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
                     player.teleport(player.getWorld().getSpawnLocation());
                 }else {
-                    hyriRTF.getGame().killPlayer(player);
+                    hyriRTF.getGame().getPlayer(player.getUniqueId()).kill();
                 }
             }
         }
@@ -53,7 +57,7 @@ public class HyriRTFListener extends HyriListener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        HyriRTF hyriRTF = (HyriRTF) this.pluginSupplier.get();
+        HyriRTF hyriRTF = this.plugin;
 
         if(hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
             if(hyriRTF.getBlueFlag().isFlagTaken()) {
@@ -81,7 +85,7 @@ public class HyriRTFListener extends HyriListener {
 
     @EventHandler
     public void onPlayerBreakBlock(BlockBreakEvent event) {
-        HyriRTF hyriRTF = (HyriRTF) this.pluginSupplier.get();
+        HyriRTF hyriRTF = this.plugin;
 
         event.setCancelled(true);
 
@@ -127,16 +131,19 @@ public class HyriRTFListener extends HyriListener {
 
     @EventHandler
     public void onEntityTakeDamageByEntity(EntityDamageByEntityEvent event) {
-        HyriRTF hyriRTF = (HyriRTF) this.pluginSupplier.get();
+        HyriRTF hyriRTF = this.plugin;
 
         if(event.getEntity().getType().equals(EntityType.PLAYER)) {
-            if(!hyriRTF.getHyrame().getGameManager().getCurrentGame().getState().equals(HyriGameState.PLAYING)) {
+            if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
                 event.setCancelled(true);
             }else {
                 Player player = (Player) event.getEntity();
+                if(event.getDamager().getType().equals(EntityType.PLAYER)) {
+                    hyriRTF.getGame().getPlayer(player.getUniqueId()).setLastDamagerExist((Player) event.getDamager());
+                }
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
                     event.setCancelled(true);
-                    hyriRTF.getGame().killPlayer((Player) event.getEntity());
+                    hyriRTF.getGame().getPlayer(event.getEntity().getUniqueId()).kill();
                 }
             }
         }
@@ -144,7 +151,7 @@ public class HyriRTFListener extends HyriListener {
 
     @EventHandler
     public void onEntityTakeDamage(EntityDamageEvent event) {
-        HyriRTF hyriRTF = (HyriRTF) this.pluginSupplier.get();
+        HyriRTF hyriRTF = this.plugin;
 
         if(event.getEntity().getType().equals(EntityType.PLAYER)) {
             if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
@@ -153,7 +160,7 @@ public class HyriRTFListener extends HyriListener {
                 Player player = (Player) event.getEntity();
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
                     event.setCancelled(true);
-                    hyriRTF.getGame().killPlayer((Player) event.getEntity());
+                    hyriRTF.getGame().getPlayer(event.getEntity().getUniqueId()).kill();
                 }
             }
         }
@@ -161,7 +168,7 @@ public class HyriRTFListener extends HyriListener {
 
     @EventHandler
     public void onEntityTakeDamageByBlock(EntityDamageByBlockEvent event) {
-        HyriRTF hyriRTF = (HyriRTF) this.pluginSupplier.get();
+        HyriRTF hyriRTF = this.plugin;
 
         if(event.getEntity().getType().equals(EntityType.PLAYER)) {
             if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
@@ -170,7 +177,7 @@ public class HyriRTFListener extends HyriListener {
                 Player player = (Player) event.getEntity();
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
                     event.setCancelled(true);
-                    hyriRTF.getGame().killPlayer((Player) event.getEntity());
+                    hyriRTF.getGame().getPlayer(event.getEntity().getUniqueId()).kill();
                 }
             }
         }
@@ -178,7 +185,7 @@ public class HyriRTFListener extends HyriListener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        HyriRTF hyriRTF = (HyriRTF) this.pluginSupplier.get();
+        HyriRTF hyriRTF = this.plugin;
 
         if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
             event.setCancelled(true);
@@ -197,7 +204,7 @@ public class HyriRTFListener extends HyriListener {
     }
 
     private boolean locationIsCaptured(Location location, HyriGamePlayer hyriGamePlayer) {
-        HyriRTF hyriRTF = (HyriRTF) this.pluginSupplier.get();
+        HyriRTF hyriRTF = this.plugin;
 
         Location startLocation = hyriRTF.getHyriRTFconfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.S_FLAG_PLACE_KEY);
         Location endLocation = hyriRTF.getHyriRTFconfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.E_FLAG_PLACE_KEY);
@@ -211,7 +218,7 @@ public class HyriRTFListener extends HyriListener {
     }
 
     private boolean locationIsAllow(Location location) {
-        HyriRTF hyriRTF = (HyriRTF) this.pluginSupplier.get();
+        HyriRTF hyriRTF = this.plugin;
 
         ArrayList<Location> startLocations = new ArrayList<>();
 

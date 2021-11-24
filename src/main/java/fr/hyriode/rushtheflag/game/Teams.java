@@ -1,21 +1,22 @@
 package fr.hyriode.rushtheflag.game;
 
 import fr.hyriode.hyrame.game.team.HyriGameTeamColor;
-import fr.hyriode.hyrame.language.Language;
-import fr.hyriode.hyrame.language.LanguageMessage;
+import fr.hyriode.hyrame.language.HyriLanguageMessage;
+import fr.hyriode.hyriapi.settings.HyriLanguage;
+import org.bukkit.ChatColor;
 
 public enum Teams {
 
-    BLUE("blueTeam", new LanguageMessage("team.blue").addValue(Language.FR, "Bleu"), HyriGameTeamColor.BLUE, 1),
-    RED("redTeam", new LanguageMessage("team.red").addValue(Language.FR, "Rouge"), HyriGameTeamColor.RED, 1);
+    BLUE("blueTeam", new HyriLanguageMessage("game.teams.red.displayName").addValue(HyriLanguage.FR, ChatColor.BLUE + "Bleu").addValue(HyriLanguage.EN, ChatColor.BLUE + "Blue"), HyriGameTeamColor.BLUE, 1),
+    RED("redTeam", new HyriLanguageMessage("game.teams.blue.displayName").addValue(HyriLanguage.FR, ChatColor.RED + "Rouge").addValue(HyriLanguage.EN, ChatColor.RED + "Red"), HyriGameTeamColor.RED, 1);
 
     private final String teamName;
-    private final LanguageMessage displayName;
+    private final HyriLanguageMessage displayName;
     private final HyriGameTeamColor color;
     private final int teamSize;
 
 
-    Teams(String teamName, LanguageMessage displayName, HyriGameTeamColor color, int teamSize) {
+    Teams(String teamName, HyriLanguageMessage displayName, HyriGameTeamColor color, int teamSize) {
         this.teamName = teamName;
         this.displayName = displayName;
         this.color = color;
@@ -26,7 +27,7 @@ public enum Teams {
         return this.teamName;
     }
 
-    public LanguageMessage getDisplayName() {
+    public HyriLanguageMessage getDisplayName() {
         return displayName;
     }
 
