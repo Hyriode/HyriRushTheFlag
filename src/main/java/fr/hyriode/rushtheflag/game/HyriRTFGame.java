@@ -62,7 +62,7 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
         player.setGameMode(GameMode.ADVENTURE);
         player.setCanPickupItems(false);
 
-        hyriRTF.getGame().getPlayer(player.getUniqueId()).setHyriRTF(this.hyriRTF);
+        this.getPlayer(player.getUniqueId()).setHyriRTF(this.hyriRTF);
     }
 
     @Override

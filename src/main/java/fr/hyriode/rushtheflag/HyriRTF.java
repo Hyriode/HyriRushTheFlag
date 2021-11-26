@@ -19,13 +19,13 @@ public class HyriRTF extends JavaPlugin {
     private HyriRTFFlag blueFlag;
     private HyriRTFFlag redFlag;
     private HyriRTFGame game;
-    private final RTFAPI rtfapi = new RTFAPI(HyriAPI.get().getRedisConnection().getPool());
-    private final RTFPlayerManager rtfPlayerManager = new RTFPlayerManager(rtfapi);
+    private RTFAPI rtfapi;
 
     public static final String RTF = "RushTheFlag";
 
     public void onEnable() {
         this.api = HyriAPI.get();
+        this.rtfapi = new RTFAPI(HyriAPI.get().getRedisConnection().getPool());
         this.hyrame = HyrameLoader.load(new HyriRTFProvider(this));
         this.configuration = new HyriRTFConfiguration(this);
         this.game = new HyriRTFGame(this.hyrame, this);
@@ -44,16 +44,12 @@ public class HyriRTF extends JavaPlugin {
         return this.hyrame;
     }
 
-    public HyriAPI getAPI() {
-        return this.api;
-    }
-
     public HyriRTFConfiguration getConfiguration() {
-        return configuration;
+        return this.configuration;
     }
 
     public HyriRTFFlag getBlueFlag() {
-        return blueFlag;
+        return this.blueFlag;
     }
 
     public void setBlueFlag(HyriRTFFlag blueFlag) {
@@ -61,7 +57,7 @@ public class HyriRTF extends JavaPlugin {
     }
 
     public HyriRTFFlag getRedFlag() {
-        return redFlag;
+        return this.redFlag;
     }
 
     public void setRedFlag(HyriRTFFlag redFlag) {
@@ -69,10 +65,10 @@ public class HyriRTF extends JavaPlugin {
     }
 
     public HyriRTFGame getGame() {
-        return game;
+        return this.game;
     }
 
     public RTFPlayerManager getRtfPlayerManager() {
-        return rtfPlayerManager;
+        return this.rtfapi.getPlayerManager();
     }
 }
