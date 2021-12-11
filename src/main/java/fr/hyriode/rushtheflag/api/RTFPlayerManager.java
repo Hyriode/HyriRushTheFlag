@@ -8,14 +8,14 @@ import java.util.UUID;
 public class RTFPlayerManager {
 
     private final RTFAPI api;
-    final Jedis jedis;
+
 
     public RTFPlayerManager(RTFAPI api) {
         this.api = api;
-        jedis = this.api.getJedisPool().getResource();
     }
 
     public void sendPlayer(RTFPlayer player) {
+        final Jedis jedis = this.api.getJedisPool().getResource();
         try {
             jedis.set(this.getRedisKey(player.getUuid().toString()), new Gson().toJson(player));
         } finally {
@@ -24,6 +24,7 @@ public class RTFPlayerManager {
     }
 
     public void removePlayer(RTFPlayer player) {
+        final Jedis jedis = this.api.getJedisPool().getResource();
         try {
             jedis.del(this.getRedisKey(player.getUuid().toString()));
         } finally {
@@ -32,6 +33,7 @@ public class RTFPlayerManager {
     }
 
     public RTFPlayer getPlayer(UUID uuid) {
+        final Jedis jedis = this.api.getJedisPool().getResource();
         try {
             final String json = jedis.get(this.getRedisKey(uuid.toString()));
             return new Gson().fromJson(json, RTFPlayer.class);
