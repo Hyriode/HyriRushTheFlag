@@ -14,18 +14,18 @@ public class RTFPlayerManager {
 
     public void sendPlayer(RTFPlayer player) {
         this.api.getJedisPool().getResource().set(this.getRedisKey(player.getUuid().toString()), new Gson().toJson(player));
-        this.api.getJedisPool().close();
+        this.api.getJedisPool().getResource().getClient().close();
     }
 
     public void removePlayer(RTFPlayer player) {
         this.api.getJedisPool().getResource().del(this.getRedisKey(player.getUuid().toString()));
-        this.api.getJedisPool().close();
+        this.api.getJedisPool().getResource().getClient().close();
     }
 
     public RTFPlayer getPlayer(UUID uuid) {
         final String json = this.api.getJedisPool().getResource().get(this.getRedisKey(uuid.toString()));
 
-        this.api.getJedisPool().close();
+        this.api.getJedisPool().getResource().getClient().close();
 
         return new Gson().fromJson(json, RTFPlayer.class);
     }
