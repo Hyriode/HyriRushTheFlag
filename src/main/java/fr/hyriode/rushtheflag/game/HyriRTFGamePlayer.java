@@ -77,15 +77,16 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         for(PotionEffect potionEffect : player.getActivePotionEffects()) {
             player.removePotionEffect(potionEffect.getType());
         }
+        player.getInventory().clear();
 
         boolean playerCanRespawn = true;
 
         if (this.getTeam().getColor().equals(HyriGameTeamColor.BLUE)) {
-            if (!this.hyriRTF.getGame().isRedTeamCanRespawn()) {
+            if (!this.hyriRTF.getGame().isBlueTeamCanRespawn()) {
                 playerCanRespawn = false;
             }
         } else {
-            if (!this.hyriRTF.getGame().isBlueTeamCanRespawn()) {
+            if (!this.hyriRTF.getGame().isRedTeamCanRespawn()) {
                 playerCanRespawn = false;
             }
         }
@@ -152,12 +153,18 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         };
 
         for(Material material : materialList.keySet()) {
+            Bukkit.broadcastMessage(material.name());
             if(player.getInventory().getItem(materialList.get(material)) != null && !player.getInventory().getItem(materialList.get(material)).getType().equals(material)) {
+                Bukkit.broadcastMessage("not equal");
                 for (int i = 0; i < 9; i++) {
+                    Bukkit.broadcastMessage(String.valueOf(i));
                     if(player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType().equals(material)) {
+                        Bukkit.broadcastMessage("I not equal");
                         boolean valueExist = false;
                         for(Integer integer : materialList.values()) {
+                            Bukkit.broadcastMessage(String.valueOf(integer));
                             if(i == integer) {
+                                Bukkit.broadcastMessage("i = int");
                                 valueExist = true;
                                 break;
                             }

@@ -12,6 +12,8 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.text.DecimalFormat;
+
 public class HyriRTFFlag {
 
     private static final HyriLanguageMessage CAPTURE_ALLY_TITLE = new HyriLanguageMessage("flag.capture.ally.title").addValue(HyriLanguage.FR, ChatColor.GREEN + " a capturé le drapeau adversaire").addValue(HyriLanguage.EN, ChatColor.GREEN + " capture the enemy flag");
@@ -79,7 +81,7 @@ public class HyriRTFFlag {
     }
 
     private String location(Player player) {
-        return ChatColor.GOLD + " x: " + ChatColor.GREEN + player.getLocation().getX() + ChatColor.GOLD + " y: " + ChatColor.GREEN + player.getLocation().getY() + ChatColor.GOLD + " z: " + ChatColor.GREEN + player.getLocation().getZ();
+        return ChatColor.GOLD + " x: " + ChatColor.GREEN + new DecimalFormat("000").format(player.getLocation().getX()) + ChatColor.GOLD + " y: " + ChatColor.GREEN + new DecimalFormat("000").format(player.getLocation().getY()) + ChatColor.GOLD + " z: " + ChatColor.GREEN + new DecimalFormat("000").format(player.getLocation().getZ());
     }
 
     public void playerLooseFlag() {
