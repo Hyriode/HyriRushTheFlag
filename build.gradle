@@ -44,5 +44,5 @@ shadowJar {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'fr.hyriode:hyrame:1.0.7'
+    implementation 'fr.hyriode:hyrame:1.1.1'
 }

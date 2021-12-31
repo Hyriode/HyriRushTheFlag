@@ -16,16 +16,17 @@ import java.util.Map;
 
 public class HyriRTFConfiguration extends HyriConfiguration {
 
-    public static String S_FLAG_PROTECT_KEY = ".startFlagProtect";
-    public static String E_FLAG_PROTECT_KEY = ".endFlagProtect";
-    public static String S_SPAWN_PROTECT_KEY = ".startSpawnProtect";
-    public static String E_SPAWN_PROTECT_KEY = ".endSpawnProtect";
-    public static String S_FLAG_PLACE_KEY = ".startFlagPlace";
-    public static String E_FLAG_PLACE_KEY = ".endFlagPlace";
+    public static String FLAG_PROTECT_1_KEY = ".flagProtect1";
+    public static String FLAG_PROTECT_2_KEY = ".flagProtect2";
+    public static String SPAWN_PROTECT_1_KEY = ".spawnProtect1";
+    public static String SPAWN_PROTECT_2_KEY = ".spawnProtect2";
+    public static String FLAG_PLACE_1_KEY = ".flagPlace1";
+    public static String FLAG_PLACE_2_KEY = ".flagPlace2";
     public static String FLAG_LOCATION_KEY = ".flagLocation";
     public static String SPAWN_LOCATION_KEY = ".spawnLocation";
-    public static String S_BORDER = "border.start";
-    public static String E_BORDER = "border.end";
+    public static String BORDER1 = "border.border1";
+    public static String BORDER2 = "border.border2";
+    public static String WORLDSPAWN = "worldspawn.worldspawn";
 
     private final JavaPlugin javaPlugin;
 
@@ -44,12 +45,12 @@ public class HyriRTFConfiguration extends HyriConfiguration {
         };
 
         String[] varNames = new String[] {
-                HyriRTFConfiguration.S_FLAG_PROTECT_KEY,
-                HyriRTFConfiguration.E_FLAG_PROTECT_KEY,
-                HyriRTFConfiguration.S_SPAWN_PROTECT_KEY,
-                HyriRTFConfiguration.E_SPAWN_PROTECT_KEY,
-                HyriRTFConfiguration.S_FLAG_PLACE_KEY,
-                HyriRTFConfiguration.E_FLAG_PLACE_KEY,
+                HyriRTFConfiguration.FLAG_PROTECT_1_KEY,
+                HyriRTFConfiguration.FLAG_PROTECT_2_KEY,
+                HyriRTFConfiguration.SPAWN_PROTECT_1_KEY,
+                HyriRTFConfiguration.SPAWN_PROTECT_2_KEY,
+                HyriRTFConfiguration.FLAG_PLACE_1_KEY,
+                HyriRTFConfiguration.FLAG_PLACE_2_KEY,
                 HyriRTFConfiguration.FLAG_LOCATION_KEY,
                 HyriRTFConfiguration.SPAWN_LOCATION_KEY
         };
@@ -59,16 +60,19 @@ public class HyriRTFConfiguration extends HyriConfiguration {
                 this.setDefaultLocation(teamNames1 + varNames1);
                 this.location(teamsLocations, teamNames1 + varNames1);
             }
+            this.set(teamNames1 + HyriRTFConfiguration.SPAWN_LOCATION_KEY, "pitch", 0.0d);
         }
 
-        this.setDefaultLocation(S_BORDER);
-        this.location(teamsLocations, S_BORDER);
+        this.setDefaultLocation(BORDER1);
+        this.location(teamsLocations, BORDER1);
 
-        this.setDefaultLocation(E_BORDER);
-        this.location(teamsLocations, E_BORDER);
+        this.setDefaultLocation(BORDER2);
+        this.location(teamsLocations, BORDER2);
+
+        this.setDefaultLocation(WORLDSPAWN);
+        this.location(teamsLocations, WORLDSPAWN);
 
         return teamsLocations;
-
     }
 
     private void setDefaultLocation(String name) {
@@ -83,6 +87,10 @@ public class HyriRTFConfiguration extends HyriConfiguration {
 
     public Location getLocation(String name) {
         return this.teamsLocations().get(name);
+    }
+
+    public float getPitch(String name) {
+        return this.teamsLocations().get(name).getPitch();
     }
 
     public Map<String, Location> getTeamsLocations() {

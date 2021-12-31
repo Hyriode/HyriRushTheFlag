@@ -3,6 +3,7 @@ package fr.hyriode.rushtheflag.game;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
+import fr.hyriode.hyrame.game.HyriGameState;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.game.team.HyriGameTeamColor;
 import fr.hyriode.hyrame.game.util.HyriGameItems;
@@ -18,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
@@ -39,6 +41,7 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
     private int bluePoints = 3;
     private int redPoints = 3;
     private final Map<HyriRTFGamePlayer, HyriGamePlayingScoreboard> scoreboards = new HashMap<>();
+    private boolean worldSpawnIsEnable;
 
     public HyriRTFGame(IHyrame hyrame, JavaPlugin plugin) {
         super(hyrame, plugin, "rtf", HyriRTF.RTF, HyriRTFGamePlayer.class, true);
@@ -63,12 +66,20 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
         player.setCanPickupItems(false);
 
         this.getPlayer(player.getUniqueId()).setHyriRTF(this.hyriRTF);
+
+        if(!worldSpawnIsEnable) {
+            worldSpawnIsEnable = true;
+            player.getWorld().setSpawnLocation((int) this.hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.WORLDSPAWN).getX(),(int) this.hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.WORLDSPAWN).getY(), (int) this.hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.WORLDSPAWN).getZ());
+        }
+        player.teleport(player.getWorld().getSpawnLocation());
     }
 
     @Override
     public void handleLogout(Player player) {
         super.handleLogout(player);
-        sendPlayerAPI(hyriRTF.getGame().getPlayer(player.getUniqueId()), false);
+        if(this.getState().equals(HyriGameState.PLAYING) || this.getState().equals(HyriGameState.ENDED)) {
+            sendPlayerAPI((player.getUniqueId()), false);
+        }
     }
 
     @Override
@@ -163,22 +174,23 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
         hyriRTF.getGame().end();
         for(HyriGamePlayer hyriGamePlayer : winner.getPlayers()) {
-            sendPlayerAPI((HyriRTFGamePlayer) hyriGamePlayer, true);
+            sendPlayerAPI(hyriGamePlayer.getUUID(), true);
             Title.sendTitle(hyriGamePlayer.getPlayer().getPlayer(),VICTORY_TITLE.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), VICTORY_SUB.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), 5, 70, 5);
             hyriGamePlayer.getPlayer().getPlayer().setGameMode(GameMode.CREATIVE);
             hyriGamePlayer.getPlayer().getPlayer().getInventory().clear();
         }
         for(HyriGamePlayer hyriGamePlayer : looser.getPlayers()) {
-            sendPlayerAPI((HyriRTFGamePlayer) hyriGamePlayer, false);
+            sendPlayerAPI(hyriGamePlayer.getUUID(), false);
             Title.sendTitle(hyriGamePlayer.getPlayer().getPlayer() ,DEFEAT_TITLE.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), DEFEAT_SUB.getForPlayer(hyriGamePlayer.getPlayer().getPlayer()), 5, 70, 10);
             hyriGamePlayer.getPlayer().getPlayer().setGameMode(GameMode.SPECTATOR);
             hyriGamePlayer.getPlayer().getPlayer().getInventory().clear();
         }
     }
 
-    public void sendPlayerAPI(HyriRTFGamePlayer player, boolean winGame) {
-        if(hyriRTF.getRtfPlayerManager().getPlayer(player.getUUID()) != null) {
-            RTFPlayer rtfPlayer = hyriRTF.getRtfPlayerManager().getPlayer(player.getUUID());
+    public void sendPlayerAPI(UUID uuid, boolean winGame) {
+        HyriRTFGamePlayer player = hyriRTF.getGame().getPlayer(uuid);
+        if (hyriRTF.getRtfPlayerManager().getPlayer(uuid) != null) {
+            RTFPlayer rtfPlayer = hyriRTF.getRtfPlayerManager().getPlayer(uuid);
 
             rtfPlayer.setWoolsBroughtBack(rtfPlayer.getWoolsBroughtBack() + player.getWoolsBroughtBack());
             rtfPlayer.setWoolsCaptured(rtfPlayer.getWoolsCaptured() + player.getWoolsCaptured());
@@ -188,10 +200,9 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
             rtfPlayer.setPlayTime(this.scoreboards.get(player).getCurrentIGSeconds() + rtfPlayer.getPlayTime());
             rtfPlayer.setGamesPlayed(rtfPlayer.getGamesPlayed() + 1);
             rtfPlayer.setVictories(rtfPlayer.getVictories() + (winGame ? 1 : 0));
-        }else {
+        } else {
             hyriRTF.getRtfPlayerManager().sendPlayer(new RTFPlayer(player.getUUID(), player.getKills(), player.getFinalKills(), player.getDeath(), player.getWoolsCaptured(), player.getWoolsBroughtBack(), winGame ? 1 : 0, 1, this.scoreboards.get(player).getCurrentIGSeconds()));
         }
-
     }
 
     public int getBluePoints() {

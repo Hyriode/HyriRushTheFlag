@@ -36,6 +36,7 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
     private Player lastDamager;
     private boolean lastDamagerExist = false;
     private int lastDamagerTask;
+    private final HyriRTFGamePlayerHotbar hotbar;
 
     private long kills;
     private long finalKills;
@@ -52,6 +53,11 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
 
     public HyriRTFGamePlayer(Player player) {
         super(player);
+        if(HyriRTFGamePlayerHotbar.hotbars.get(player.getUniqueId()) != null) {
+            this.hotbar = HyriRTFGamePlayerHotbar.hotbars.get(player.getUniqueId());
+        }else {
+            this.hotbar = new HyriRTFGamePlayerHotbar(player.getUniqueId());
+        }
     }
 
     public void setHyriRTF(HyriRTF hyriRTF) {
@@ -63,8 +69,9 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         Player player = this.getPlayer().getPlayer();
 
         Bukkit.broadcastMessage(this.deathMessage(player));
-        player.playSound(this.lastDamager.getLocation(), Sound.WOLF_HOWL, 1, 1);
+
         if(this.lastDamagerExist) {
+            player.playSound(this.lastDamager.getLocation(), Sound.WOLF_HOWL, 1, 1);
             this.lastDamager.playNote(this.lastDamager.getLocation(), Instrument.PIANO, Note.flat(1, Note.Tone.A));
         }
 
@@ -138,81 +145,78 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
 
         }
 
-        int swordSlot = 0;
-        int gapSlot = 1;
-        int pickSlot = 2;
-
-        if(!player.getInventory().getItem(0).getType().equals(Material.IRON_SWORD)) {
-            for (int i = 1; i < 9; i++) {
-                if(player.getInventory().getItem(i).getType().equals(Material.IRON_SWORD)) {
-                    swordSlot = i;
+        if(player.getInventory().getItem(this.hotbar.getSwordSlot()) != null && !player.getInventory().getItem(this.hotbar.getSwordSlot()).getType().equals(Material.IRON_SWORD)) {
+            for (int i = 0; i < 9; i++) {
+                if(player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType().equals(Material.IRON_SWORD)) {
+                    this.hotbar.setSwordSlot(i);
                     break;
                 }
             }
         }
 
-        if(!player.getInventory().getItem(1).getType().equals(Material.GOLDEN_APPLE)) {
-            for (int i = 1; i < 9; i++) {
-                if(player.getInventory().getItem(i).getType().equals(Material.GOLDEN_APPLE)) {
-                    gapSlot = i;
+        if(player.getInventory().getItem(this.hotbar.getGapSlot()) != null && !player.getInventory().getItem(this.hotbar.getGapSlot()).getType().equals(Material.GOLDEN_APPLE)) {
+            for (int i = 0; i < 9; i++) {
+                if(player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType().equals(Material.GOLDEN_APPLE)) {
+                    this.hotbar.setGapSlot(i);
                     break;
                 }
             }
         }
 
-        if(!player.getInventory().getItem(1).getType().equals(Material.IRON_PICKAXE)) {
-            for (int i = 1; i < 9; i++) {
-                if(player.getInventory().getItem(i).getType().equals(Material.IRON_PICKAXE)) {
-                    pickSlot = i;
+        if(player.getInventory().getItem(this.hotbar.getPickSlot()) != null && !player.getInventory().getItem(this.hotbar.getPickSlot()).getType().equals(Material.IRON_PICKAXE)) {
+            for (int i = 0; i < 9; i++) {
+                if(player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType().equals(Material.IRON_PICKAXE)) {
+                    this.hotbar.setPickSlot(i);
                     break;
                 }
             }
         }
-
-        hyriRTF.getConfiguration().setHotbar(player, swordSlot, gapSlot, pickSlot);
     }
 
     public void spawn() {
         Player player = this.getPlayer().getPlayer();
 
-        player.teleport(hyriRTF.getConfiguration().getLocation(this.getTeam().getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY));
-        player.setGameMode(GameMode.SURVIVAL);
-        player.setHealth(20);
-        player.setCanPickupItems(false);
+        Bukkit.getScheduler().runTaskLater(this.hyriRTF, () -> {
+            Location spawnLocation = hyriRTF.getConfiguration().getLocation(getTeam().getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY);
+            player.teleport(new Location(player.getWorld() ,spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ(), hyriRTF.getConfiguration().getPitch(getTeam().getName() + HyriRTFConfiguration.SPAWN_LOCATION_KEY),(float) 0));
+            player.setGameMode(GameMode.SURVIVAL);
+            player.setHealth(20);
+            player.setCanPickupItems(false);
 
-        this.getPlayer().getPlayer().getInventory().clear();
+            getPlayer().getPlayer().getInventory().clear();
 
-        final ItemStack sword = new ItemStack(Material.IRON_SWORD);
-        ItemMeta itemMeta = sword.getItemMeta();
-        itemMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, false);
-        sword.setItemMeta(itemMeta);
+            final ItemStack sword = new ItemStack(Material.IRON_SWORD);
+            ItemMeta itemMeta = sword.getItemMeta();
+            itemMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, false);
+            sword.setItemMeta(itemMeta);
 
-        final ItemStack pickaxe = new ItemBuilder(Material.IRON_PICKAXE)
-                .withEnchant(Enchantment.DIG_SPEED, 2)
-                .nbt().setBoolean("RTFPickaxe", true)
-                .build();
+            final ItemStack pickaxe = new ItemBuilder(Material.IRON_PICKAXE)
+                    .withEnchant(Enchantment.DIG_SPEED, 2)
+                    .nbt().setBoolean("RTFPickaxe", true)
+                    .build();
 
-        player.getInventory().addItem(new ItemStack(Material.SANDSTONE,64*9));
+            player.getInventory().addItem(new ItemStack(Material.SANDSTONE,64*9));
 
-        player.getInventory().setItem(hyriRTF.getConfiguration().swordSlot(player), sword);
-        player.getInventory().setItem(hyriRTF.getConfiguration().gappleSlot(player), new ItemStack(Material.GOLDEN_APPLE, 64));
-        player.getInventory().setItem(hyriRTF.getConfiguration().pickaxeSlot(player), pickaxe);
+            player.getInventory().setItem(hyriRTF.getConfiguration().swordSlot(player), sword);
+            player.getInventory().setItem(hyriRTF.getConfiguration().gappleSlot(player), new ItemStack(Material.GOLDEN_APPLE, 64));
+            player.getInventory().setItem(hyriRTF.getConfiguration().pickaxeSlot(player), pickaxe);
 
-        ArrayList<ItemStack> dyedArmor = new ArrayList<>();
+            ArrayList<ItemStack> dyedArmor = new ArrayList<>();
 
-        for(ItemStack itemStack : this.armor) {
-            LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemStack.getItemMeta();
-            if(this.getTeam().getColor().equals(HyriGameTeamColor.BLUE)) {
-                leatherArmorMeta.setColor(Color.BLUE);
-            }else {
-                leatherArmorMeta.setColor(Color.RED);
+            for(ItemStack itemStack : armor) {
+                LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemStack.getItemMeta();
+                if(getTeam().getColor().equals(HyriGameTeamColor.BLUE)) {
+                    leatherArmorMeta.setColor(Color.BLUE);
+                }else {
+                    leatherArmorMeta.setColor(Color.RED);
+                }
+                leatherArmorMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2, false);
+                itemStack.setItemMeta(leatherArmorMeta);
+                dyedArmor.add(itemStack);
             }
-            leatherArmorMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2, false);
-            itemStack.setItemMeta(leatherArmorMeta);
-            dyedArmor.add(itemStack);
-        }
 
-        player.getInventory().setArmorContents(dyedArmor.toArray(new ItemStack[0]));
+            player.getInventory().setArmorContents(dyedArmor.toArray(new ItemStack[0]));
+        }, 1);
     }
 
     public void setLastDamagerExist(Player newLastDamager) {

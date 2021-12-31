@@ -6,6 +6,7 @@ import fr.hyriode.hyrame.listener.HyriListener;
 import fr.hyriode.rushtheflag.game.HyriRTFTeams;
 import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
 import fr.hyriode.tools.item.ItemNBT;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -23,6 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HyriRTFListener extends HyriListener<HyriRTF> {
+
+    public static final List<Player> DEAD_PLAYERS = new ArrayList<>();
 
     public HyriRTFListener(HyriRTF plugin) {
         super(plugin);
@@ -48,10 +51,14 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
 
     @EventHandler
     public void onPlayerPlaceBlock(BlockPlaceEvent event) {
-        if(!locationIsAllow(event.getBlock().getLocation())) {
-            event.setCancelled(true);
+        if(this.plugin.getGame().getState().equals(HyriGameState.PLAYING)) {
+            if(locationIsAllow(event.getBlockPlaced().getLocation())) {
+                event.getPlayer().getItemInHand().setAmount(64);
+            }else {
+                event.setCancelled(true);
+            }
         }else {
-            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() + 1);
+            event.setCancelled(true);
         }
     }
 
@@ -90,38 +97,44 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
         HyriRTF hyriRTF = this.plugin;
 
         event.setCancelled(true);
+        if(hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
+            if (event.getPlayer().getItemInHand() != null) {
+                if(event.getPlayer().getItemInHand().getType() != Material.AIR) {
+                    ItemNBT itemNBT = new ItemNBT(event.getPlayer().getItemInHand());
+                    if(itemNBT.hasTag("RTFPickaxe")) {
+                        if(itemNBT.getBoolean("RTFPickaxe")) {
+                            event.getPlayer().getItemInHand().setDurability(Material.IRON_PICKAXE.getMaxDurability());
+                        }
+                    }
 
-        ItemNBT itemNBT = new ItemNBT(event.getPlayer().getItemInHand());
-        if(itemNBT.hasTag("RTFPickaxe")) {
-            if(itemNBT.getBoolean("RTFPickaxe")) {
-                event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - Material.IRON_PICKAXE.getMaxDurability()));
+                    if(event.getBlock().getType().equals(Material.SANDSTONE)) {
+                        if(!hyriRTF.getBlueFlag().isFlagTaken() && !hyriRTF.getRedFlag().isFlagTaken()) {
+                            event.getBlock().setType(Material.AIR);
+                        }else {
+                            if(!event.getPlayer().equals(hyriRTF.getBlueFlag().getPlayerWhoTookFlag()) || !event.getPlayer().equals(hyriRTF.getRedFlag().getPlayerWhoTookFlag())) {
+                                event.getBlock().setType(Material.AIR);
+                            }
+                        }
+                    }else if(event.getBlock().getType().equals(Material.WOOL)) {
+                        if(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(HyriRTFTeams.BLUE.getTeamName())) {
+                            if(hyriRTF.getRedFlag().getFlagLocation().equals(event.getBlock().getLocation())) {
+                                hyriRTF.getRedFlag().playerTakeFlag(event.getPlayer());
+                            }
+                        }else if(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(HyriRTFTeams.RED.getTeamName())) {
+                            if(hyriRTF.getBlueFlag().getFlagLocation().equals(event.getBlock().getLocation())) {
+                                hyriRTF.getBlueFlag().playerTakeFlag(event.getPlayer());
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        if(event.getBlock().getType().equals(Material.SANDSTONE)) {
-            if(!hyriRTF.getBlueFlag().isFlagTaken() && !hyriRTF.getRedFlag().isFlagTaken()) {
-                event.getBlock().setType(Material.AIR);
-            }else {
-                if(!event.getPlayer().equals(hyriRTF.getBlueFlag().getPlayerWhoTookFlag()) || !event.getPlayer().equals(hyriRTF.getRedFlag().getPlayerWhoTookFlag())) {
-                    event.getBlock().setType(Material.AIR);
-                }
-            }
-        }else if(event.getBlock().getType().equals(Material.WOOL)) {
-            if(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(HyriRTFTeams.BLUE.getTeamName())) {
-                if(hyriRTF.getRedFlag().getFlagLocation().equals(event.getBlock().getLocation())) {
-                    hyriRTF.getRedFlag().playerTakeFlag(event.getPlayer());
-                }
-            }else if(hyriRTF.getGame().getPlayer(event.getPlayer().getUniqueId()).getTeam().getName().equalsIgnoreCase(HyriRTFTeams.RED.getTeamName())) {
-                if(hyriRTF.getBlueFlag().getFlagLocation().equals(event.getBlock().getLocation())) {
-                    hyriRTF.getBlueFlag().playerTakeFlag(event.getPlayer());
-                }
-            }
-        }
     }
 
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
-        if(event.getEntity().getType().equals(EntityType.PLAYER)) {
+        if(event.getEntity() instanceof Player) {
             event.setCancelled(true);
         }
     }
@@ -135,17 +148,22 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
     public void onEntityTakeDamageByEntity(EntityDamageByEntityEvent event) {
         HyriRTF hyriRTF = this.plugin;
 
-        if(event.getEntity().getType().equals(EntityType.PLAYER)) {
+        if(event.getEntity() instanceof Player) {
             if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
                 event.setCancelled(true);
             }else {
                 Player player = (Player) event.getEntity();
-                if(event.getDamager().getType().equals(EntityType.PLAYER)) {
-                    hyriRTF.getGame().getPlayer(player.getUniqueId()).setLastDamagerExist((Player) event.getDamager());
+                if(event.getDamager() != null) {
+                    if(event.getDamager() instanceof Player) {
+                        hyriRTF.getGame().getPlayer(player.getUniqueId()).setLastDamagerExist((Player) event.getDamager());
+                    }
                 }
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
-                    event.setCancelled(true);
-                    hyriRTF.getGame().getPlayer(event.getEntity().getUniqueId()).kill();
+                    if(!DEAD_PLAYERS.contains(player)) {
+                        event.setCancelled(true);
+                        hyriRTF.getGame().getPlayer(event.getEntity().getUniqueId()).kill();
+                        DEAD_PLAYERS.add(player);
+                    }
                 }
             }
         }
@@ -155,14 +173,17 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
     public void onEntityTakeDamage(EntityDamageEvent event) {
         HyriRTF hyriRTF = this.plugin;
 
-        if(event.getEntity().getType().equals(EntityType.PLAYER)) {
+        if(event.getEntity() instanceof Player) {
             if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
                 event.setCancelled(true);
             }else {
                 Player player = (Player) event.getEntity();
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
-                    event.setCancelled(true);
-                    hyriRTF.getGame().getPlayer(event.getEntity().getUniqueId()).kill();
+                    if(!DEAD_PLAYERS.contains(player)) {
+                        event.setCancelled(true);
+                        hyriRTF.getGame().getPlayer(event.getEntity().getUniqueId()).kill();
+                        DEAD_PLAYERS.add(player);
+                    }
                 }
             }
         }
@@ -172,14 +193,17 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
     public void onEntityTakeDamageByBlock(EntityDamageByBlockEvent event) {
         HyriRTF hyriRTF = this.plugin;
 
-        if(event.getEntity().getType().equals(EntityType.PLAYER)) {
+        if(event.getEntity() instanceof Player) {
             if(!hyriRTF.getGame().getState().equals(HyriGameState.PLAYING)) {
                 event.setCancelled(true);
             }else {
                 Player player = (Player) event.getEntity();
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
-                    event.setCancelled(true);
-                    hyriRTF.getGame().getPlayer(event.getEntity().getUniqueId()).kill();
+                    if(!DEAD_PLAYERS.contains(player)) {
+                        event.setCancelled(true);
+                        hyriRTF.getGame().getPlayer(event.getEntity().getUniqueId()).kill();
+                        DEAD_PLAYERS.add(player);
+                    }
                 }
             }
         }
@@ -208,23 +232,18 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
     private boolean locationIsCaptured(Location location, HyriGamePlayer hyriGamePlayer) {
         HyriRTF hyriRTF = this.plugin;
 
-        Location startLocation = hyriRTF.getConfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.S_FLAG_PLACE_KEY);
-        Location endLocation = hyriRTF.getConfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.E_FLAG_PLACE_KEY);
+        Location location1 = hyriRTF.getConfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.FLAG_PLACE_1_KEY);
+        Location location2 = hyriRTF.getConfiguration().getLocation(hyriGamePlayer.getTeam().getName() + HyriRTFConfiguration.FLAG_PLACE_2_KEY);
 
-        if(location.getX() >= startLocation.getX() && location.getY() >= startLocation.getY() && location.getZ() >= startLocation.getZ()) {
-            if(location.getX() <= endLocation.getX() && location.getY() <= endLocation.getY() && location.getZ() <= endLocation.getZ()) {
-                return true;
-            }
-        }
-        return false;
+        return isInArea(location,location1, location2);
     }
 
     private boolean locationIsAllow(Location location) {
         HyriRTF hyriRTF = this.plugin;
 
-        ArrayList<Location> startLocations = new ArrayList<>();
+        ArrayList<Location> locations1 = new ArrayList<>();
 
-        ArrayList<Location> endLocations = new ArrayList<>();
+        ArrayList<Location> locations2 = new ArrayList<>();
 
         List<String> teamNames = Arrays.asList(
                 HyriRTFTeams.BLUE.getTeamName(),
@@ -232,30 +251,27 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
         );
 
         for(String teamName : teamNames) {
-            startLocations.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.S_SPAWN_PROTECT_KEY));
-            startLocations.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.S_FLAG_PROTECT_KEY));
-            endLocations.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.E_SPAWN_PROTECT_KEY));
-            endLocations.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.E_FLAG_PROTECT_KEY));
+            locations1.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.SPAWN_PROTECT_1_KEY));
+            locations1.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.FLAG_PROTECT_1_KEY));
+            locations2.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.SPAWN_PROTECT_2_KEY));
+            locations2.add(hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.FLAG_PROTECT_2_KEY));
         }
 
-        Location s_border = hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.S_BORDER);
-        Location e_border = hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.E_BORDER);
+        locations1.add(hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.BORDER1));
+        locations2.add(hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.BORDER2));
 
-        if(location.getX() < s_border.getX() || location.getY() < s_border.getY() || location.getZ() < s_border.getZ()) {
-            return false;
-        }
-
-        if(location.getX() > e_border.getX() || location.getY() > e_border.getY() || location.getZ() > e_border.getZ()) {
-            return false;
-        }
-
-        for(Location location1 : startLocations) {
-            if(location.getX() >= location1.getX() && location.getY() >= location1.getY() && location.getZ() >= location1.getZ()) {
-                if(location.getX() <= endLocations.get(startLocations.indexOf(location1)) .getX() && location.getY() <= endLocations.get(startLocations.indexOf(location1)).getY() && location.getZ() <= endLocations.get(startLocations.indexOf(location1)).getZ()) {
-                    return false;
-                }
+        for(Location location1 : locations1) {
+            Location location2 = locations2.get(locations1.indexOf(location1));
+            if(isInArea(location, location1, location2)) {
+                return false;
             }
         }
         return true;
+    }
+
+    public static boolean isInArea(Location location, Location location1, Location location2){
+        return location.getX() >= Math.min(location1.getX(), location2.getX()) && location.getX() <= Math.max(location1.getX(), location2.getX()) &&
+                location.getY() >= Math.min(location1.getY(), location2.getY()) && location.getY() <= Math.max(location1.getY(), location2.getY()) &&
+                location.getZ() >= Math.min(location1.getZ(), location2.getZ()) && location.getZ() <= Math.max(location1.getZ(), location2.getZ());
     }
 }
