@@ -141,7 +141,6 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
                     this.hyriRTF.getGame().winGame(hyriRTF.getGame().getTeam(HyriRTFTeams.BLUE.getTeamName()));
                 }
             }
-
         }
 
         Map<Material, Integer> materialList = new HashMap<Material, Integer>() {
