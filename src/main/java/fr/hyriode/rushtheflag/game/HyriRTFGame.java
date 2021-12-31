@@ -13,7 +13,10 @@ import fr.hyriode.rushtheflag.HyriRTF;
 import fr.hyriode.rushtheflag.api.RTFPlayer;
 import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
 import fr.hyriode.tools.title.Title;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 

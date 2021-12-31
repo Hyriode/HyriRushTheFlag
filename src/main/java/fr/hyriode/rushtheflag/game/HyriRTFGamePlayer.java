@@ -6,6 +6,7 @@ import fr.hyriode.hyrame.game.util.HyriGameItems;
 import fr.hyriode.hyrame.language.HyriLanguageMessage;
 import fr.hyriode.hyriapi.settings.HyriLanguage;
 import fr.hyriode.rushtheflag.HyriRTF;
+import fr.hyriode.rushtheflag.api.HyriRTFGamePlayerHotbar;
 import fr.hyriode.rushtheflag.utils.HyriRTFConfiguration;
 import fr.hyriode.tools.item.ItemBuilder;
 import fr.hyriode.tools.title.Title;
@@ -17,9 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class HyriRTFGamePlayer extends HyriGamePlayer {
 
@@ -145,32 +144,37 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
 
         }
 
-        if(player.getInventory().getItem(this.hotbar.getSwordSlot()) != null && !player.getInventory().getItem(this.hotbar.getSwordSlot()).getType().equals(Material.IRON_SWORD)) {
-            for (int i = 0; i < 9; i++) {
-                if(player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType().equals(Material.IRON_SWORD)) {
-                    this.hotbar.setSwordSlot(i);
-                    break;
+        Map<Material, Integer> materialList = new HashMap<Material, Integer>() {
+            {
+                put(Material.IRON_SWORD, hotbar.getIronSwordSlot());
+                put(Material.GOLDEN_APPLE, hotbar.getGoldenAppleSlot());
+                put(Material.IRON_PICKAXE, hotbar.getIronPickaxeSlot());
+            }
+        };
+
+        for(Material material : materialList.keySet()) {
+            if(player.getInventory().getItem(materialList.get(material)) != null && !player.getInventory().getItem(materialList.get(material)).getType().equals(material)) {
+                for (int i = 0; i < 9; i++) {
+                    if(player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType().equals(material)) {
+                        boolean valueExist = false;
+                        for(Integer integer : materialList.values()) {
+                            if(i == integer) {
+                                valueExist = true;
+                                break;
+                            }
+                        }
+                        if(!valueExist) {
+                            materialList.replace(material, i);
+                        }
+                        break;
+                    }
                 }
             }
         }
 
-        if(player.getInventory().getItem(this.hotbar.getGapSlot()) != null && !player.getInventory().getItem(this.hotbar.getGapSlot()).getType().equals(Material.GOLDEN_APPLE)) {
-            for (int i = 0; i < 9; i++) {
-                if(player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType().equals(Material.GOLDEN_APPLE)) {
-                    this.hotbar.setGapSlot(i);
-                    break;
-                }
-            }
-        }
-
-        if(player.getInventory().getItem(this.hotbar.getPickSlot()) != null && !player.getInventory().getItem(this.hotbar.getPickSlot()).getType().equals(Material.IRON_PICKAXE)) {
-            for (int i = 0; i < 9; i++) {
-                if(player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType().equals(Material.IRON_PICKAXE)) {
-                    this.hotbar.setPickSlot(i);
-                    break;
-                }
-            }
-        }
+        this.hotbar.setIronSwordSlot(materialList.get(Material.IRON_SWORD));
+        this.hotbar.setGoldenAppleSlot(materialList.get(Material.GOLDEN_APPLE));
+        this.hotbar.setIronPickaxeSlot(materialList.get(Material.IRON_PICKAXE));
     }
 
     public void spawn() {
