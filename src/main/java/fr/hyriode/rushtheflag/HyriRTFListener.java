@@ -102,7 +102,7 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
                     ItemNBT itemNBT = new ItemNBT(event.getPlayer().getItemInHand());
                     if(itemNBT.hasTag("RTFPickaxe")) {
                         if(itemNBT.getBoolean("RTFPickaxe")) {
-                            event.getPlayer().getItemInHand().setDurability(Material.IRON_PICKAXE.getMaxDurability());
+                            event.getPlayer().getItemInHand().setDurability((short) 0);
                         }
                     }
 
@@ -244,12 +244,11 @@ public class HyriRTFListener extends HyriListener<HyriRTF> {
             locations2.add(this.hyriRTF.getConfiguration().getLocation(teamName + HyriRTFConfiguration.FLAG_PROTECT_2_KEY));
         }
 
-        locations1.add(this.hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.BORDER1));
-        locations2.add(this.hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.BORDER2));
-
         for(Location location1 : locations1) {
             Location location2 = locations2.get(locations1.indexOf(location1));
             if(LocationUtil.isInArea(location, location1, location2)) {
+                return false;
+            }else if(!LocationUtil.isInArea(location,this.hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.BORDER1),this.hyriRTF.getConfiguration().getLocation(HyriRTFConfiguration.BORDER2))) {
                 return false;
             }
         }

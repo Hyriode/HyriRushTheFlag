@@ -7,8 +7,8 @@ import org.bukkit.ChatColor;
 
 public enum HyriRTFTeams {
 
-    BLUE("blueTeam", new HyriLanguageMessage("game.teams.red.displayName").addValue(HyriLanguage.FR, ChatColor.BLUE + "Bleu").addValue(HyriLanguage.EN, ChatColor.BLUE + "Blue"), HyriGameTeamColor.BLUE, 1),
-    RED("redTeam", new HyriLanguageMessage("game.teams.blue.displayName").addValue(HyriLanguage.FR, ChatColor.RED + "Rouge").addValue(HyriLanguage.EN, ChatColor.RED + "Red"), HyriGameTeamColor.RED, 1);
+    BLUE("blueTeam", new HyriLanguageMessage("game.teams.red.displayName").addValue(HyriLanguage.FR, ChatColor.BLUE + "Bleu").addValue(HyriLanguage.EN, ChatColor.BLUE + "Blue"), HyriGameTeamColor.BLUE, 2),
+    RED("redTeam", new HyriLanguageMessage("game.teams.blue.displayName").addValue(HyriLanguage.FR, ChatColor.RED + "Rouge").addValue(HyriLanguage.EN, ChatColor.RED + "Red"), HyriGameTeamColor.RED, 2);
 
     private final String teamName;
     private final HyriLanguageMessage displayName;

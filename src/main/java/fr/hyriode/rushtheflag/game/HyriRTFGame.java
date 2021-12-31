@@ -50,8 +50,8 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
         super(hyrame, plugin, "rtf", HyriRTF.RTF, HyriRTFGamePlayer.class, true);
         this.hyriRTF = (HyriRTF) plugin;
 
-        this.minPlayers = 2;
-        this.maxPlayers = 2;
+        this.minPlayers = 3;
+        this.maxPlayers = 4;
         this.registerTeams();
     }
 
