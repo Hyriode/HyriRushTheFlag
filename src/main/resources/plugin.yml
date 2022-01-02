@@ -1,9 +1,5 @@
-main: fr.hyriode.rushtheflag.HyriRTF
-
-version: 1.0.0
-
+main: fr.hyriode.rtf.HyriRTF
+version: @version@
 name: HyriRushTheFlag
-
 author: Calyx
-
 depend: [Hyrame]

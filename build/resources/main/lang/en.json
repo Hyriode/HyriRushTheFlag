@@ -1,0 +1,38 @@
+{
+  "team.blue.display": "Blue",
+  "team.red.display": "Red",
+  "team.green.display": "Green",
+  "team.yellow.display": "Yellow",
+  "team.aqua.display": "Aqua",
+  "team.pink.display": "Pink",
+  "team.white.display": "White",
+  "team.black.display": "Black",
+
+  "character.colon": ": ",
+
+  "scoreboard.kills.display": "Kills: ",
+  "scoreboard.final-kills.display": "Final Kills: ",
+  "scoreboard.deaths.display": "Deaths: ",
+  "scoreboard.time.display": "Time: ",
+
+  "message.flag-respawn": "The flag of the %team% team respawned!",
+  "message.flag-brought-back": " brought back the flag!",
+  "message.flag-lost": " lost the flag!",
+  "message.flag-captured": " captured the flag!",
+  "message.no-life-team": "The %team% team has no more lives! Kill the remaining players of this team to win the game!",
+  "message.kill-by-player": " was killed by ",
+  "message.and-void": " and the void.",
+  "message.died-void": " fell into the void.",
+  "message.died": " died.",
+  "message.eliminated": " Eliminated!",
+
+  "title.flag-captured": "You have the flag!",
+  "title.team-flag-captured": "Your flag has been captured!",
+  "title.no-life-team": "You have no more lives!",
+
+  "subtitle.flag-captured": "Go back to your base",
+  "subtitle.no-life-team": "You will no longer respawn",
+
+  "error.place-block": "You can't place blocks here!",
+  "error.break-flag": "You can't break your own flag!"
+}

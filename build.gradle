@@ -16,7 +16,7 @@ java {
 }
 
 compileJava {
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_1_8
     options.encoding = 'UTF-8'
 }
 
@@ -24,7 +24,6 @@ repositories {
     mavenCentral()
 
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-
     maven { url = 'https://oss.sonatype.org/content/groups/public/' }
 
     maven {
@@ -32,17 +31,19 @@ repositories {
         url = 'https://maven.pkg.github.com/Hyriode/Hyrame/'
 
         credentials {
-            username System.getenv('USER')
+            username System.getenv('USERNAME')
             password System.getenv('TOKEN')
         }
     }
 }
 
-shadowJar {
-    configurations = [project.configurations.shadow]
-}
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'fr.hyriode:hyrame:1.1.2'
+    implementation 'fr.hyriode:hyrame:1.1.3'
+}
+
+processResources {
+    filter {
+        it.replace('@version@', project.version)
+    }
 }
