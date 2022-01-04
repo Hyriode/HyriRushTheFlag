@@ -14,9 +14,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Project: HyriRushTheFlag
@@ -35,7 +33,7 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
         super(hyrame, plugin, "rtf", "RushTheFlag", HyriRTFGamePlayer.class);
         this.plugin = plugin;
         this.spawn = this.plugin.getConfiguration().getSpawn();
-        this.minPlayers = 3;
+        this.minPlayers = 2;
         this.maxPlayers = 4;
 
         this.registerTeams();
@@ -91,7 +89,8 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
         gamePlayer.setPlugin(this.plugin);
 
         HyriRTFPlayer account = this.plugin.getAPI().getPlayerManager().getPlayer(uuid);
-        if (account == null) {
+
+        if(this.plugin.getAPI().getPlayerManager().getPlayer(uuid) == null) {
             account = new HyriRTFPlayer(uuid);
         }
 

@@ -1,5 +1,8 @@
 package fr.hyriode.rtf.api.hotbar;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,10 +13,21 @@ import java.util.Map;
  */
 public class HyriRTFHotBar {
 
+    public static Map<Item, Material> HOTBAR_ITEMS;
+
+    static {
+        HOTBAR_ITEMS = new HashMap<>();
+        HOTBAR_ITEMS.put(Item.SWORD, Material.IRON_SWORD);
+        HOTBAR_ITEMS.put(Item.PICKAXE, Material.IRON_PICKAXE);
+        HOTBAR_ITEMS.put(Item.GOLDEN_APPLE, Material.GOLDEN_APPLE);
+    }
+
     private final Map<Item, Integer> items;
 
     public HyriRTFHotBar() {
         this.items = new HashMap<>();
+
+        Bukkit.broadcastMessage("HOTBAR 2");
 
         this.items.put(Item.SWORD, 0);
         this.items.put(Item.PICKAXE, 2);

@@ -80,7 +80,7 @@ public class PlayerListener extends HyriListener<HyriRTF> {
                 }
 
                 if(target.getHealth() - event.getFinalDamage() <= 0) {
-                    event.setCancelled(true);
+                    target.setHealth(20);
 
                     if (!game.getDeadPlayers().contains(gamePlayer)) {
                         gamePlayer.kill(false);
@@ -101,7 +101,7 @@ public class PlayerListener extends HyriListener<HyriRTF> {
                 final HyriRTFGamePlayer gamePlayer = game.getPlayer(player.getUniqueId());
 
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
-                    event.setCancelled(true);
+                    player.setHealth(20);
 
                     if (!game.getDeadPlayers().contains(gamePlayer)) {
                         gamePlayer.kill(false);

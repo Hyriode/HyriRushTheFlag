@@ -34,5 +34,6 @@
   "subtitle.no-life-team": "You will no longer respawn",
 
   "error.place-block": "You can't place blocks here!",
-  "error.break-flag": "You can't break your own flag!"
+  "error.break-block.spleef": "You can't spleef a team member",
+  "error.break-block.flag": "You can't break your own flag!"
 }

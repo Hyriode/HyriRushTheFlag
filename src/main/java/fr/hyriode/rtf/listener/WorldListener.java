@@ -1,10 +1,12 @@
 package fr.hyriode.rtf.listener;
 
+import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.listener.HyriListener;
 import fr.hyriode.hyrame.utils.LocationUtil;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.config.HyriRTFConfig;
 import fr.hyriode.rtf.game.HyriRTFFlag;
+import fr.hyriode.rtf.game.HyriRTFGamePlayer;
 import fr.hyriode.rtf.game.HyriRTFGameTeam;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,6 +19,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -61,12 +64,37 @@ public class WorldListener extends HyriListener<HyriRTF> {
                         team.getFlag().capture(player);
                     } else {
                         event.setCancelled(true);
-                        player.sendMessage(ChatColor.RED + HyriRTF.getLanguageManager().getValue(player, "error.break-flag"));
+                        player.sendMessage(ChatColor.RED + HyriRTF.getLanguageManager().getValue(player, "error.break-block.flag"));
                     }
                 }
             }
         } else if (!block.hasMetadata(SANDSTONE_METADATA_KEY)) {
             event.setCancelled(true);
+        }else {
+            final HyriRTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(event.getPlayer().getUniqueId());
+            boolean playerIsOnTheBlock = false;
+
+            List<Location> locations = Arrays.asList(
+                    event.getBlock().getLocation(),
+                    event.getBlock().getLocation().add(1, 0, 0),
+                    event.getBlock().getLocation().add(0, 0, 1),
+                    event.getBlock().getLocation().add(-1, 0, 0),
+                    event.getBlock().getLocation().add(0, 0, -1)
+            );
+
+            for(HyriGamePlayer gamePlayer1 : gamePlayer.getTeam().getPlayers()) {
+                if(!gamePlayer1.equals(gamePlayer)) {
+                    for(Location location : locations) {
+                        if(LocationUtil.roundLocation(gamePlayer1.getPlayer().getLocation().subtract(0, 1, 0), 0).equals(location)) {
+                            playerIsOnTheBlock = true;
+                        }
+                    }
+                }
+            }
+            if(playerIsOnTheBlock) {
+                event.setCancelled(true);
+                event.getPlayer().sendMessage(ChatColor.RED + HyriRTF.getLanguageManager().getValue(player, "error.break-block.spleef"));
+            }
         }
     }
 

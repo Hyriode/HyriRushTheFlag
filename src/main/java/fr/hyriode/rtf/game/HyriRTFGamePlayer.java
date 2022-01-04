@@ -5,9 +5,8 @@ import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.util.HyriDeadScreen;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.hyrame.language.IHyriLanguageManager;
-import fr.hyriode.hyrame.title.Title;
-import fr.hyriode.hyrame.utils.Symbols;
 import fr.hyriode.rtf.HyriRTF;
+import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
 import fr.hyriode.rtf.game.scoreboard.HyriRTFScoreboard;
 import org.bukkit.ChatColor;
@@ -20,6 +19,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -60,9 +60,9 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         final PlayerInventory inventory = this.player.getInventory();
 
         inventory.addItem(new ItemBuilder(Material.SANDSTONE, 64 * 9, 2).build());
-        inventory.setItem(8, new ItemBuilder(Material.GOLDEN_APPLE, 16).build());
-        inventory.setItem(0, new ItemBuilder(Material.IRON_SWORD).withEnchant(Enchantment.DAMAGE_ALL, 1).unbreakable().build());
-        inventory.setItem(1, new ItemBuilder(Material.IRON_PICKAXE).withEnchant(Enchantment.DIG_SPEED, 2).unbreakable().build());
+        inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.GOLDEN_APPLE), new ItemBuilder(Material.GOLDEN_APPLE, 16).build());
+        inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.SWORD), new ItemBuilder(Material.IRON_SWORD).withEnchant(Enchantment.DAMAGE_ALL, 1).unbreakable().build());
+        inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.PICKAXE), new ItemBuilder(Material.IRON_PICKAXE).withEnchant(Enchantment.DIG_SPEED, 2).unbreakable().build());
     }
 
     public void giveArmor() {
@@ -80,6 +80,33 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         this.hide();
 
         final PlayerInventory playerInventory = this.player.getInventory();
+
+        final Map<HyriRTFHotBar.Item, Integer> hotbar = this.account.getHotBar().getItems();
+
+        for(HyriRTFHotBar.Item item : hotbar.keySet()) {
+            if(playerInventory.getItem(hotbar.get(item)) != null) {
+                if(!playerInventory.getItem(hotbar.get(item)).getType().equals(HyriRTFHotBar.HOTBAR_ITEMS.get(item))) {
+                    for (int i = 0; i < 9; i++) {
+                        if(playerInventory.getItem(i) != null) {
+                            if(playerInventory.getItem(i).getType().equals(HyriRTFHotBar.HOTBAR_ITEMS.get(item))) {
+                                boolean valueExist = false;
+                                for(Integer integer : hotbar.values()) {
+                                    if (i == integer) {
+                                        valueExist = true;
+                                        break;
+                                    }
+                                }
+                                if(!valueExist) {
+                                    hotbar.put(item, i);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
         playerInventory.setArmorContents(null);
         playerInventory.clear();
@@ -234,7 +261,7 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
                 public void run() {
                     setLastHitter(null);
                 }
-            }.runTaskLater(this.plugin, 20 * 25L);
+            }.runTaskLater(this.plugin, 20 * 15L);
         }
     }
 

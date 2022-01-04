@@ -2,6 +2,7 @@ package fr.hyriode.rtf.api.player;
 
 import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
 import fr.hyriode.rtf.api.statistics.HyriRTFStatistics;
+import org.bukkit.Bukkit;
 
 import java.util.UUID;
 
@@ -14,12 +15,13 @@ public class HyriRTFPlayer {
 
     private final UUID uniqueId;
     private HyriRTFStatistics statistics;
-    private HyriRTFHotBar hotBar;
+    private final HyriRTFHotBar hotBar;
 
     public HyriRTFPlayer(UUID uniqueId) {
         this.uniqueId = uniqueId;
         this.statistics = new HyriRTFStatistics();
         this.hotBar = new HyriRTFHotBar();
+        Bukkit.broadcastMessage("HOTBAR");
     }
 
     public UUID getUniqueId() {
@@ -36,10 +38,6 @@ public class HyriRTFPlayer {
 
     public HyriRTFHotBar getHotBar() {
         return this.hotBar;
-    }
-
-    public void setHotBar(HyriRTFHotBar hotBar) {
-        this.hotBar = hotBar;
     }
 
 }
