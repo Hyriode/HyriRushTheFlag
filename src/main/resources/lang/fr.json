@@ -34,6 +34,6 @@
   "subtitle.no-life-team": "Tu ne pourras plus réapparaître",
 
   "error.place-block": "Tu ne peux pas placer de blocs à cet endroit!",
-  "error.break-block.spleef": "Tu ne peux pas faire tomber un allié",
+  "error.break-block.spleef": "Tu ne peux pas casser de blocs sous tes équipiers",
   "error.break- block.flag": "Tu ne peux pas casser ton drapeau!"
 }

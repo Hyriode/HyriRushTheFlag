@@ -25,7 +25,7 @@ public class HyriRTFHotBar {
 
     public HyriRTFHotBar() {
         this.items = new HashMap<>();
-        
+
         this.items.put(Item.SWORD, 0);
         this.items.put(Item.PICKAXE, 2);
         this.items.put(Item.GOLDEN_APPLE, 3);
