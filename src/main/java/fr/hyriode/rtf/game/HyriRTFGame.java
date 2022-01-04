@@ -90,7 +90,7 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
         HyriRTFPlayer account = this.plugin.getAPI().getPlayerManager().getPlayer(uuid);
 
-        if(this.plugin.getAPI().getPlayerManager().getPlayer(uuid) == null) {
+        if(account == null) {
             account = new HyriRTFPlayer(uuid);
         }
 
