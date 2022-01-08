@@ -14,7 +14,7 @@ public class HyriRTFPlayer {
 
     private final UUID uniqueId;
     private HyriRTFStatistics statistics;
-    private final HyriRTFHotBar hotBar;
+    private HyriRTFHotBar hotBar;
 
     public HyriRTFPlayer(UUID uniqueId) {
         this.uniqueId = uniqueId;
@@ -32,6 +32,10 @@ public class HyriRTFPlayer {
 
     public void setStatistics(HyriRTFStatistics statistics) {
         this.statistics = statistics;
+    }
+
+    public void setHotBar(HyriRTFHotBar hotBar) {
+        this.hotBar = hotBar;
     }
 
     public HyriRTFHotBar getHotBar() {

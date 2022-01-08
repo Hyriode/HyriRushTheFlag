@@ -74,5 +74,4 @@ public class HyriRTFAPI {
     public HyriRTFPlayerManager getPlayerManager() {
         return this.playerManager;
     }
-
 }

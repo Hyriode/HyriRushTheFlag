@@ -8,6 +8,7 @@ import fr.hyriode.rtf.config.HyriRTFConfig;
 import fr.hyriode.rtf.game.HyriRTFGame;
 import fr.hyriode.rtf.game.HyriRTFGamePlayer;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -115,7 +116,7 @@ public class PlayerListener extends HyriListener<HyriRTF> {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (event.getSlotType() == InventoryType.SlotType.ARMOR) {
+        if (event.getSlotType() == InventoryType.SlotType.ARMOR || event.getCurrentItem().getType().equals(Material.WOOL)) {
             event.setCancelled(true);
         }
     }

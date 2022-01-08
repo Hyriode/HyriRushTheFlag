@@ -10,6 +10,7 @@ import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
 import fr.hyriode.rtf.api.statistics.HyriRTFStatistics;
 import fr.hyriode.rtf.game.scoreboard.HyriRTFScoreboard;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -123,12 +124,14 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
             this.plugin.getAPI().getPlayerManager().sendPlayer(account);
         }
-
         super.handleLogout(player);
     }
 
     @Override
     public void win(HyriGameTeam team) {
+        for(Player player : Bukkit.getServer().getOnlinePlayers()) {
+            this.plugin.getAPI().getPlayerManager().sendPlayer(this.plugin.getAPI().getPlayerManager().getPlayer(player.getUniqueId()));
+        }
         super.win(team);
     }
 

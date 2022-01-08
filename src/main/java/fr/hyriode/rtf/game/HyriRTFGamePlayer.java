@@ -107,7 +107,6 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
             }
         }
 
-
         playerInventory.setArmorContents(null);
         playerInventory.clear();
 
@@ -249,19 +248,21 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
     }
 
     public void setLastHitter(Player lastHitter) {
-        if (!this.game.areInSameTeam(this.player, lastHitter)) {
-            this.lastHitter = lastHitter;
+        if(lastHitter != null) {
+            if (!this.game.areInSameTeam(this.player, lastHitter)) {
+                this.lastHitter = lastHitter;
 
-            if (this.lastHitterTask != null) {
-                this.lastHitterTask.cancel();
-            }
-
-            this.lastHitterTask = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    setLastHitter(null);
+                if (this.lastHitterTask != null) {
+                    this.lastHitterTask.cancel();
                 }
-            }.runTaskLater(this.plugin, 20 * 15L);
+
+                this.lastHitterTask = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        setLastHitter(null);
+                    }
+                }.runTaskLater(this.plugin, 20 * 15L);
+            }
         }
     }
 
