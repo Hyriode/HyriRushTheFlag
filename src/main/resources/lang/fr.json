@@ -25,15 +25,17 @@
   "message.died-void": " est tombé dans le vide.",
   "message.died": " est mort.",
   "message.eliminated": " Eliminé !",
+  "message.event-swap": "Vous avez été swap",
+  "message.event-shadow-blocks": "Les blocks posés disparaissent désormais après 3 secondes",
 
-  "title.flag-captured": "Tu as le drapeau !",
+  "title.flag-captured": "Vous avez le drapeau !",
   "title.team-flag-captured": "Votre drapeau a été capturé !",
   "title.no-life-team": "Vous n'avez plus de vies !",
 
-  "subtitle.flag-captured": "Retourne à ta base",
-  "subtitle.no-life-team": "Tu ne pourras plus réapparaître",
+  "subtitle.flag-captured": "Retournez vite à votre base",
+  "subtitle.no-life-team": "Vous ne pouvez plus réapparaître",
 
-  "error.place-block": "Tu ne peux pas placer de blocs à cet endroit!",
-  "error.break-block.spleef": "Tu ne peux pas casser de blocs sous tes équipiers",
-  "error.break- block.flag": "Tu ne peux pas casser ton drapeau!"
+  "error.place-block": "Vous ne pouvez pas placer de blocs à cet endroit!",
+  "error.break-block.spleef": "Vous ne pouvez pas casser de blocs sous vos équipiers",
+  "error.break- block.flag": "Vous ne pouvez pas casser de block autour de votre drapeau!"
 }

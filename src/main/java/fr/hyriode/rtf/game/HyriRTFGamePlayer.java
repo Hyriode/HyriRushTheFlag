@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -79,6 +80,8 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
 
         this.hide();
 
+        this.player.getActivePotionEffects().forEach(effect -> this.player.removePotionEffect(effect.getType()));
+
         final PlayerInventory playerInventory = this.player.getInventory();
 
         final Map<HyriRTFHotBar.Item, Integer> hotbar = this.account.getHotBar().getItems();
@@ -113,6 +116,7 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         this.player.setHealth(20.0F);
         this.player.setGameMode(GameMode.SPECTATOR);
         this.player.teleport(this.plugin.getConfiguration().getSpawn());
+        player.getPlayer().setVelocity(new Vector(0,0,0));
 
         this.addDeath();
 
@@ -162,6 +166,7 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
                 this.show();
 
                 this.player.teleport(this.team.getSpawnLocation());
+                player.getPlayer().setVelocity(new Vector(0,0,0));
 
                 this.spawn();
             });

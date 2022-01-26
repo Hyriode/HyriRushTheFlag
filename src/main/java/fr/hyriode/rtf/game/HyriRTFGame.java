@@ -9,6 +9,7 @@ import fr.hyriode.hyrame.utils.Pair;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
 import fr.hyriode.rtf.api.statistics.HyriRTFStatistics;
+import fr.hyriode.rtf.game.events.Event;
 import fr.hyriode.rtf.game.scoreboard.HyriRTFScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -102,35 +103,24 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
         HyriGameItems.LEAVE_ITEM.give(this.hyrame, player, 8);
 
         player.teleport(this.spawn);
+
+        Event.registerEvents(this.plugin);
+        Bukkit.broadcastMessage(String.valueOf(Event.EVENTS));
     }
 
     @Override
     public void handleLogout(Player player) {
         final UUID uuid = player.getUniqueId();
         final HyriRTFGamePlayer gamePlayer = this.getPlayer(uuid);
-        final HyriRTFPlayer account = gamePlayer.getAccount();
-        final HyriRTFStatistics statistics = account.getStatistics();
-
-        if (this.state != HyriGameState.READY && this.state != HyriGameState.WAITING) {
-            gamePlayer.getScoreboard().hide();
-
-            statistics.setPlayedTime(gamePlayer.getPlayedTime());
-            statistics.addGamesPlayed(1);
-            statistics.addKills(gamePlayer.getKills());
-            statistics.addFinalKills(gamePlayer.getFinalKills());
-            statistics.addDeaths(gamePlayer.getDeaths());
-            statistics.addCapturedFlags(gamePlayer.getCapturedFlags());
-            statistics.addFlagsBroughtBack(gamePlayer.getFlagsBroughtBack());
-
-            this.plugin.getAPI().getPlayerManager().sendPlayer(account);
-        }
+        this.refreshAPIPlayer(gamePlayer);
         super.handleLogout(player);
     }
 
     @Override
     public void win(HyriGameTeam team) {
         for(Player player : Bukkit.getServer().getOnlinePlayers()) {
-            this.plugin.getAPI().getPlayerManager().sendPlayer(this.plugin.getAPI().getPlayerManager().getPlayer(player.getUniqueId()));
+            final HyriRTFGamePlayer gamePlayer = this.getPlayer(player.getUniqueId());
+            this.refreshAPIPlayer(gamePlayer);
         }
         super.win(team);
     }
@@ -163,6 +153,26 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
     public HyriRTFGameTeam getSecondTeam() {
         return this.secondTeam;
+    }
+
+    private void refreshAPIPlayer(HyriRTFGamePlayer gamePlayer) {
+        final HyriRTFPlayer account = gamePlayer.getAccount();
+        final HyriRTFStatistics statistics = account.getStatistics();
+
+        if (this.state != HyriGameState.READY && this.state != HyriGameState.WAITING) {
+            gamePlayer.getScoreboard().hide();
+
+            statistics.setPlayedTime(gamePlayer.getPlayedTime());
+            statistics.addGamesPlayed(1);
+            statistics.addKills(gamePlayer.getKills());
+            statistics.addFinalKills(gamePlayer.getFinalKills());
+            statistics.addDeaths(gamePlayer.getDeaths());
+            statistics.addCapturedFlags(gamePlayer.getCapturedFlags());
+            statistics.addFlagsBroughtBack(gamePlayer.getFlagsBroughtBack());
+
+            this.plugin.getAPI().getPlayerManager().sendPlayer(account);
+        }
+
     }
 
 }

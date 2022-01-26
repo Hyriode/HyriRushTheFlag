@@ -8,6 +8,7 @@ import fr.hyriode.rtf.config.HyriRTFConfig;
 import fr.hyriode.rtf.game.HyriRTFFlag;
 import fr.hyriode.rtf.game.HyriRTFGamePlayer;
 import fr.hyriode.rtf.game.HyriRTFGameTeam;
+import fr.hyriode.rtf.game.events.Event;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,6 +44,10 @@ public class WorldListener extends HyriListener<HyriRTF> {
 
         if (event.isCancelled()) {
             player.sendMessage(ChatColor.RED + HyriRTF.getLanguageManager().getValue(player, "error.place-block"));
+        }else {
+            if(Event.EVENTS.get("shadowBlocks").isRunning()) {
+                Event.EVENTS.get("shadowBlocks").send(event.getBlock());
+            }
         }
     }
 

@@ -25,6 +25,8 @@
   "message.died-void": " fell into the void.",
   "message.died": " died.",
   "message.eliminated": " Eliminated!",
+  "message.event-swap": "You have been swapped",
+  "message.event-shadow-blocks": "The blocks placed now disappear after 3 seconds",
 
   "title.flag-captured": "You have the flag!",
   "title.team-flag-captured": "Your flag has been captured!",
