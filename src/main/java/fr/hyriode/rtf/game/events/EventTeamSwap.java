@@ -23,37 +23,41 @@ public class EventTeamSwap extends Event {
 
         List<HyriGamePlayer> team1 = this.plugin.getGame().getFirstTeam().getPlayers();
         List<HyriGamePlayer> team2 = this.plugin.getGame().getSecondTeam().getPlayers();
-        if(!team1.isEmpty()) {
+
+        if(team1.isEmpty()) {
+            for(HyriGamePlayer player : team2) {
+                if(!player.isDead()) {
+                    this.teleport(player, this.plugin.getGame().getFirstTeam().getSpawnLocation());
+                }
+            }
+        }else if(team2.isEmpty()) {
+            for (HyriGamePlayer player : team1) {
+                if(!player.isDead()) {
+                    this.teleport(player, this.plugin.getGame().getSecondTeam().getSpawnLocation());
+                }
+            }
+        }else {
             Collections.shuffle(team1);
             Collections.shuffle(team2);
 
             for(HyriGamePlayer player : team1) {
                 if(!player.isDead()) {
-                    if(!team2.isEmpty()) {
-                        HyriRTFGamePlayer player1 = this.plugin.getGame().getPlayer(team2.get(team1.indexOf(player)).getUUID());
-                        if(player1 == null || player1.isDead()) {
-                            player.getPlayer().teleport(this.plugin.getGame().getSecondTeam().getSpawnLocation());
-                            player.getPlayer().setVelocity(new Vector(0,0,0));
-                        }else {
-                            Location playerLocation = player.getPlayer().getLocation();
-                            player.getPlayer().teleport(player1.getPlayer().getLocation());
-                            player.getPlayer().setVelocity(new Vector(0,0,0));
-                            player1.getPlayer().teleport(playerLocation);
-                            player1.getPlayer().setVelocity(new Vector(0,0,0));
-                        }
+                    HyriRTFGamePlayer player1 = this.plugin.getGame().getPlayer(team2.get(team1.indexOf(player)).getUUID());
+                    if(player1 == null || player1.isDead()) {
+                        this.teleport(player, this.plugin.getGame().getSecondTeam().getSpawnLocation());
                     }else {
-                        player.getPlayer().teleport(this.plugin.getGame().getSecondTeam().getSpawnLocation());
+                        Location playerLocation = player.getPlayer().getLocation();
+                        this.teleport(player, player1.getPlayer().getLocation());
+                        this.teleport(player1, playerLocation);
                     }
-                }
-            }
-        }else {
-            for(HyriGamePlayer player : team2) {
-                if(!player.isDead()) {
-                    player.getPlayer().teleport(this.plugin.getGame().getSecondTeam().getSpawnLocation());
-                    player.getPlayer().setVelocity(new Vector(0,0,0));
                 }
             }
         }
         this.isRunning =  false;
+    }
+
+    private void teleport(HyriGamePlayer player, Location location) {
+        player.getPlayer().teleport(location);
+        player.getPlayer().setVelocity(new Vector(0,0,0));
     }
 }

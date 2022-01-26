@@ -22,10 +22,10 @@ public class EventCommand implements CommandExecutor {
             if(sender instanceof Player) {
                 Player player = (Player) sender;
                 if(args.length == 1) {
-                    for(String eventName : Event.EVENTS.keySet()) {
-                        if(args[0].equals(eventName)) {
-                            Event.EVENTS.get(eventName).execute(Collections.singleton(this.plugin.getGame().getPlayer(player.getUniqueId())));
-                            player.sendMessage("execute " + eventName);
+                    for(Events event : Events.values()) {
+                        if(args[0].equals(event.name())) {
+                            Event.EVENTS.get(event.name()).execute(Collections.singleton(this.plugin.getGame().getPlayer(player.getUniqueId())));
+                            player.sendMessage("execute " + event.name());
                             break;
                         }
                     }

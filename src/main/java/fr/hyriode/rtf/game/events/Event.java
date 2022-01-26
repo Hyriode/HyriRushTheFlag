@@ -22,8 +22,8 @@ public abstract class Event {
     }
 
     public static void registerEvents(HyriRTF plugin) {
-        new EventTeamSwap(plugin, "swap");
-        new EventShadowBlocks(plugin, "shadowBlocks");
+        new EventTeamSwap(plugin, Events.TEAM_SWAP.name());
+        new EventShadowBlocks(plugin, Events.SHADOW_BLOCK.name());
     }
 
     public abstract void execute(Collection<HyriRTFGamePlayer> players);
