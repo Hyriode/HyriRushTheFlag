@@ -9,7 +9,7 @@ import fr.hyriode.hyrame.utils.Pair;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
 import fr.hyriode.rtf.api.statistics.HyriRTFStatistics;
-import fr.hyriode.rtf.game.events.Event;
+import fr.hyriode.rtf.game.event.Event;
 import fr.hyriode.rtf.game.scoreboard.HyriRTFScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -53,6 +53,7 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
     @Override
     public void start() {
+        Event.registerEvents(this.plugin);
         super.start();
 
         this.firstTeam.getFlag().place();
@@ -104,8 +105,6 @@ public class HyriRTFGame extends HyriGame<HyriRTFGamePlayer> {
 
         player.teleport(this.spawn);
 
-        Event.registerEvents(this.plugin);
-        Bukkit.broadcastMessage(String.valueOf(Event.EVENTS));
     }
 
     @Override

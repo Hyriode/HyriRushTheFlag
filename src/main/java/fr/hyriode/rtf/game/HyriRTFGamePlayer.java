@@ -8,7 +8,10 @@ import fr.hyriode.hyrame.language.IHyriLanguageManager;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
+import fr.hyriode.rtf.game.event.Event;
+import fr.hyriode.rtf.game.event.Events;
 import fr.hyriode.rtf.game.scoreboard.HyriRTFScoreboard;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -53,7 +56,12 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         this.player.setGameMode(GameMode.SURVIVAL);
         this.player.setHealth(20.0F);
 
-        this.giveHotBar();
+        Bukkit.broadcastMessage(String.valueOf(Event.EVENTS.get(Events.SNOWED.name())));
+        if(!Event.EVENTS.get(Events.SNOWED.name()).isRunning()) {
+            this.giveHotBar();
+        }else {
+            Event.EVENTS.get(Events.SNOWED.name()).send(this);
+        }
         this.giveArmor();
     }
 
@@ -194,6 +202,11 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
                 .withEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                 .unbreakable()
                 .build();
+    }
+
+    public boolean hasFlag() {
+        HyriRTFGameTeam team = (HyriRTFGameTeam) this.team;
+        return team.getOppositeTeam().getFlag().getHolder() != null && team.getOppositeTeam().getFlag().getHolder().equals(this.getPlayer());
     }
 
     public HyriRTFPlayer getAccount() {

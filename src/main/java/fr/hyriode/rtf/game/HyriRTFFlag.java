@@ -113,7 +113,7 @@ public class HyriRTFFlag {
         final HyriRTFGamePlayer gamePlayer = game.getPlayer(player.getUniqueId());
         final IHyriLanguageManager languageManager = HyriRTF.getLanguageManager();
         final PlayerInventory inventory = player.getInventory();
-        final byte data = this.team.getColor().getData();
+        final byte data = this.team.getColor().getDyeColor().getData();
 
         player.setGameMode(GameMode.ADVENTURE);
 

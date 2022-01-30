@@ -14,12 +14,14 @@ import org.bukkit.entity.Player;
 public class HyriRTFGameTeam extends HyriGameTeam {
 
     private int lives;
+    private HyriRTF plugin;
 
     private final HyriRTFConfig.Team config;
     private final HyriRTFFlag flag;
 
     public HyriRTFGameTeam(HyriRTF plugin, HyriRTFTeams team, HyriRTFConfig.Team config) {
         super(team.getName(), team.getDisplayName(), team.getColor(), 2);
+        this.plugin = plugin;
         this.config = config;
         this.spawnLocation = this.config.getSpawn();
         this.flag = new HyriRTFFlag(plugin, this);
@@ -32,6 +34,14 @@ public class HyriRTFGameTeam extends HyriGameTeam {
             return LocationUtil.isInArea(player.getLocation(), config.getSpawnAreaFirst(), config.getSpawnAreaSecond());
         }
         return false;
+    }
+
+    public HyriRTFGameTeam getOppositeTeam() {
+        if(this.equals(this.plugin.getGame().getFirstTeam())) {
+            return this.plugin.getGame().getSecondTeam();
+        }else {
+            return this.plugin.getGame().getFirstTeam();
+        }
     }
 
     public HyriRTFConfig.Team getConfig() {

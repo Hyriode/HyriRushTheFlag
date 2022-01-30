@@ -8,8 +8,8 @@ import fr.hyriode.rtf.config.HyriRTFConfig;
 import fr.hyriode.rtf.game.HyriRTFFlag;
 import fr.hyriode.rtf.game.HyriRTFGamePlayer;
 import fr.hyriode.rtf.game.HyriRTFGameTeam;
-import fr.hyriode.rtf.game.events.Event;
-import fr.hyriode.rtf.game.events.Events;
+import fr.hyriode.rtf.game.event.Event;
+import fr.hyriode.rtf.game.event.Events;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -114,7 +114,11 @@ public class WorldListener extends HyriListener<HyriRTF> {
             block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(this.plugin, ""));
 
             player.getItemInHand().setAmount(64);
-        } else {
+        } else if(Event.EVENTS.get(Events.SNOWED.name()).isRunning() && block.getType() == Material.SNOW_BLOCK){
+            block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(this.plugin, ""));
+
+            player.getItemInHand().setAmount(64);
+        }else {
             return false;
         }
 

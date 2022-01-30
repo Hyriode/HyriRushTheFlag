@@ -73,7 +73,7 @@ public class HyriRTFScoreboard extends Scoreboard {
             return teamDisplay + colon + ChatColor.AQUA + team.getLives();
         }
 
-        return teamDisplay + colon + ChatColor.RED + Symbols.BOLD_STYLIZED_CROSS + ChatColor.WHITE + " " + Symbols.BOLD_DOT + " " + ChatColor.AQUA + team.getPlayersPlaying().size();
+        return teamDisplay + colon + ChatColor.RED + Symbols.CROSS_STYLIZED_BOLD + ChatColor.WHITE + " " + Symbols.DOT_BOLD + " " + ChatColor.AQUA + team.getPlayersPlaying().size();
     }
 
     private String getTimeLine() {
