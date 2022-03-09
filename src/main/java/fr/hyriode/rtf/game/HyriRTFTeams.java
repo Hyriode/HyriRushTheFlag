@@ -28,15 +28,15 @@ public enum HyriRTFTeams {
 
     private static final List<Pair<HyriRTFTeams, HyriRTFTeams>> PAIRS = Arrays.asList(new Pair<>(BLUE, RED), new Pair<>(GREEN, YELLOW), new Pair<>(AQUA, PINK), new Pair<>(WHITE, BLACK));
 
-    private final String name;
-    private final HyriGameTeamColor color;
-    private final Supplier<HyriLanguageMessage> displayName;
+        private final String name;
+        private final HyriGameTeamColor color;
+        private final Supplier<HyriLanguageMessage> displayName;
 
-    HyriRTFTeams(String name, HyriGameTeamColor color) {
-        this.name = name;
-        this.color = color;
-        this.displayName = () -> HyriRTF.getLanguageManager().getMessage("team." + this.name + ".display");
-    }
+        HyriRTFTeams(String name, HyriGameTeamColor color) {
+            this.name = name;
+            this.color = color;
+            this.displayName = () -> HyriRTF.getLanguageManager().getMessage("team." + this.name + ".display");
+        }
 
     public String getName() {
         return this.name;

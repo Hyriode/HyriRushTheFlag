@@ -23,7 +23,7 @@ public class EventCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 if(args.length == 1) {
                     for(Events event : Events.values()) {
-                        if(args[0].equals(event.name())) {
+                        if(args[0].equalsIgnoreCase(event.name())) {
                             Event.EVENTS.get(event.name()).execute(Collections.singleton(this.plugin.getGame().getPlayer(player.getUniqueId())));
                             player.sendMessage("execute " + event.name());
                             break;
