@@ -18,8 +18,8 @@ compileJava {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 
-    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { url = 'https://oss.sonatype.org/content/groups/public/' }
 
     maven {
@@ -35,7 +35,8 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'fr.hyriode:hyrame:1.1.6'
+    implementation group: 'org.spigotmc', name: 'spigot', version: '1.8.8-R0.1-SNAPSHOT'
+    implementation 'fr.hyriode:hyrame:+'
 }
 
 processResources {

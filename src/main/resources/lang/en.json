@@ -11,9 +11,10 @@
   "character.colon": ": ",
 
   "scoreboard.kills.display": "Kills: ",
-  "scoreboard.final-kills.display": "Final Kills: ",
   "scoreboard.deaths.display": "Deaths: ",
+  "scoreboard.final-kills.display": "Final Kills: ",
   "scoreboard.time.display": "Time: ",
+  "scoreboard.you.display": " &7(YOU)",
 
   "message.flag-respawn": "The flag of the %team% team respawned!",
   "message.flag-brought-back": " brought back the flag!",
@@ -25,8 +26,9 @@
   "message.died-void": " fell into the void.",
   "message.died": " died.",
   "message.eliminated": " Eliminated!",
-  "message.event-swap": "You have been swapped",
-  "message.event-shadow-blocks": "The blocks placed now disappear after 3 seconds",
+  "message.ability-activated": "You enabled the ability %ability%&f!",
+  "message.game-finishing": "All the flags will be&c destroyed&f in&b %time% minutes&f!",
+  "message.game-finish": "&c&lAll the flags has been destroyed!",
 
   "title.flag-captured": "You have the flag!",
   "title.team-flag-captured": "Your flag has been captured!",
@@ -37,5 +39,27 @@
 
   "error.place-block": "You can't place blocks here!",
   "error.break-block.spleef": "You can't spleef a team member",
-  "error.break-block.flag": "You can't break your own flag!"
+  "error.break-block.flag": "You can't break your own flag!",
+
+  "item.choose.name": "&bChoose your class",
+  "item.ability.name": "&fAbility: %ability%",
+  "ability.gui.name": "&8Class: %ability%",
+  "ability.gui.lore-choose" : "&cClick to choose this class",
+  "ability.gui.lore-chosen" : "&aYou have chosen this class",
+
+  "ability.astronaut.name": "&3Astronaut",
+  "ability.astronaut.lore.1": "&7Allows you to propel yourself",
+  "ability.astronaut.lore.2": "&7forward to surprise your opponents.",
+
+  "ability.shooter.name": "&cShooter",
+  "ability.shooter.lore.1": "&7Allows you to shoot an explosive fireball",
+  "ability.shooter.lore.2": "&7to knock your opponents into the void.",
+
+  "ability.runner.name": "&6Runner",
+  "ability.runner.lore.1": "&7Grants a speed III effect",
+  "ability.runner.lore.2": "&7for five seconds.",
+
+  "ability.builder.name": "&aBuilder",
+  "ability.builder.lore.1": "&7Allows you to create a temporary",
+  "ability.builder.lore.2": "&7bridge to move quickly."
 }

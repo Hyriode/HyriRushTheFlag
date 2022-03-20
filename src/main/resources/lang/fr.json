@@ -11,11 +11,12 @@
   "character.colon": " : ",
 
   "scoreboard.kills.display": "Kills : ",
-  "scoreboard.final-kills.display": "Final Kills : ",
   "scoreboard.deaths.display": "Morts : ",
-  "scoreboard.time.display": "Durée : ",
+  "scoreboard.final-kills.display": "Final Kills : ",
+  "scoreboard.time.display": "Temps : ",
+  "scoreboard.you.display": " &7(VOUS)",
 
-  "message.flag-respawn": "Le drapeau de l'équipe %team% a réapparu !",
+  "message.flag-respawn": "Le drapeau de l'équipe %team% est réapparu !",
   "message.flag-brought-back": " a ramené le drapeau !",
   "message.flag-lost": " a perdu le drapeau !",
   "message.flag-captured": " a capturé le drapeau!",
@@ -25,8 +26,9 @@
   "message.died-void": " est tombé dans le vide.",
   "message.died": " est mort.",
   "message.eliminated": " Eliminé !",
-  "message.event-swap": "Vous avez été swap",
-  "message.event-shadow-blocks": "Les blocks posés disparaissent désormais après 3 secondes",
+  "message.ability-activated": "Vous avez activé la capacité %ability% &f!",
+  "message.game-finishing": "Tous les drapeaux seront&c détruits&f dans&b %time% minutes &f!",
+  "message.game-finish": "&c&lTous les drapeaux ont été détruits !",
 
   "title.flag-captured": "Vous avez le drapeau !",
   "title.team-flag-captured": "Votre drapeau a été capturé !",
@@ -37,5 +39,27 @@
 
   "error.place-block": "Vous ne pouvez pas placer de blocs à cet endroit!",
   "error.break-block.spleef": "Vous ne pouvez pas casser de blocs sous vos équipiers",
-  "error.break- block.flag": "Vous ne pouvez pas casser de block autour de votre drapeau!"
+  "error.break- block.flag": "Vous ne pouvez pas casser de blocs autour de votre drapeau !",
+
+  "item.choose.name": "&bChoisir sa classe",
+  "item.ability.name": "&fCapacité: %ability%",
+  "ability.gui.name": "&8Classe: %ability%",
+  "ability.gui.lore-choose" : "&cCliquez pour choisir cette classe",
+  "ability.gui.lore-chosen" : "&aVous avez choisi cette classe",
+
+  "ability.astronaut.name": "&3Astronaute",
+  "ability.astronaut.lore.1": "&7Permet de vous propulser vers l'avant",
+  "ability.astronaut.lore.2": "&7pour surprendre vos adversaires.",
+
+  "ability.shooter.name": "&cTireur",
+  "ability.shooter.lore.1": "&7Permet de tirer une boule de feu explosive",
+  "ability.shooter.lore.2": "&7pour faire tomber vos adversaires dans le vide.",
+
+  "ability.runner.name": "&6Coureur",
+  "ability.runner.lore.1": "&7Permet d'obtenir un effet de",
+  "ability.runner.lore.2": "&7vitesse III pendant cinq secondes.",
+
+  "ability.builder.name": "&aArchitecte",
+  "ability.builder.lore.1": "&7Permet de créer un pont temporaire",
+  "ability.builder.lore.2": "&7pour se déplacer rapidement."
 }

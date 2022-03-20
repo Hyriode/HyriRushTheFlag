@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -27,20 +28,21 @@ public class HyriRTFScoreboard extends Scoreboard {
 
         this.addLines();
 
-        this.setLine(1, this.getTeamLine(this.plugin.getGame().getFirstTeam()), line -> line.setValue(this.getTeamLine(this.plugin.getGame().getFirstTeam())), 5);
-        this.setLine(2, this.getTeamLine(this.plugin.getGame().getSecondTeam()), line -> line.setValue(this.getTeamLine(this.plugin.getGame().getSecondTeam())), 5);
-        this.setLine(8, this.getTimeLine(), line -> line.setValue(this.getTimeLine()), 20);
-        this.setLine(10, ChatColor.DARK_AQUA + "hyriode.fr", new HyriScoreboardIpConsumer("hyriode.fr"), 2);
+        this.setLine(2, this.getTeamLine(this.plugin.getGame().getFirstTeam()), line -> line.setValue(this.getTeamLine(this.plugin.getGame().getFirstTeam())), 20);
+        this.setLine(3, this.getTeamLine(this.plugin.getGame().getSecondTeam()), line -> line.setValue(this.getTeamLine(this.plugin.getGame().getSecondTeam())), 20);
+        this.setLine(9, this.getTimeLine(), line -> line.setValue(this.getTimeLine()), 20);
+        this.setLine(11, ChatColor.DARK_AQUA + "hyriode.fr", new HyriScoreboardIpConsumer("hyriode.fr"), 2);
     }
 
     private void addLines() {
-        this.setLine(0, " ");
-        this.setLine(3, "  ");
-        this.setLine(4, this.getKillsLine());
-        this.setLine(5, this.getFinalKillsLine());
-        this.setLine(6, this.getDeathsLine());
-        this.setLine(7, "   ");
-        this.setLine(9, "    ");
+        this.setLine(0, this.getDateLine());
+        this.setLine(1, "§1");
+        this.setLine(4, "§2");
+        this.setLine(5, this.getKillsLine(), line -> line.setValue(this.getKillsLine()), 40);
+        this.setLine(6, this.getFinalKillsLine(), line -> line.setValue(this.getFinalKillsLine()), 40);
+        this.setLine(7, this.getDeathsLine(), line -> line.setValue(this.getDeathsLine()), 40);
+        this.setLine(8, "§3");
+        this.setLine(10, "§4");
     }
 
     public void update() {
@@ -57,12 +59,12 @@ public class HyriRTFScoreboard extends Scoreboard {
         return this.getLinePrefix("kills") + ChatColor.AQUA + this.getGamePlayer().getKills();
     }
 
-    private String getFinalKillsLine() {
-        return this.getLinePrefix("final-kills") + ChatColor.AQUA + this.getGamePlayer().getFinalKills();
-    }
-
     private String getDeathsLine() {
         return this.getLinePrefix("deaths") + ChatColor.AQUA + this.getGamePlayer().getDeaths();
+    }
+
+    private String getFinalKillsLine() {
+        return this.getLinePrefix("final-kills") + ChatColor.AQUA + this.getGamePlayer().getFinalKills();
     }
 
     private String getTeamLine(HyriRTFGameTeam team) {
@@ -70,10 +72,18 @@ public class HyriRTFScoreboard extends Scoreboard {
         final String colon = ChatColor.WHITE + HyriRTF.getLanguageManager().getValue(this.player, "character.colon");
 
         if (team.hasLife()) {
-            return teamDisplay + colon + ChatColor.AQUA + team.getLives();
-        }
+            if (this.getGamePlayer().getTeam().equals(team)) {
+                return teamDisplay + colon + ChatColor.GREEN + "✔" + this.getLinePrefix("you");
+            }
+            return teamDisplay + colon + ChatColor.GREEN + "✔";
+        } else {
 
-        return teamDisplay + colon + ChatColor.RED + Symbols.CROSS_STYLIZED_BOLD + ChatColor.WHITE + " " + Symbols.DOT_BOLD + " " + ChatColor.AQUA + team.getPlayersPlaying().size();
+            if (this.getGamePlayer().getTeam().equals(team)) {
+                return teamDisplay + colon + ChatColor.RED + Symbols.CROSS_STYLIZED_BOLD + ChatColor.WHITE + " " + Symbols.DOT_BOLD + " " + ChatColor.AQUA + team.getPlayersPlaying().size() + this.getLinePrefix("you");
+            }
+
+            return teamDisplay + colon + ChatColor.RED + Symbols.CROSS_STYLIZED_BOLD + ChatColor.WHITE + " " + Symbols.DOT_BOLD + " " + ChatColor.AQUA + team.getPlayersPlaying().size();
+        }
     }
 
     private String getTimeLine() {
@@ -84,6 +94,10 @@ public class HyriRTFScoreboard extends Scoreboard {
         final String line = format.format(this.plugin.getGame().getGameTime() * 1000);
 
         return this.getLinePrefix("time") + ChatColor.AQUA + (line.startsWith("00:") ? line.substring(3) : line);
+    }
+
+    private String getDateLine() {
+        return ChatColor.GRAY + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
     }
 
     private String getLinePrefix(String prefix) {

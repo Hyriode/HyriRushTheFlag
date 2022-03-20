@@ -8,18 +8,23 @@ import fr.hyriode.rtf.config.HyriRTFConfig;
 import fr.hyriode.rtf.game.HyriRTFFlag;
 import fr.hyriode.rtf.game.HyriRTFGamePlayer;
 import fr.hyriode.rtf.game.HyriRTFGameTeam;
-import fr.hyriode.rtf.game.event.Event;
-import fr.hyriode.rtf.game.event.Events;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.material.MaterialData;
+import org.bukkit.material.Wool;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,13 +46,51 @@ public class WorldListener extends HyriListener<HyriRTF> {
     public void onBlockPlace(BlockPlaceEvent event) {
         final Player player = event.getPlayer();
 
-        event.setCancelled(!this.canPlaceBlock(event.getBlock(), event.getPlayer()));
+        event.setCancelled(!this.canPlaceBlock(event.getBlockPlaced(), event.getPlayer()));
 
         if (event.isCancelled()) {
             player.sendMessage(ChatColor.RED + HyriRTF.getLanguageManager().getValue(player, "error.place-block"));
-        }else {
-            if(Event.EVENTS.get(Events.SHADOW_BLOCK.name()).isRunning()) {
-                Event.EVENTS.get(Events.SHADOW_BLOCK.name()).send(event.getBlock());
+        }
+
+        new BukkitRunnable() {
+            private int index = 150;
+
+            @Override
+            public void run() {
+                if(index == 120) {
+                    Bukkit.getScheduler().runTask(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            if(event.getBlockPlaced().getType().equals(Material.SANDSTONE)) {
+                                event.getBlockPlaced().setType(Material.STAINED_GLASS);
+                                event.getBlockPlaced().setData((byte) 14);
+                                event.getBlockPlaced().setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(plugin, true));
+                            }
+                        }
+                    });
+                }
+                if(index == 0) {
+                    Bukkit.getScheduler().runTask(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            if(event.getBlockPlaced().getType().equals(Material.STAINED_GLASS)) {
+                                event.getBlockPlaced().breakNaturally();
+                            }
+                        }
+                    });
+                    this.cancel();
+                }
+                index--;
+            }
+        }.runTaskTimerAsynchronously(this.plugin, 0, 20);
+    }
+    
+    @EventHandler
+    public void onExplode(EntityExplodeEvent event) {
+        event.setCancelled(true);
+        for (Block block : event.blockList()) {
+            if(block.hasMetadata(SANDSTONE_METADATA_KEY)) {
+                block.breakNaturally();
             }
         }
     }
@@ -111,11 +154,7 @@ public class WorldListener extends HyriListener<HyriRTF> {
         final HyriRTFConfig.Team secondTeamConfig = config.getSecondTeam();
 
         if (block.getType() == Material.SANDSTONE) {
-            block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(this.plugin, ""));
-
-            player.getItemInHand().setAmount(64);
-        } else if(Event.EVENTS.get(Events.SNOWED.name()).isRunning() && block.getType() == Material.SNOW_BLOCK){
-            block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(this.plugin, ""));
+            block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(this.plugin, true));
 
             player.getItemInHand().setAmount(64);
         }else {

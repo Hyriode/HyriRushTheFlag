@@ -1,29 +1,32 @@
 package fr.hyriode.rtf.game;
 
+import fr.hyriode.hyrame.actionbar.ActionBar;
 import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.util.HyriDeadScreen;
 import fr.hyriode.hyrame.item.ItemBuilder;
+import fr.hyriode.hyrame.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.language.IHyriLanguageManager;
+import fr.hyriode.hyrame.utils.Symbols;
+import fr.hyriode.hyriapi.settings.HyriLanguage;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
-import fr.hyriode.rtf.game.event.Event;
-import fr.hyriode.rtf.game.event.Events;
+import fr.hyriode.rtf.game.abilities.Ability;
+import fr.hyriode.rtf.game.abilities.AbilityItem;
 import fr.hyriode.rtf.game.scoreboard.HyriRTFScoreboard;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
 
-import java.util.Map;
+import java.awt.event.ActionListener;
 import java.util.function.Function;
 
 /**
@@ -37,6 +40,9 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
     private BukkitTask lastHitterTask;
 
     private HyriRTFScoreboard scoreboard;
+    private Ability ability;
+
+    private boolean cooldown = false;
 
     private HyriRTFPlayer account;
     private long kills;
@@ -56,22 +62,23 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         this.player.setGameMode(GameMode.SURVIVAL);
         this.player.setHealth(20.0F);
 
-        Bukkit.broadcastMessage(String.valueOf(Event.EVENTS.get(Events.SNOWED.name())));
-        if(!Event.EVENTS.get(Events.SNOWED.name()).isRunning()) {
-            this.giveHotBar();
-        }else {
-            Event.EVENTS.get(Events.SNOWED.name()).send(this);
-        }
+
+        this.giveHotBar();
         this.giveArmor();
+
+        this.handleCooldown(this.getAbility().getCooldown() / 2);
     }
 
     public void giveHotBar() {
         final PlayerInventory inventory = this.player.getInventory();
+        this.player.setExp(0);
+        this.player.setLevel(0);
 
         inventory.addItem(new ItemBuilder(Material.SANDSTONE, 64 * 9, 2).build());
         inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.GOLDEN_APPLE), new ItemBuilder(Material.GOLDEN_APPLE, 16).build());
         inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.SWORD), new ItemBuilder(Material.IRON_SWORD).withEnchant(Enchantment.DAMAGE_ALL, 1).unbreakable().build());
         inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.PICKAXE), new ItemBuilder(Material.IRON_PICKAXE).withEnchant(Enchantment.DIG_SPEED, 2).unbreakable().build());
+        this.plugin.getHyrame().getItemManager().giveItem(this.player, this.account.getHotBar().getSlot(HyriRTFHotBar.Item.ABILITY_ITEM), AbilityItem.class);
     }
 
     public void giveArmor() {
@@ -83,6 +90,46 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         inventory.setBoots(this.getArmorPiece(Material.LEATHER_BOOTS));
     }
 
+    public void handleCooldown(final int i) {
+        if (!this.isCooldown()) {
+            this.setCooldown(true);
+        }
+        new BukkitRunnable() {
+            private int index = i;
+
+            @Override
+            public void run() {
+                HyriLanguageMessage actionBar = new HyriLanguageMessage("actionbar.cooldown.display")
+                        .addValue(HyriLanguage.FR, ChatColor.DARK_AQUA + Symbols.SPARKLES + " Capacité en attente : " + ChatColor.AQUA + this.index + "s " + ChatColor.DARK_AQUA + Symbols.SPARKLES)
+                        .addValue(HyriLanguage.EN, ChatColor.DARK_AQUA + Symbols.SPARKLES + " Ability in cooldown: " + ChatColor.AQUA + this.index + "s " + ChatColor.DARK_AQUA + Symbols.SPARKLES);
+                final ActionBar bar = new ActionBar(actionBar.getForPlayer(player));
+
+                bar.send(player);
+                player.setLevel(this.index);
+
+                if(isDead()) {
+                    player.setLevel(0);
+                    bar.remove(player);
+                    this.cancel();
+                }
+                if(index == 0) {
+                    HyriLanguageMessage actionBarFinished = new HyriLanguageMessage("actionbar.finished.display")
+                            .addValue(HyriLanguage.FR, ChatColor.GREEN + "✔ Capacité disponible ✔")
+                            .addValue(HyriLanguage.EN, ChatColor.GREEN + "✔ Ability available ✔");
+                    final ActionBar finishedBar = new ActionBar(actionBarFinished.getForPlayer(player));
+                    setCooldown(false);
+                    player.setLevel(0);
+                    bar.remove(player);
+                    finishedBar.send(player);
+                    player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 3f, 3f);
+                    this.cancel();
+                }
+                index--;
+            }
+        }.runTaskTimer(this.plugin, 0, 20);
+
+    }
+
     public void kill(boolean diedFromVoid) {
         final HyriRTFGame game = this.plugin.getGame();
 
@@ -92,26 +139,13 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
 
         final PlayerInventory playerInventory = this.player.getInventory();
 
-        final Map<HyriRTFHotBar.Item, Integer> hotbar = this.account.getHotBar().getItems();
+        for (HyriRTFHotBar.Item item : this.account.getHotBar().getItems().keySet()) {
 
-        for(HyriRTFHotBar.Item item : hotbar.keySet()) {
-            if(playerInventory.getItem(hotbar.get(item)) != null) {
-                if(!playerInventory.getItem(hotbar.get(item)).getType().equals(HyriRTFHotBar.HOTBAR_ITEMS.get(item))) {
-                    for (int i = 0; i < 9; i++) {
-                        if(playerInventory.getItem(i) != null) {
-                            if(playerInventory.getItem(i).getType().equals(HyriRTFHotBar.HOTBAR_ITEMS.get(item))) {
-                                boolean valueExist = false;
-                                for(Integer integer : hotbar.values()) {
-                                    if (i == integer) {
-                                        valueExist = true;
-                                        break;
-                                    }
-                                }
-                                if(!valueExist) {
-                                    hotbar.put(item, i);
-                                }
-                                break;
-                            }
+            if (this.account.getHotBar().getSlot(item) != null) {
+                for (int i = 0; i <= 9; i++) {
+                    if (playerInventory.getItem(i) != null) {
+                        if (playerInventory.getItem(i).getType() == Material.getMaterial(item.getName())) {
+                            this.account.getHotBar().setItem(item, i);
                         }
                     }
                 }
@@ -124,7 +158,6 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         this.player.setHealth(20.0F);
         this.player.setGameMode(GameMode.SPECTATOR);
         this.player.teleport(this.plugin.getConfiguration().getSpawn());
-        player.getPlayer().setVelocity(new Vector(0,0,0));
 
         this.addDeath();
 
@@ -142,7 +175,6 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
             }
 
             lastHitterGamePlayer.addKill();
-            lastHitterGamePlayer.getScoreboard().update();
 
             if (diedFromVoid) {
                 killMessage = target -> defaultMessage.apply(target) + languageManager.getValue(target, "message.and-void");
@@ -151,7 +183,7 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
             }
         } else {
             if (diedFromVoid) {
-               killMessage = target -> formattedName + ChatColor.GRAY + languageManager.getValue(target, "message.died-void");
+                killMessage = target -> formattedName + ChatColor.GRAY + languageManager.getValue(target, "message.died-void");
             } else {
                 killMessage = target -> formattedName + ChatColor.GRAY + languageManager.getValue(target, "message.died");
             }
@@ -160,8 +192,6 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         if (game.isHoldingFlag(this.player)) {
             game.getHoldingFlag(this.player).lost();
         }
-
-        this.scoreboard.update();
 
         if (hasLife) {
             this.dead = true;
@@ -174,7 +204,6 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
                 this.show();
 
                 this.player.teleport(this.team.getSpawnLocation());
-                player.getPlayer().setVelocity(new Vector(0,0,0));
 
                 this.spawn();
             });
@@ -266,7 +295,7 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
     }
 
     public void setLastHitter(Player lastHitter) {
-        if(lastHitter != null) {
+        if (lastHitter != null) {
             if (!this.game.areInSameTeam(this.player, lastHitter)) {
                 this.lastHitter = lastHitter;
 
@@ -293,4 +322,19 @@ public class HyriRTFGamePlayer extends HyriGamePlayer {
         return (HyriRTFGameTeam) this.team;
     }
 
+    public boolean isCooldown() {
+        return this.cooldown;
+    }
+
+    public void setCooldown(boolean cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public Ability getAbility() {
+        return this.ability;
+    }
+
+    public void setAbility(Ability ability) {
+        this.ability = ability;
+    }
 }

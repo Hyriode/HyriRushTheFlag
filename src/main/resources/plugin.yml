@@ -3,7 +3,3 @@ version: @version@
 name: HyriRushTheFlag
 author: Calyx
 depend: [Hyrame]
-commands:
-  event:
-    usage: erreur
-    description: a

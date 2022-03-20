@@ -4,10 +4,9 @@ import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.hyrame.language.IHyriLanguageManager;
 import fr.hyriode.hyrame.title.Title;
 import fr.hyriode.rtf.HyriRTF;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
+import fr.hyriode.rtf.game.abilities.AbilityItem;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
@@ -62,6 +61,9 @@ public class HyriRTFFlag {
         final HyriRTFGame game = this.plugin.getGame();
 
         this.place();
+        for (HyriRTFGamePlayer player : game.getPlayers()) {
+            player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.PISTON_EXTEND, 5f, 5f);
+        }
 
         game.sendMessageToAll(target -> ChatColor.GRAY + HyriRTF.getLanguageManager().getValue(target, "message.flag-respawn")
                 .replace("%team%", this.team.getFormattedDisplayName(target) + ChatColor.GRAY));
@@ -75,13 +77,12 @@ public class HyriRTFFlag {
             final HyriRTFGameTeam playerTeam = gamePlayer.getTeam();
 
             game.sendMessageToAll(target -> this.getFormattedHolderName() + ChatColor.GRAY + languageManager.getValue(target, "message.flag-brought-back"));
+            for (HyriRTFGamePlayer player : game.getPlayers()) {
+                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 3f, 3f);
+            }
 
             gamePlayer.spawn();
             gamePlayer.addFlagBroughtBack();
-
-            if (playerTeam.hasLife()) {
-                playerTeam.addLife();
-            }
 
             this.team.removeLife();
 
@@ -103,6 +104,9 @@ public class HyriRTFFlag {
             this.plugin.getGame().sendMessageToAll(target -> this.getFormattedHolderName() + ChatColor.GRAY + HyriRTF.getLanguageManager().getValue(target, "message.flag-lost"));
 
             this.respawn();
+            for (HyriRTFGamePlayer player : this.plugin.getGame().getPlayers()) {
+                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.SILVERFISH_KILL, 5f, 5f);
+            }
 
             this.holder = null;
         }
@@ -114,6 +118,19 @@ public class HyriRTFFlag {
         final IHyriLanguageManager languageManager = HyriRTF.getLanguageManager();
         final PlayerInventory inventory = player.getInventory();
         final byte data = this.team.getColor().getDyeColor().getData();
+
+        for (HyriRTFHotBar.Item item : gamePlayer.getAccount().getHotBar().getItems().keySet()) {
+
+            if (gamePlayer.getAccount().getHotBar().getSlot(item) != null) {
+                for (int i = 0; i <= 9; i++) {
+                    if (inventory.getItem(i) != null) {
+                        if (inventory.getItem(i).getType() == Material.getMaterial(item.getName())) {
+                            gamePlayer.getAccount().getHotBar().setItem(item, i);
+                        }
+                    }
+                }
+            }
+        }
 
         player.setGameMode(GameMode.ADVENTURE);
 
@@ -129,9 +146,12 @@ public class HyriRTFFlag {
             inventory.setItem(i, new ItemBuilder(Material.WOOL, 1, data).build());
         }
 
+        this.plugin.getHyrame().getItemManager().giveItem(player, 4, AbilityItem.class);
+
         inventory.setHelmet(new ItemBuilder(Material.WOOL, 1, data).build());
 
-        game.sendMessageToAll(target -> this.getFormattedHolderName() + ChatColor.GRAY + languageManager.getValue(player, "message.flag-captured"));
+        game.sendMessageToAll(target ->  " \n" + this.getFormattedHolderName() + ChatColor.GRAY + languageManager.getValue(player, "message.flag-captured") + " \n ");
+        this.location.getWorld().strikeLightningEffect(this.location);
 
         final String title = ChatColor.DARK_AQUA + languageManager.getValue(player, "title.flag-captured");
         final String subtitle = ChatColor.AQUA + languageManager.getValue(player, "subtitle.flag-captured");
@@ -152,4 +172,7 @@ public class HyriRTFFlag {
         return this.holder;
     }
 
+    public Block getBlock() {
+        return block;
+    }
 }

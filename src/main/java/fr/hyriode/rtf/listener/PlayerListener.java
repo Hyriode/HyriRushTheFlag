@@ -17,7 +17,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 /**
  * Project: HyriRushTheFlag
@@ -101,7 +103,12 @@ public class PlayerListener extends HyriListener<HyriRTF> {
                 final HyriRTFGame game = this.plugin.getGame();
                 final HyriRTFGamePlayer gamePlayer = game.getPlayer(player.getUniqueId());
 
+                if(event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+                    event.setCancelled(true);
+                }
+
                 if(player.getHealth() - event.getFinalDamage() <= 0) {
+                    event.setCancelled(true);
                     player.setHealth(20);
 
                     if (!game.getDeadPlayers().contains(gamePlayer)) {
@@ -119,6 +126,29 @@ public class PlayerListener extends HyriListener<HyriRTF> {
         if (event.getSlotType() == InventoryType.SlotType.ARMOR || event.getCurrentItem().getType().equals(Material.WOOL)) {
             event.setCancelled(true);
         }
+        if(this.plugin.getGame().getState().equals(HyriGameState.PLAYING)) {
+            if(this.plugin.getGame().getPlayer(event.getWhoClicked().getUniqueId()).hasFlag()) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPickupItem(PlayerPickupItemEvent event) {
+        if(this.plugin.getGame().getState().equals(HyriGameState.PLAYING)) {
+            final Player player = event.getPlayer();
+            final HyriRTFGame game = this.plugin.getGame();
+            final HyriRTFGamePlayer gamePlayer = game.getPlayer(player.getUniqueId());
+
+            if(gamePlayer.hasFlag()) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent e) {
+        e.setCancelled(true);
     }
 
 }

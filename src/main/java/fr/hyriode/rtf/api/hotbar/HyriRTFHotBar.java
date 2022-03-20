@@ -2,6 +2,7 @@ package fr.hyriode.rtf.api.hotbar;
 
 import org.bukkit.Material;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,15 +13,6 @@ import java.util.Map;
  */
 public class HyriRTFHotBar {
 
-    public static Map<Item, Material> HOTBAR_ITEMS;
-
-    static {
-        HOTBAR_ITEMS = new HashMap<>();
-        HOTBAR_ITEMS.put(Item.SWORD, Material.IRON_SWORD);
-        HOTBAR_ITEMS.put(Item.PICKAXE, Material.IRON_PICKAXE);
-        HOTBAR_ITEMS.put(Item.GOLDEN_APPLE, Material.GOLDEN_APPLE);
-    }
-
     private final Map<Item, Integer> items;
 
     public HyriRTFHotBar() {
@@ -29,6 +21,7 @@ public class HyriRTFHotBar {
         this.items.put(Item.SWORD, 0);
         this.items.put(Item.PICKAXE, 2);
         this.items.put(Item.GOLDEN_APPLE, 3);
+        this.items.put(Item.ABILITY_ITEM, 4);
     }
 
     public void setItem(Item item, int slot) {
@@ -44,9 +37,21 @@ public class HyriRTFHotBar {
     }
 
     public enum Item {
-        SWORD,
-        PICKAXE,
-        GOLDEN_APPLE
+        SWORD("IRON_SWORD"),
+        PICKAXE("IRON_PICKAXE"),
+        GOLDEN_APPLE("GOLDEN_APPLE"),
+        ABILITY_ITEM("NETHER_STAR"),
+        ;
+
+        private final String name;
+
+        Item(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
 }

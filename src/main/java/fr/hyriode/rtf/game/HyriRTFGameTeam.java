@@ -4,6 +4,7 @@ import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.utils.LocationUtil;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.config.HyriRTFConfig;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -36,10 +37,15 @@ public class HyriRTFGameTeam extends HyriGameTeam {
         return false;
     }
 
+    public boolean isInBase(Location location) {
+        return LocationUtil.isInArea(location, config.getSpawnAreaFirst(), config.getSpawnAreaSecond());
+    }
+
+
     public HyriRTFGameTeam getOppositeTeam() {
-        if(this.equals(this.plugin.getGame().getFirstTeam())) {
+        if (this.equals(this.plugin.getGame().getFirstTeam())) {
             return this.plugin.getGame().getSecondTeam();
-        }else {
+        } else {
             return this.plugin.getGame().getFirstTeam();
         }
     }

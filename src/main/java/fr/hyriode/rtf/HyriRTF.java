@@ -7,8 +7,7 @@ import fr.hyriode.hyriapi.HyriAPI;
 import fr.hyriode.rtf.api.HyriRTFAPI;
 import fr.hyriode.rtf.config.HyriRTFConfig;
 import fr.hyriode.rtf.game.HyriRTFGame;
-import fr.hyriode.rtf.game.event.Event;
-import fr.hyriode.rtf.game.event.EventCommand;
+import fr.hyriode.rtf.game.abilities.Ability;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -34,7 +33,6 @@ public class HyriRTF extends JavaPlugin {
     private IHyrame hyrame;
     private HyriRTFAPI api;
     private HyriRTFGame game;
-    private Event event;
 
     @Override
     public void onEnable() {
@@ -54,7 +52,6 @@ public class HyriRTF extends JavaPlugin {
         this.configuration.load();
         this.hyrame = HyrameLoader.load(new HyriRTFProvider(this));
 
-
         languageManager = this.hyrame.getLanguageManager();
 
         this.api = new HyriRTFAPI(HyriAPI.get().getRedisConnection().getPool());
@@ -62,7 +59,7 @@ public class HyriRTF extends JavaPlugin {
         this.game = new HyriRTFGame(this.hyrame, this);
         this.hyrame.getGameManager().registerGame(this.game);
 
-        getCommand("event").setExecutor(new EventCommand(this));
+        Ability.register(this);
     }
 
     public static void log(Level level, String message) {
