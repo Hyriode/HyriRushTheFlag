@@ -12,10 +12,10 @@ import java.util.function.Supplier;
 
 /**
  * Project: HyriRushTheFlag
- * Created by AstFaster
+ * Created by Akkashi
  * on 31/12/2021 at 18:43
  */
-public enum HyriRTFTeams {
+public enum RTFTeam {
 
     BLUE("blue", HyriGameTeamColor.BLUE),
     RED("red", HyriGameTeamColor.RED),
@@ -26,13 +26,13 @@ public enum HyriRTFTeams {
     WHITE("white", HyriGameTeamColor.WHITE),
     BLACK("black", HyriGameTeamColor.GRAY);
 
-    private static final List<Pair<HyriRTFTeams, HyriRTFTeams>> PAIRS = Arrays.asList(new Pair<>(BLUE, RED), new Pair<>(GREEN, YELLOW), new Pair<>(AQUA, PINK), new Pair<>(WHITE, BLACK));
+    private static final List<Pair<RTFTeam, RTFTeam>> PAIRS = Arrays.asList(new Pair<>(BLUE, RED), new Pair<>(GREEN, YELLOW), new Pair<>(AQUA, PINK), new Pair<>(WHITE, BLACK));
 
         private final String name;
         private final HyriGameTeamColor color;
         private final Supplier<HyriLanguageMessage> displayName;
 
-        HyriRTFTeams(String name, HyriGameTeamColor color) {
+        RTFTeam(String name, HyriGameTeamColor color) {
             this.name = name;
             this.color = color;
             this.displayName = () -> HyriRTF.getLanguageManager().getMessage("team." + this.name + ".display");
@@ -50,7 +50,7 @@ public enum HyriRTFTeams {
         return this.displayName.get();
     }
 
-    public static Pair<HyriRTFTeams, HyriRTFTeams> get() {
+    public static Pair<RTFTeam, RTFTeam> get() {
         return PAIRS.get(ThreadLocalRandom.current().nextInt(PAIRS.size()));
     }
 

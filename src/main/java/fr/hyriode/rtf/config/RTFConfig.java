@@ -16,7 +16,7 @@ import static fr.hyriode.hyrame.configuration.HyriConfigurationEntry.LocationEnt
  * Created by AstFaster
  * on 31/12/2021 at 23:00
  */
-public class HyriRTFConfig implements IHyriConfiguration {
+public class RTFConfig implements IHyriConfiguration {
 
     private static final Supplier<Location> DEFAULT_LOCATION = () -> new Location(HyriRTF.WORLD.get(), 0, 0, 0, 0, 0);
 
@@ -28,16 +28,13 @@ public class HyriRTFConfig implements IHyriConfiguration {
     private Location gameAreaSecond;
     private final LocationEntry gameAreaSecondEntry;
 
-    private int teamLives;
-    private IntegerEntry teamLivesEntry;
-
     private final Team firstTeam;
     private final Team secondTeam;
 
     private final FileConfiguration config;
     private final JavaPlugin plugin;
 
-    public HyriRTFConfig(JavaPlugin plugin) {
+    public RTFConfig(JavaPlugin plugin) {
         this.plugin = plugin;
         this.config = plugin.getConfig();
 
@@ -51,9 +48,6 @@ public class HyriRTFConfig implements IHyriConfiguration {
         this.gameAreaSecond = DEFAULT_LOCATION.get();
         this.gameAreaSecondEntry = new LocationEntry(areaKey + "second", this.config);
 
-        this.teamLives = 3;
-        this.teamLivesEntry = new IntegerEntry("team-lives", this.config);
-
         this.firstTeam = new Team("firstTeam");
         this.secondTeam = new Team("secondTeam");
     }
@@ -64,8 +58,6 @@ public class HyriRTFConfig implements IHyriConfiguration {
 
         this.gameAreaFirstEntry.setDefault(this.gameAreaFirst);
         this.gameAreaSecondEntry.setDefault(this.gameAreaSecond);
-
-        this.teamLivesEntry.setDefault(this.teamLives);
 
         this.firstTeam.create();
         this.secondTeam.create();
@@ -82,8 +74,6 @@ public class HyriRTFConfig implements IHyriConfiguration {
         this.gameAreaFirst = this.gameAreaFirstEntry.get();
         this.gameAreaSecond = this.gameAreaSecondEntry.get();
 
-        this.teamLives = this.teamLivesEntry.get();
-
         this.firstTeam.load();
         this.secondTeam.load();
     }
@@ -96,8 +86,6 @@ public class HyriRTFConfig implements IHyriConfiguration {
 
         this.gameAreaFirstEntry.set(this.gameAreaFirst);
         this.gameAreaSecondEntry.set(this.gameAreaSecond);
-
-        this.teamLivesEntry.set(this.teamLives);
 
         this.firstTeam.save();
         this.secondTeam.save();
@@ -120,10 +108,6 @@ public class HyriRTFConfig implements IHyriConfiguration {
 
     public Location getGameAreaSecond() {
         return this.gameAreaSecond;
-    }
-
-    public int getTeamLives() {
-        return this.teamLives;
     }
 
     public Team getFirstTeam() {

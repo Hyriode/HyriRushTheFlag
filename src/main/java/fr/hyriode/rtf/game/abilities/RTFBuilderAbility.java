@@ -19,11 +19,11 @@ import java.util.ArrayList;
  * Created by Akkashi
  * on 20/03/2022 at 10:32
  */
-public class BuilderAbility {
+public class RTFBuilderAbility {
 
     private final HyriRTF plugin;
 
-    public BuilderAbility(HyriRTF pl) {
+    public RTFBuilderAbility(HyriRTF pl) {
       /*  super(HyriRTFAbilityModel.BUILDER,
                 "ability.builder.name",
                 new String[]{"ability.builder.lore.1", "ability.builder.lore.2"},

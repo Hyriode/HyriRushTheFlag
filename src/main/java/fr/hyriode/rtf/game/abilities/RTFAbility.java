@@ -14,9 +14,9 @@ import java.util.Optional;
  * Created by Akkashi
  * on 11/03/2022 at 17:17
  */
-public abstract class Ability {
+public abstract class RTFAbility {
 
-    protected static final Map<Class<? extends Ability>, Ability> abilityMap = new HashMap<>();
+    protected static final Map<Class<? extends RTFAbility>, RTFAbility> abilityMap = new HashMap<>();
 
     private final HyriRTFAbilityModel model;
     private final String nameKey;
@@ -24,7 +24,7 @@ public abstract class Ability {
     private final Material icon;
     private final int cooldown;
 
-    public Ability(HyriRTFAbilityModel model, String nameKey, String[] loreKey, Material icon, int cooldown) {
+    public RTFAbility(HyriRTFAbilityModel model, String nameKey, String[] loreKey, Material icon, int cooldown) {
         this.model = model;
         this.nameKey = nameKey;
         this.loreKey = loreKey;
@@ -38,9 +38,9 @@ public abstract class Ability {
         HyriRTF.log("Registering challenges...");
 
         /*  Add challenges here  */
-        new AstronautAbility(pl);
-        new ShooterAbility(pl);
-        new RunnerAbility(pl);
+        new RTFAstronautAbility(pl);
+        new RTFShooterAbility(pl);
+        new RTFRunnerAbility(pl);
        // new BuilderAbility(pl);
 
         if(!abilityMap.isEmpty()) {
@@ -50,7 +50,7 @@ public abstract class Ability {
         }
     }
 
-    public static Optional<Ability> getWithModel(HyriRTFAbilityModel model) {
+    public static Optional<RTFAbility> getWithModel(HyriRTFAbilityModel model) {
         return abilityMap.values().stream().filter(ability -> ability.getModel() == model).findFirst();
     }
 

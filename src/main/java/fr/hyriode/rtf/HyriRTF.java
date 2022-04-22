@@ -1,13 +1,15 @@
 package fr.hyriode.rtf;
 
+import fr.hyriode.api.HyriAPI;
 import fr.hyriode.hyrame.HyrameLoader;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.language.IHyriLanguageManager;
-import fr.hyriode.hyriapi.HyriAPI;
+import fr.hyriode.hyrame.world.HyriWorldSettings;
+import fr.hyriode.hyrame.world.generator.HyriWorldGenerator;
 import fr.hyriode.rtf.api.HyriRTFAPI;
-import fr.hyriode.rtf.config.HyriRTFConfig;
-import fr.hyriode.rtf.game.HyriRTFGame;
-import fr.hyriode.rtf.game.abilities.Ability;
+import fr.hyriode.rtf.config.RTFConfig;
+import fr.hyriode.rtf.game.RTFGame;
+import fr.hyriode.rtf.game.abilities.RTFAbility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -29,10 +31,10 @@ public class HyriRTF extends JavaPlugin {
 
     private static IHyriLanguageManager languageManager;
 
-    private HyriRTFConfig configuration;
+    private RTFConfig configuration;
     private IHyrame hyrame;
     private HyriRTFAPI api;
-    private HyriRTFGame game;
+    private RTFGame game;
 
     @Override
     public void onEnable() {
@@ -47,19 +49,21 @@ public class HyriRTF extends JavaPlugin {
 
         log("Starting " + NAME + "...");
 
-        this.configuration = new HyriRTFConfig(this);
+        this.configuration = new RTFConfig(this);
         this.configuration.create();
         this.configuration.load();
         this.hyrame = HyrameLoader.load(new HyriRTFProvider(this));
+
+        IHyriLanguageManager.Provider.registerInstance(() -> this.hyrame.getLanguageManager());
 
         languageManager = this.hyrame.getLanguageManager();
 
         this.api = new HyriRTFAPI(HyriAPI.get().getRedisConnection().getPool());
         this.api.start();
-        this.game = new HyriRTFGame(this.hyrame, this);
-        this.hyrame.getGameManager().registerGame(this.game);
+        this.game = new RTFGame(this.hyrame, this);
+        this.hyrame.getGameManager().registerGame(() -> this.game);
 
-        Ability.register(this);
+        RTFAbility.register(this);
     }
 
     public static void log(Level level, String message) {
@@ -88,7 +92,7 @@ public class HyriRTF extends JavaPlugin {
         this.api.stop();
     }
 
-    public HyriRTFConfig getConfiguration() {
+    public RTFConfig getConfiguration() {
         return this.configuration;
     }
 
@@ -104,7 +108,7 @@ public class HyriRTF extends JavaPlugin {
         return this.api;
     }
 
-    public HyriRTFGame getGame() {
+    public RTFGame getGame() {
         return this.game;
     }
 

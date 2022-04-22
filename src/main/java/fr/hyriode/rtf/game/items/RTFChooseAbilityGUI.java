@@ -3,12 +3,9 @@ package fr.hyriode.rtf.game.items;
 import fr.hyriode.hyrame.inventory.HyriInventory;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.HyriRTFAPI;
 import fr.hyriode.rtf.api.abilities.HyriRTFAbilityModel;
-import fr.hyriode.rtf.game.HyriRTFGamePlayer;
-import fr.hyriode.rtf.game.abilities.Ability;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import fr.hyriode.rtf.game.RTFGamePlayer;
+import fr.hyriode.rtf.game.abilities.RTFAbility;
 
 import java.util.Optional;
 
@@ -17,9 +14,9 @@ import java.util.Optional;
  * Created by Akkashi
  * on 11/03/2022 at 19:24
  */
-public class AbilityChooseGui extends HyriInventory {
+public class RTFChooseAbilityGUI extends HyriInventory {
 
-    public AbilityChooseGui(HyriRTFGamePlayer owner) {
+    public RTFChooseAbilityGUI(RTFGamePlayer owner) {
 
         super(owner.getPlayer(), HyriRTF.getLanguageManager().getValue(owner.getPlayer(), "ability.gui.name")
                 .replace("%ability%", HyriRTF.getLanguageManager().getValue(owner.getPlayer(), owner.getAbility().getNameKey()))
@@ -28,9 +25,9 @@ public class AbilityChooseGui extends HyriInventory {
         this.fillInventory(owner);
     }
 
-    private void fillInventory(HyriRTFGamePlayer gamePlayer) {
+    private void fillInventory(RTFGamePlayer gamePlayer) {
         for (HyriRTFAbilityModel value : HyriRTFAbilityModel.values()) {
-            Optional<Ability> oAbility = Ability.getWithModel(value);
+            Optional<RTFAbility> oAbility = RTFAbility.getWithModel(value);
 
             oAbility.ifPresent(ability -> {
                 if(gamePlayer.getAbility().equals(ability)) {
@@ -61,7 +58,7 @@ public class AbilityChooseGui extends HyriInventory {
                         event.setCancelled(true);
                         gamePlayer.setAbility(ability);
                         gamePlayer.getAccount().setLastAbility(ability.getModel());
-                        gamePlayer.getPlayer().closeInventory();
+                        new RTFChooseAbilityGUI(gamePlayer).open();
                     });
                 }
             });

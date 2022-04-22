@@ -1,33 +1,42 @@
 package fr.hyriode.rtf.game;
 
+import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.utils.LocationUtil;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.config.HyriRTFConfig;
+import fr.hyriode.rtf.config.RTFConfig;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 /**
  * Project: HyriRushTheFlag
- * Created by AstFaster
+ * Created by Akkashi
  * on 01/01/2022 at 11:02
  */
-public class HyriRTFGameTeam extends HyriGameTeam {
+public class RTFGameTeam extends HyriGameTeam {
 
     private int lives;
-    private HyriRTF plugin;
+    private final HyriRTF plugin;
 
-    private final HyriRTFConfig.Team config;
-    private final HyriRTFFlag flag;
+    private final RTFConfig.Team config;
+    private final RTFFlag flag;
 
-    public HyriRTFGameTeam(HyriRTF plugin, HyriRTFTeams team, HyriRTFConfig.Team config) {
-        super(team.getName(), team.getDisplayName(), team.getColor(), 2);
+    public RTFGameTeam(HyriRTF plugin, RTFTeam team, RTFConfig.Team config, int teamSize) {
+        super(
+                plugin.getGame(),
+                team.getName(),
+                team.getDisplayName(),
+                team.getColor(),
+                teamSize
+        );
         this.plugin = plugin;
         this.config = config;
         this.spawnLocation = this.config.getSpawn();
-        this.flag = new HyriRTFFlag(plugin, this);
+        this.flag = new RTFFlag(plugin, this);
 
-        this.lives = plugin.getConfiguration().getTeamLives();
+        this.lives = 1;
     }
 
     public boolean isInBase(Player player) {
@@ -42,7 +51,7 @@ public class HyriRTFGameTeam extends HyriGameTeam {
     }
 
 
-    public HyriRTFGameTeam getOppositeTeam() {
+    public RTFGameTeam getOppositeTeam() {
         if (this.equals(this.plugin.getGame().getFirstTeam())) {
             return this.plugin.getGame().getSecondTeam();
         } else {
@@ -50,11 +59,11 @@ public class HyriRTFGameTeam extends HyriGameTeam {
         }
     }
 
-    public HyriRTFConfig.Team getConfig() {
+    public RTFConfig.Team getConfig() {
         return this.config;
     }
 
-    public HyriRTFFlag getFlag() {
+    public RTFFlag getFlag() {
         return this.flag;
     }
 
@@ -73,5 +82,4 @@ public class HyriRTFGameTeam extends HyriGameTeam {
     public boolean hasLife() {
         return this.lives > 0;
     }
-
 }

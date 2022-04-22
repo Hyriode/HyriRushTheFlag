@@ -4,27 +4,23 @@ import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.listener.HyriListener;
 import fr.hyriode.hyrame.utils.LocationUtil;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.config.HyriRTFConfig;
-import fr.hyriode.rtf.game.HyriRTFFlag;
-import fr.hyriode.rtf.game.HyriRTFGamePlayer;
-import fr.hyriode.rtf.game.HyriRTFGameTeam;
+import fr.hyriode.rtf.config.RTFConfig;
+import fr.hyriode.rtf.game.RTFFlag;
+import fr.hyriode.rtf.game.RTFGamePlayer;
+import fr.hyriode.rtf.game.RTFGameTeam;
+import fr.hyriode.rtf.game.RTFMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.Wool;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,11 +30,11 @@ import java.util.List;
  * Created by AstFaster
  * on 01/01/2022 at 14:45
  */
-public class WorldListener extends HyriListener<HyriRTF> {
+public class RTFWorldListener extends HyriListener<HyriRTF> {
 
     public static final String SANDSTONE_METADATA_KEY = "RTFSandstone";
 
-    public WorldListener(HyriRTF plugin) {
+    public RTFWorldListener(HyriRTF plugin) {
         super(plugin);
     }
 
@@ -49,19 +45,19 @@ public class WorldListener extends HyriListener<HyriRTF> {
         event.setCancelled(!this.canPlaceBlock(event.getBlockPlaced(), event.getPlayer()));
 
         if (event.isCancelled()) {
-            player.sendMessage(ChatColor.RED + HyriRTF.getLanguageManager().getValue(player, "error.place-block"));
+            player.sendMessage(RTFMessage.ERROR_PLACE_BLOCK_MESSAGE.get().getForPlayer(player));
         }
 
         new BukkitRunnable() {
-            private int index = 150;
+            private int index = 180;
 
             @Override
             public void run() {
-                if(index == 120) {
+                if (index == 3) {
                     Bukkit.getScheduler().runTask(plugin, new Runnable() {
                         @Override
                         public void run() {
-                            if(event.getBlockPlaced().getType().equals(Material.SANDSTONE)) {
+                            if (event.getBlockPlaced().getType().equals(Material.SANDSTONE)) {
                                 event.getBlockPlaced().setType(Material.STAINED_GLASS);
                                 event.getBlockPlaced().setData((byte) 14);
                                 event.getBlockPlaced().setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(plugin, true));
@@ -69,11 +65,11 @@ public class WorldListener extends HyriListener<HyriRTF> {
                         }
                     });
                 }
-                if(index == 0) {
+                if (index == 0) {
                     Bukkit.getScheduler().runTask(plugin, new Runnable() {
                         @Override
                         public void run() {
-                            if(event.getBlockPlaced().getType().equals(Material.STAINED_GLASS)) {
+                            if (event.getBlockPlaced().getType().equals(Material.STAINED_GLASS)) {
                                 event.getBlockPlaced().breakNaturally();
                             }
                         }
@@ -84,12 +80,12 @@ public class WorldListener extends HyriListener<HyriRTF> {
             }
         }.runTaskTimerAsynchronously(this.plugin, 0, 20);
     }
-    
+
     @EventHandler
     public void onExplode(EntityExplodeEvent event) {
         event.setCancelled(true);
         for (Block block : event.blockList()) {
-            if(block.hasMetadata(SANDSTONE_METADATA_KEY)) {
+            if (block.hasMetadata(SANDSTONE_METADATA_KEY)) {
                 block.breakNaturally();
             }
         }
@@ -100,27 +96,27 @@ public class WorldListener extends HyriListener<HyriRTF> {
         final Player player = event.getPlayer();
         final Block block = event.getBlock();
 
-        if (block.hasMetadata(HyriRTFFlag.METADATA_KEY)) {
-            final List<MetadataValue> values = block.getMetadata(HyriRTFFlag.METADATA_KEY);
+        if (block.hasMetadata(RTFFlag.METADATA_KEY)) {
+            final List<MetadataValue> values = block.getMetadata(RTFFlag.METADATA_KEY);
 
             if (values != null) {
                 final MetadataValue value = values.get(0);
 
                 if (value != null) {
-                    final HyriRTFGameTeam team = (HyriRTFGameTeam) this.plugin.getGame().getTeam(value.asString());
+                    final RTFGameTeam team = (RTFGameTeam) this.plugin.getGame().getTeam(value.asString());
 
                     if (!team.contains(player.getUniqueId())) {
                         team.getFlag().capture(player);
                     } else {
                         event.setCancelled(true);
-                        player.sendMessage(ChatColor.RED + HyriRTF.getLanguageManager().getValue(player, "error.break-block.flag"));
+                        player.sendMessage(RTFMessage.ERROR_BREAK_FLAG_MESSAGE.get().getForPlayer(player));
                     }
                 }
             }
         } else if (!block.hasMetadata(SANDSTONE_METADATA_KEY)) {
             event.setCancelled(true);
-        }else {
-            final HyriRTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(event.getPlayer().getUniqueId());
+        } else {
+            final RTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(event.getPlayer().getUniqueId());
             boolean playerIsOnTheBlock = false;
 
             List<Location> locations = Arrays.asList(
@@ -131,33 +127,33 @@ public class WorldListener extends HyriListener<HyriRTF> {
                     event.getBlock().getLocation().add(0, 0, -1)
             );
 
-            for(HyriGamePlayer gamePlayer1 : gamePlayer.getTeam().getPlayers()) {
-                if(!gamePlayer1.equals(gamePlayer)) {
-                    for(Location location : locations) {
-                        if(LocationUtil.roundLocation(gamePlayer1.getPlayer().getLocation().subtract(0, 1, 0), 0).equals(location)) {
+            for (HyriGamePlayer gamePlayer1 : gamePlayer.getTeam().getPlayers()) {
+                if (!gamePlayer1.equals(gamePlayer)) {
+                    for (Location location : locations) {
+                        if (LocationUtil.roundLocation(gamePlayer1.getPlayer().getLocation().subtract(0, 1, 0), 0).equals(location)) {
                             playerIsOnTheBlock = true;
                         }
                     }
                 }
             }
-            if(playerIsOnTheBlock) {
+            if (playerIsOnTheBlock) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.RED + HyriRTF.getLanguageManager().getValue(player, "error.break-block.spleef"));
+                event.getPlayer().sendMessage(RTFMessage.ERROR_SPLEEF_MESSAGE.get().getForPlayer(player));
             }
         }
     }
 
     private boolean canPlaceBlock(Block block, Player player) {
         final Location location = block.getLocation();
-        final HyriRTFConfig config = this.plugin.getConfiguration();
-        final HyriRTFConfig.Team firstTeamConfig = config.getFirstTeam();
-        final HyriRTFConfig.Team secondTeamConfig = config.getSecondTeam();
+        final RTFConfig config = this.plugin.getConfiguration();
+        final RTFConfig.Team firstTeamConfig = config.getFirstTeam();
+        final RTFConfig.Team secondTeamConfig = config.getSecondTeam();
 
         if (block.getType() == Material.SANDSTONE) {
             block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(this.plugin, true));
 
             player.getItemInHand().setAmount(64);
-        }else {
+        } else {
             return false;
         }
 
