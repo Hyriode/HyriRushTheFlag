@@ -157,9 +157,9 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             return false;
         }
 
-        return !LocationUtil.isInArea(location, firstTeamConfig.getSpawnAreaFirst(), firstTeamConfig.getSpawnAreaSecond()) &&
-                !LocationUtil.isInArea(location, secondTeamConfig.getSpawnAreaFirst(), secondTeamConfig.getSpawnAreaSecond()) &&
-                LocationUtil.isInArea(location, config.getGameAreaFirst(), config.getGameAreaSecond());
+        return !firstTeamConfig.getArea().isInArea(location) &&
+                !secondTeamConfig.getArea().isInArea(location) &&
+                config.getArea().asArea().isInArea(location);
     }
 
 }

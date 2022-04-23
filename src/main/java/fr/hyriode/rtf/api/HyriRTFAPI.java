@@ -15,71 +15,11 @@ import java.util.function.Consumer;
  */
 public class HyriRTFAPI {
 
-    public static final String REDIS_KEY = "rtf:";
     public static final Gson GSON = new Gson();
-
-    private boolean running;
-
     private final HyriRTFPlayerManager playerManager;
 
-    private final LinkedBlockingQueue<Consumer<Jedis>> redisRequests;
-    private final Thread redisRequestsThread;
-
-    private final JedisPool jedisPool;
-
-    public HyriRTFAPI(JedisPool jedisPool) {
-        this.jedisPool = jedisPool;
-        this.redisRequests = new LinkedBlockingQueue<>();
-        this.redisRequestsThread = new Thread(() -> {
-            while(running) {
-                try {
-                    final Consumer<Jedis> request = this.redisRequests.take();
-
-                    try (final Jedis jedis = this.getRedisResource()) {
-                        if (jedis != null) {
-                            request.accept(jedis);
-                        }
-                    }
-                } catch (InterruptedException ignored) {}
-            }
-        }, "RTF API - Redis processor");
+    public HyriRTFAPI() {
         this.playerManager = new HyriRTFPlayerManager(this);
-    }
-
-    public void start() {
-        this.running = true;
-        this.redisRequestsThread.start();
-    }
-
-    public void stop() {
-        this.running = false;
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        this.redisRequestsThread.interrupt();
-    }
-
-    public JedisPool getJedisPool() {
-        return this.jedisPool;
-    }
-
-    public Jedis getRedisResource() {
-        return this.jedisPool.getResource();
-    }
-
-    public void redisRequest(Consumer<Jedis> request) {
-        this.redisRequests.add(request);
-    }
-
-    public String getFromRedis(String key) {
-        try (final Jedis jedis = this.getRedisResource()) {
-            if (jedis != null) {
-                return jedis.get(key);
-            }
-        }
-        return null;
     }
 
     public HyriRTFPlayerManager getPlayerManager() {

@@ -154,7 +154,6 @@ public class RTFGamePlayer extends HyriGamePlayer {
                 this.getLastHitterGamePlayer().addKill();
             } else {
                 this.getLastHitterGamePlayer().addFinalKill();
-                this.setSpectator(true);
             }
 
             this.getLastHitterGamePlayer().getScoreboard().update();

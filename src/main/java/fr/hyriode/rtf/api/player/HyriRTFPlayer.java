@@ -1,5 +1,6 @@
 package fr.hyriode.rtf.api.player;
 
+import fr.hyriode.api.player.HyriPlayerData;
 import fr.hyriode.rtf.api.abilities.HyriRTFAbilityModel;
 import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
 import fr.hyriode.rtf.api.statistics.HyriRTFStatistics;
@@ -12,7 +13,7 @@ import java.util.UUID;
  * Created by AstFaster
  * on 31/12/2021 at 18:18
  */
-public class HyriRTFPlayer {
+public class HyriRTFPlayer extends HyriPlayerData {
 
     private final UUID uniqueId;
     private HyriRTFStatistics statistics;

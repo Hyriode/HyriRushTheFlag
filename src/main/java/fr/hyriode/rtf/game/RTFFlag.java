@@ -34,7 +34,7 @@ public class RTFFlag {
     public RTFFlag(HyriRTF plugin, RTFGameTeam team) {
         this.plugin = plugin;
         this.team = team;
-        this.location = this.team.getConfig().getFlag();
+        this.location = this.team.getConfig().getFlag().asBukkit();
         this.block = HyriRTF.WORLD.get().getBlockAt(this.location);
     }
 

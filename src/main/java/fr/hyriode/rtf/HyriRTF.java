@@ -4,14 +4,15 @@ import fr.hyriode.api.HyriAPI;
 import fr.hyriode.hyrame.HyrameLoader;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.language.IHyriLanguageManager;
-import fr.hyriode.hyrame.world.HyriWorldSettings;
-import fr.hyriode.hyrame.world.generator.HyriWorldGenerator;
+import fr.hyriode.hyrame.utils.LocationWrapper;
 import fr.hyriode.rtf.api.HyriRTFAPI;
 import fr.hyriode.rtf.config.RTFConfig;
 import fr.hyriode.rtf.game.RTFGame;
+import fr.hyriode.rtf.game.RTFGameType;
 import fr.hyriode.rtf.game.abilities.RTFAbility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,17 +50,13 @@ public class HyriRTF extends JavaPlugin {
 
         log("Starting " + NAME + "...");
 
-        this.configuration = new RTFConfig(this);
-        this.configuration.create();
-        this.configuration.load();
         this.hyrame = HyrameLoader.load(new HyriRTFProvider(this));
 
-        IHyriLanguageManager.Provider.registerInstance(() -> this.hyrame.getLanguageManager());
+        this.configuration = HyriAPI.get().getServer().getConfig(RTFConfig.class);
 
         languageManager = this.hyrame.getLanguageManager();
 
-        this.api = new HyriRTFAPI(HyriAPI.get().getRedisConnection().getPool());
-        this.api.start();
+        this.api = new HyriRTFAPI();
         this.game = new RTFGame(this.hyrame, this);
         this.hyrame.getGameManager().registerGame(() -> this.game);
 
@@ -89,7 +86,6 @@ public class HyriRTF extends JavaPlugin {
         log("Stopping " + NAME + "...");
 
         this.hyrame.getGameManager().unregisterGame(game);
-        this.api.stop();
     }
 
     public RTFConfig getConfiguration() {

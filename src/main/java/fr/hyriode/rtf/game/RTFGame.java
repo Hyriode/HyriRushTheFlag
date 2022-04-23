@@ -1,5 +1,6 @@
 package fr.hyriode.rtf.game;
 
+import fr.hyriode.api.HyriAPI;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGameState;
@@ -36,19 +37,11 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     private final Location spawn;
     private final HyriRTF plugin;
 
-    private final RTFGameType gameType;
-
     public RTFGame(IHyrame hyrame, HyriRTF plugin) {
-        super(hyrame, plugin, "rtf", "RushTheFlag", RTFGamePlayer.class);
+       // DEV super(hyrame, plugin, HyriAPI.get().getGameManager().getGameInfo("rushtheflag"), RTFGamePlayer.class, RTFGameType.SOLO);
+        super(hyrame, plugin, HyriAPI.get().getGameManager().getGameInfo("rushtheflag"), RTFGamePlayer.class, HyriGameType.getFromData(RTFGameType.values()));
         this.plugin = plugin;
-        this.spawn = this.plugin.getConfiguration().getSpawn();
-
-        this.gameType = RTFGameType.DOUBLES;
-
-        final int full = this.getType().getTeamSize() * 2;
-
-        this.minPlayers = full;
-        this.maxPlayers = full;
+        this.spawn = this.plugin.getConfiguration().getSpawn().asBukkit();
 
         this.registerTeams();
     }
@@ -81,7 +74,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             player.startGame();
         }
 
-        final HyriDeathProtocol.Options.YOptions yOptions = new HyriDeathProtocol.Options.YOptions(new Area(this.plugin.getConfiguration().getGameAreaFirst(), this.plugin.getConfiguration().getGameAreaSecond()).getMin().getY());
+        final HyriDeathProtocol.Options.YOptions yOptions = new HyriDeathProtocol.Options.YOptions(this.plugin.getConfiguration().getArea().asArea().getMin().getY());
 
         this.protocolManager.enableProtocol(new HyriLastHitterProtocol(this.hyrame, this.plugin, 15 * 20L));
         this.protocolManager.enableProtocol(new HyriDeathProtocol(this.hyrame, this.plugin, gamePlayer -> {
@@ -90,7 +83,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             player.teleport(this.spawn);
 
             return this.getPlayer(player).kill();
-        }, this.createDeathScreen(), HyriDeathProtocol.ScreenHandler.Default.class).withOptions(new HyriDeathProtocol.Options().withYOptions(yOptions).withDeathSound(true).withDeathMessages(true)));
+        }, this.createDeathScreen(), HyriDeathProtocol.ScreenHandler.Default.class).withOptions(new HyriDeathProtocol.Options().withYOptions(yOptions)));
 
         this.handleEndGame();
     }
@@ -144,6 +137,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     public void win(HyriGameTeam team) {
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             final RTFGamePlayer gamePlayer = this.getPlayer(player.getUniqueId());
+            gamePlayer.getScoreboard().update();
             this.refreshAPIPlayer(gamePlayer);
         }
         super.win(team);
@@ -259,6 +253,6 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
     @Override
     public RTFGameType getType() {
-        return (RTFGameType) this.gameType;
+        return (RTFGameType) super.getType();
     }
 }

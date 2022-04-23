@@ -9,22 +9,41 @@ import fr.hyriode.hyrame.game.HyriGameType;
  */
 public enum RTFGameType implements HyriGameType {
 
-    SOLO("solo", 1),
-    DOUBLES("doubles", 2),
-    MDT("mdt", 4)
+    SOLO("Solo", 1, 2, 2),
+    DOUBLES("Doubles", 2, 4, 4),
+    MDT("4v4", 4, 6, 8),
     ;
 
-    private final String name;
+    private final String displayName;
     private final int teamSize;
+    private final int minPlayers;
+    private final int maxPlayers;
 
-    RTFGameType(String name, int teamSize) {
-        this.name = name;
+    RTFGameType(String displayName, int teamSize, int minPlayers, int maxPlayers) {
+        this.displayName = displayName;
         this.teamSize = teamSize;
+        this.minPlayers = minPlayers;
+        this.maxPlayers = maxPlayers;
     }
 
     @Override
     public String getName() {
-        return this.name;
+        return this.name();
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayName;
+    }
+
+    @Override
+    public int getMinPlayers() {
+        return this.minPlayers;
+    }
+
+    @Override
+    public int getMaxPlayers() {
+        return this.maxPlayers;
     }
 
     public int getTeamSize() {

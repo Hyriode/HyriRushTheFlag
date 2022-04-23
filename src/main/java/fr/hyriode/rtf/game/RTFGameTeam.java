@@ -1,14 +1,11 @@
 package fr.hyriode.rtf.game;
 
-import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.utils.LocationUtil;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.config.RTFConfig;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 /**
  * Project: HyriRushTheFlag
@@ -33,7 +30,7 @@ public class RTFGameTeam extends HyriGameTeam {
         );
         this.plugin = plugin;
         this.config = config;
-        this.spawnLocation = this.config.getSpawn();
+        this.spawnLocation = this.config.getSpawn().asBukkit();
         this.flag = new RTFFlag(plugin, this);
 
         this.lives = 1;
@@ -41,13 +38,13 @@ public class RTFGameTeam extends HyriGameTeam {
 
     public boolean isInBase(Player player) {
         if (this.contains(player.getUniqueId())) {
-            return LocationUtil.isInArea(player.getLocation(), config.getSpawnAreaFirst(), config.getSpawnAreaSecond());
+            return this.config.getArea().isInArea(player.getLocation());
         }
         return false;
     }
 
     public boolean isInBase(Location location) {
-        return LocationUtil.isInArea(location, config.getSpawnAreaFirst(), config.getSpawnAreaSecond());
+        return this.config.getArea().isInArea(location);
     }
 
 
