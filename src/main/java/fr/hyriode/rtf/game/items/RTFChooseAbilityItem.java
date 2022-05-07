@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * on 11/03/2022 at 19:24
  */
 public class RTFChooseAbilityItem extends HyriItem<HyriRTF> {
+
     public RTFChooseAbilityItem(HyriRTF plugin) {
         super(plugin, "ability_choose", () -> HyriRTF.getLanguageManager().getMessage("item.choose.name"), Material.NAME_TAG);
     }
@@ -21,4 +22,5 @@ public class RTFChooseAbilityItem extends HyriItem<HyriRTF> {
         event.setCancelled(true);
         new RTFChooseAbilityGUI(this.plugin.getGame().getPlayer(event.getPlayer().getUniqueId())).open();
     }
+
 }

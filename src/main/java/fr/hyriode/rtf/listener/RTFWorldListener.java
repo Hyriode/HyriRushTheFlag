@@ -18,6 +18,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -38,6 +40,7 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
         super(plugin);
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         final Player player = event.getPlayer();
@@ -54,24 +57,18 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             @Override
             public void run() {
                 if (index == 3) {
-                    Bukkit.getScheduler().runTask(plugin, new Runnable() {
-                        @Override
-                        public void run() {
-                            if (event.getBlockPlaced().getType().equals(Material.SANDSTONE)) {
-                                event.getBlockPlaced().setType(Material.STAINED_GLASS);
-                                event.getBlockPlaced().setData((byte) 14);
-                                event.getBlockPlaced().setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(plugin, true));
-                            }
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (event.getBlockPlaced().getType().equals(Material.SANDSTONE)) {
+                            event.getBlockPlaced().setType(Material.STAINED_GLASS);
+                            event.getBlockPlaced().setData((byte) 14);
+                            event.getBlockPlaced().setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(plugin, true));
                         }
                     });
                 }
                 if (index == 0) {
-                    Bukkit.getScheduler().runTask(plugin, new Runnable() {
-                        @Override
-                        public void run() {
-                            if (event.getBlockPlaced().getType().equals(Material.STAINED_GLASS)) {
-                                event.getBlockPlaced().breakNaturally();
-                            }
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (event.getBlockPlaced().getType().equals(Material.STAINED_GLASS)) {
+                            event.getBlockPlaced().breakNaturally();
                         }
                     });
                     this.cancel();
@@ -88,6 +85,15 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             if (block.hasMetadata(SANDSTONE_METADATA_KEY)) {
                 block.breakNaturally();
             }
+        }
+    }
+
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent event) {
+        final ItemStack itemStack = event.getEntity().getItemStack();
+
+        if (itemStack.getType() == Material.SANDSTONE) {
+            event.setCancelled(true);
         }
     }
 

@@ -41,9 +41,7 @@ public class RTFChooseAbilityGUI extends HyriInventory {
                             )
                             .withGlow()
                             .withAllItemFlags()
-                            .build(), event -> {
-                        event.setCancelled(true);
-                    });
+                            .build(), event -> event.setCancelled(true));
                 } else {
                     this.addItem(new ItemBuilder(ability.getIcon())
                             .withName(HyriRTF.getLanguageManager().getValue(owner.getPlayer(), ability.getNameKey()))

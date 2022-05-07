@@ -12,14 +12,16 @@ import fr.hyriode.hystia.api.config.IConfig;
 public class RTFConfig implements IConfig {
 
     private final LocationWrapper spawn;
+    private final GameArea spawnArea;
 
     private final GameArea area;
 
     private final Team firstTeam;
     private final Team secondTeam;
 
-    public RTFConfig(LocationWrapper spawn, GameArea area, Team firstTeam, Team secondTeam) {
+    public RTFConfig(LocationWrapper spawn, GameArea spawnArea, GameArea area, Team firstTeam, Team secondTeam) {
         this.spawn = spawn;
+        this.spawnArea = spawnArea;
         this.area = area;
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
@@ -31,6 +33,10 @@ public class RTFConfig implements IConfig {
 
     public GameArea getArea() {
         return area;
+    }
+
+    public GameArea getSpawnArea() {
+        return this.spawnArea;
     }
 
     public Team getFirstTeam() {

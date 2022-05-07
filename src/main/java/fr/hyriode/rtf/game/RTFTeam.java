@@ -24,7 +24,7 @@ public enum RTFTeam {
     AQUA("aqua", HyriGameTeamColor.CYAN),
     PINK("pink", HyriGameTeamColor.PINK),
     WHITE("white", HyriGameTeamColor.WHITE),
-    BLACK("black", HyriGameTeamColor.GRAY);
+    BLACK("black", HyriGameTeamColor.BLACK);
 
     private static final List<Pair<RTFTeam, RTFTeam>> PAIRS = Arrays.asList(new Pair<>(BLUE, RED), new Pair<>(GREEN, YELLOW), new Pair<>(AQUA, PINK), new Pair<>(WHITE, BLACK));
 

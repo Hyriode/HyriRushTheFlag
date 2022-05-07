@@ -1,14 +1,18 @@
 package fr.hyriode.rtf.game;
 
+import fr.hyriode.api.HyriAPI;
+import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.hyrame.actionbar.ActionBar;
 import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.protocol.HyriLastHitterProtocol;
+import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.hyrame.utils.PlayerUtil;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
+import fr.hyriode.rtf.api.statistics.HyriRTFStatistics;
 import fr.hyriode.rtf.game.abilities.RTFAbility;
 import fr.hyriode.rtf.game.items.RTFAbilityItem;
 import fr.hyriode.rtf.game.scoreboard.RTFScoreboard;
@@ -36,6 +40,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
     private boolean cooldown = false;
 
     private HyriRTFPlayer account;
+    private HyriRTFStatistics statistics;
     private long kills;
     private long finalKills;
     private long deaths;
@@ -55,6 +60,10 @@ public class RTFGamePlayer extends HyriGamePlayer {
         this.spawn(true);
     }
 
+    public IHyriPlayer asHyriode() {
+        return HyriAPI.get().getPlayerManager().getPlayer(this.player.getUniqueId());
+    }
+
     public void spawn(boolean teleport) {
         PlayerUtil.resetPlayer(this.player, true);
         this.player.setGameMode(GameMode.SURVIVAL);
@@ -64,9 +73,8 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
         if (teleport) {
             this.player.teleport(this.team.getSpawnLocation());
+            this.handleCooldown(this.getAbility().getCooldown() / 2);
         }
-
-        this.handleCooldown(this.getAbility().getCooldown() / 2);
     }
 
     public void giveHotBar() {
@@ -78,6 +86,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
         inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.GOLDEN_APPLE), new ItemBuilder(Material.GOLDEN_APPLE, 16).build());
         inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.SWORD), new ItemBuilder(Material.IRON_SWORD).withEnchant(Enchantment.DAMAGE_ALL, 1).unbreakable().build());
         inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.PICKAXE), new ItemBuilder(Material.IRON_PICKAXE).withEnchant(Enchantment.DIG_SPEED, 2).unbreakable().build());
+
         this.plugin.getHyrame().getItemManager().giveItem(this.player, this.account.getHotBar().getSlot(HyriRTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
     }
 
@@ -99,9 +108,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
             @Override
             public void run() {
-                final ActionBar bar = new ActionBar(RTFMessage.ABILITY_WAITING_BAR.get().getForPlayer(player)
-                        .replace("%time%", this.index + "s")
-                );
+                final ActionBar bar = new ActionBar(RTFMessage.ABILITY_WAITING_BAR.get().getForPlayer(player).replace("%time%", this.index + "s"));
 
                 bar.send(player);
                 player.setLevel(this.index);
@@ -111,6 +118,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
                     bar.remove(player);
                     this.cancel();
                 }
+
                 if (index == 0) {
                     final ActionBar finishedBar = new ActionBar(RTFMessage.ABILITY_READY_BAR.get().getForPlayer(player));
                     setCooldown(false);
@@ -163,6 +171,10 @@ public class RTFGamePlayer extends HyriGamePlayer {
             game.getHoldingFlag(this.player).lost();
         }
 
+        if (!hasLife) {
+            this.setSpectator(true);
+        }
+
         game.win(game.getWinner());
 
         return hasLife;
@@ -187,6 +199,14 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
     public void setAccount(HyriRTFPlayer account) {
         this.account = account;
+    }
+
+    public HyriRTFStatistics getStatistics() {
+        return this.statistics;
+    }
+
+    public void setStatistics(HyriRTFStatistics statistics) {
+        this.statistics = statistics;
     }
 
     public void addKill() {

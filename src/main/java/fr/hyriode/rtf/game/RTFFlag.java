@@ -5,6 +5,7 @@ import fr.hyriode.hyrame.language.IHyriLanguageManager;
 import fr.hyriode.hyrame.title.Title;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
+import fr.hyriode.rtf.game.items.RTFAbilityItem;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -73,10 +74,8 @@ public class RTFFlag {
 
     public void broughtBack() {
         if (this.holder != null) {
-            final IHyriLanguageManager languageManager = HyriRTF.getLanguageManager();
             final RTFGame game = this.plugin.getGame();
             final RTFGamePlayer gamePlayer = game.getPlayer(this.holder.getUniqueId());
-            final RTFGameTeam playerTeam = gamePlayer.getTeam();
 
             for (RTFGamePlayer player : game.getPlayers()) {
                 player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 3f, 1f);
@@ -110,15 +109,14 @@ public class RTFFlag {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void capture(Player player) {
         final RTFGame game = this.plugin.getGame();
         final RTFGamePlayer gamePlayer = game.getPlayer(player.getUniqueId());
-        final IHyriLanguageManager languageManager = HyriRTF.getLanguageManager();
         final PlayerInventory inventory = player.getInventory();
         final byte data = this.team.getColor().getDyeColor().getData();
 
         for (HyriRTFHotBar.Item item : gamePlayer.getAccount().getHotBar().getItems().keySet()) {
-
             if (gamePlayer.getAccount().getHotBar().getSlot(item) != null) {
                 for (int i = 0; i <= 9; i++) {
                     if (inventory.getItem(i) != null) {
@@ -129,7 +127,6 @@ public class RTFFlag {
                 }
             }
         }
-
         player.setGameMode(GameMode.ADVENTURE);
 
         this.holder = player;
@@ -152,6 +149,8 @@ public class RTFFlag {
                         .replace("%player%", this.getFormattedHolderName())
                 + " \n ");
         this.location.getWorld().strikeLightningEffect(this.location);
+
+        this.plugin.getHyrame().getItemManager().giveItem(player, gamePlayer.getAccount().getHotBar().getSlot(HyriRTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
     }
 
     private String getFormattedHolderName() {

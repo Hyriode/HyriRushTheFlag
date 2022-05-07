@@ -1,5 +1,6 @@
 package fr.hyriode.rtf.api.player;
 
+import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.player.HyriPlayerData;
 import fr.hyriode.rtf.api.abilities.HyriRTFAbilityModel;
 import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
@@ -16,14 +17,12 @@ import java.util.UUID;
 public class HyriRTFPlayer extends HyriPlayerData {
 
     private final UUID uniqueId;
-    private HyriRTFStatistics statistics;
-    private final HyriRTFHotBar hotBar;
+    private HyriRTFHotBar hotBar;
 
     private HyriRTFAbilityModel lastAbility;
 
     public HyriRTFPlayer(UUID uniqueId) {
         this.uniqueId = uniqueId;
-        this.statistics = new HyriRTFStatistics();
         this.hotBar = new HyriRTFHotBar();
         this.lastAbility = HyriRTFAbilityModel.ASTRONAUT;
     }
@@ -32,23 +31,22 @@ public class HyriRTFPlayer extends HyriPlayerData {
         return this.uniqueId;
     }
 
-    public HyriRTFStatistics getStatistics() {
-        return this.statistics;
-    }
-
     public HyriRTFHotBar getHotBar() {
+        if (this.hotBar == null) {
+            return this.hotBar = new HyriRTFHotBar();
+        }
         return this.hotBar;
     }
 
-    public void setStatistics(HyriRTFStatistics statistics) {
-        this.statistics = statistics;
-    }
-
     public HyriRTFAbilityModel getLastAbility() {
+        if (this.lastAbility == null) {
+            return this.lastAbility = HyriRTFAbilityModel.ASTRONAUT;
+        }
         return this.lastAbility;
     }
 
     public void setLastAbility(HyriRTFAbilityModel lastAbility) {
         this.lastAbility = lastAbility;
     }
+
 }

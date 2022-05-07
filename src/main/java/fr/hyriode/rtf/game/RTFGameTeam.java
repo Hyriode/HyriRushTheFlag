@@ -21,13 +21,7 @@ public class RTFGameTeam extends HyriGameTeam {
     private final RTFFlag flag;
 
     public RTFGameTeam(HyriRTF plugin, RTFTeam team, RTFConfig.Team config, int teamSize) {
-        super(
-                plugin.getGame(),
-                team.getName(),
-                team.getDisplayName(),
-                team.getColor(),
-                teamSize
-        );
+        super(plugin.getGame(), team.getName(), team.getDisplayName(), team.getColor(), teamSize);
         this.plugin = plugin;
         this.config = config;
         this.spawnLocation = this.config.getSpawn().asBukkit();
@@ -42,11 +36,6 @@ public class RTFGameTeam extends HyriGameTeam {
         }
         return false;
     }
-
-    public boolean isInBase(Location location) {
-        return this.config.getArea().isInArea(location);
-    }
-
 
     public RTFGameTeam getOppositeTeam() {
         if (this.equals(this.plugin.getGame().getFirstTeam())) {
@@ -79,4 +68,5 @@ public class RTFGameTeam extends HyriGameTeam {
     public boolean hasLife() {
         return this.lives > 0;
     }
+
 }

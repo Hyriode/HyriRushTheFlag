@@ -1,7 +1,11 @@
 package fr.hyriode.rtf.listener;
 
 import fr.hyriode.api.HyriAPI;
+import fr.hyriode.api.event.HyriEventHandler;
+import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGameState;
+import fr.hyriode.hyrame.game.event.player.HyriGameDeathEvent;
+import fr.hyriode.hyrame.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.listener.HyriListener;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGame;
@@ -9,6 +13,7 @@ import fr.hyriode.rtf.game.RTFGamePlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,6 +21,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Project: HyriRushTheFlag
@@ -26,7 +32,17 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
 
     public RTFPlayerListener(HyriRTF plugin) {
         super(plugin);
+
         HyriAPI.get().getEventBus().register(this);
+    }
+
+    @HyriEventHandler
+    public void onDeath(HyriGameDeathEvent event) {
+        final RTFGamePlayer gamePlayer = (RTFGamePlayer) event.getGamePlayer();
+
+        if (!gamePlayer.getTeam().hasLife()) {
+            event.addMessage(HyriLanguageMessage.get("message.eliminated"));
+        }
     }
 
     @EventHandler
@@ -48,11 +64,23 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
                 }
             }
         }
+
+        if (game.getState().isAccessible()) {
+            if (this.plugin.getConfiguration().getSpawnArea().asArea().getMin().getY() >= event.getTo().getY()) {
+                player.teleport(this.plugin.getConfiguration().getSpawn().asBukkit().clone());
+            }
+        }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageEvent event) {
-        if (this.plugin.getGame().getState() == HyriGameState.PLAYING) {
+        final HyriGame<?> game = this.plugin.getGame();
+
+        if (game == null) {
+            return;
+        }
+
+        if (game.getState() == HyriGameState.PLAYING) {
             if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 event.setCancelled(true);
             }
@@ -63,9 +91,12 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (event.getSlotType() == InventoryType.SlotType.ARMOR || event.getCurrentItem().getType().equals(Material.WOOL)) {
+        final ItemStack currentItem = event.getCurrentItem();
+
+        if (event.getSlotType() == InventoryType.SlotType.ARMOR || (currentItem != null && currentItem.getType().equals(Material.WOOL))) {
             event.setCancelled(true);
         }
+
         if (this.plugin.getGame().getState().equals(HyriGameState.PLAYING)) {
             if (this.plugin.getGame().getPlayer(event.getWhoClicked().getUniqueId()).hasFlag()) {
                 event.setCancelled(true);

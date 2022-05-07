@@ -61,7 +61,4 @@ public class RTFAbilityItem extends HyriItem<HyriRTF> {
         gamePlayer.handleCooldown(gamePlayer.getAbility().getCooldown());
     }
 
-
-
-
 }

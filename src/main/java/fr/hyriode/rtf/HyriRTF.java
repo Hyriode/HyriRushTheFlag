@@ -1,6 +1,7 @@
 package fr.hyriode.rtf;
 
 import fr.hyriode.api.HyriAPI;
+import fr.hyriode.api.server.IHyriServer;
 import fr.hyriode.hyrame.HyrameLoader;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.language.IHyriLanguageManager;
@@ -12,7 +13,6 @@ import fr.hyriode.rtf.game.RTFGameType;
 import fr.hyriode.rtf.game.abilities.RTFAbility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,6 +50,22 @@ public class HyriRTF extends JavaPlugin {
 
         log("Starting " + NAME + "...");
 
+        /*final RTFConfig.GameArea spawnArea = new RTFConfig.GameArea(new LocationWrapper(IHyrame.WORLD.get().getUID(), 23, 201, 19), new LocationWrapper(IHyrame.WORLD.get().getUID(), -24, 157, -24));
+        final RTFConfig config = new RTFConfig(// Spawn (en haut de la carte)
+                // Spawn (en haut de la carte)
+                new LocationWrapper(IHyrame.WORLD.get().getUID(), 0.5, 170, 0.5, -90, 0),
+
+                spawnArea,
+                // Pos1 et Pos2 comme world edit pour définir les limites de la map
+                new RTFConfig.GameArea(new LocationWrapper(IHyrame.WORLD.get().getUID(), -68, 139, 18), new LocationWrapper(IHyrame.WORLD.get().getUID(), 68, 89, -21)),
+
+                // Les teams: 4 valeurs -> 1) Spawn // 2) Pos1 de la base // 3) Pos2 de la base // 4) Position du block du flag
+                new RTFConfig.Team(new LocationWrapper(IHyrame.WORLD.get().getUID(), -46.5, 100, 0.5, -90, 0), new LocationWrapper(IHyrame.WORLD.get().getUID(), -44, 100, 10), new LocationWrapper(IHyrame.WORLD.get().getUID(), -64, 114, -10), new LocationWrapper(IHyrame.WORLD.get().getUID(), -51, 101, 0)),
+                new RTFConfig.Team(new LocationWrapper(IHyrame.WORLD.get().getUID(), 47.5, 100, 0.5, 90, 0), new LocationWrapper(IHyrame.WORLD.get().getUID(), 44, 100, -10), new LocationWrapper(IHyrame.WORLD.get().getUID(), 64, 115, 10), new LocationWrapper(IHyrame.WORLD.get().getUID(), 51, 101, 0)));
+
+        HyriAPI.get().getHystiaAPI().getConfigManager().saveConfig(config, "rushtheflag", RTFGameType.EVENT.getName(), "Pokémon");
+        HyriAPI.get().getHystiaAPI().getWorldManager().saveWorld(IHyrame.WORLD.get().getUID(), "rushtheflag", RTFGameType.EVENT.getName(), "Pokémon");*/
+
         this.hyrame = HyrameLoader.load(new HyriRTFProvider(this));
 
         this.configuration = HyriAPI.get().getServer().getConfig(RTFConfig.class);
@@ -61,6 +77,8 @@ public class HyriRTF extends JavaPlugin {
         this.hyrame.getGameManager().registerGame(() -> this.game);
 
         RTFAbility.register(this);
+
+        HyriAPI.get().getServer().setState(IHyriServer.State.READY);
     }
 
     public static void log(Level level, String message) {

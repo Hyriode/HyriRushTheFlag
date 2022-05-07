@@ -34,15 +34,11 @@ public class RTFScoreboard extends HyriGameScoreboard<RTFGame> {
     }
 
     private void addLines() {
-        this.setLine(1, "§1");
         this.setLine(2, this.getTeamLine(this.plugin.getGame().getFirstTeam()));
         this.setLine(3, this.getTeamLine(this.plugin.getGame().getSecondTeam()));
-        this.setLine(4, "§2");
         this.setLine(5, this.getKillsLine());
         this.setLine(6, this.getFinalKillsLine());
         this.setLine(7, this.getDeathsLine());
-        this.setLine(8, "§3");
-        this.setLine(10, "§4");
     }
 
     public void update() {

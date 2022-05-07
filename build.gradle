@@ -35,8 +35,7 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation group: 'org.spigotmc', name: 'spigot', version: '1.8.8-R0.1-SNAPSHOT'
-    implementation 'fr.hyriode:hyrame:1.2.0'
+    implementation 'fr.hyriode:hyrame:1.2.3'
 }
 
 processResources {

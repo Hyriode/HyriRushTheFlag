@@ -1,11 +1,13 @@
 package fr.hyriode.rtf.api.statistics;
 
+import fr.hyriode.api.player.HyriPlayerData;
+
 /**
  * Project: HyriRushTheFlag
  * Created by AstFaster
  * on 31/12/2021 at 18:18
  */
-public class HyriRTFStatistics {
+public class HyriRTFStatistics extends HyriPlayerData {
 
     private long kills;
     private long finalKills;

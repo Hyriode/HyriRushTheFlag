@@ -15,12 +15,6 @@ import java.util.function.Function;
  */
 public class HyriRTFPlayerManager {
 
-    private final HyriRTFAPI api;
-
-    public HyriRTFPlayerManager(HyriRTFAPI api) {
-        this.api = api;
-    }
-
     public HyriRTFPlayer getPlayer(UUID uuid) {
         IHyriPlayer hyriPlayer = HyriAPI.get().getPlayerManager().getPlayer(uuid);
 

@@ -8,6 +8,16 @@
   "team.white.display": "Blanc",
   "team.black.display": "Noir",
 
+  "message.game.description": "&fRécuperez le dreapeau de l'équipe adverse et battez-vous pour\n&fgarder le vôtre. Utilisez vos capacités pour jouer en équipe\n&fet surprendre vos adversaires.",
+
+  "message.game.end.1": "&e1er Tueur",
+  "message.game.end.2": "&f2ème Tueur",
+  "message.game.end.3": "&63ème Tueur",
+  "message.game.end.nobody": "&7Personne",
+  "message.game.end.kills": "%position% &7- %player% &7- %kills%",
+
+  "message.eliminated": "&cEliminé!",
+
   "character.colon": " : ",
 
   "scoreboard.kills.display": "Kills : ",
