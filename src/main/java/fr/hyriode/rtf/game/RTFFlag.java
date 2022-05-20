@@ -77,10 +77,6 @@ public class RTFFlag {
             final RTFGame game = this.plugin.getGame();
             final RTFGamePlayer gamePlayer = game.getPlayer(this.holder.getUniqueId());
 
-            for (RTFGamePlayer player : game.getPlayers()) {
-                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 3f, 1f);
-            }
-
             gamePlayer.spawn(false);
             gamePlayer.addFlagBroughtBack();
 
@@ -95,6 +91,7 @@ public class RTFFlag {
             this.holder = null;
 
             for (RTFGamePlayer player : game.getPlayers()) {
+                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 3f, 1f);
                 player.getScoreboard().update();
             }
         }
@@ -102,7 +99,6 @@ public class RTFFlag {
 
     public void lost() {
         if (this.holder != null) {
-
             this.respawn();
 
             this.holder = null;
@@ -135,7 +131,6 @@ public class RTFFlag {
         player.setGameMode(GameMode.ADVENTURE);
 
         this.holder = player;
-
         this.block.setType(Material.AIR);
 
         gamePlayer.addCapturedFlag();

@@ -303,6 +303,10 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
         }
 
         for (RTFGamePlayer player : players) {
+            if (player.isSpectator() || player.isDead()) {
+                continue;
+            }
+
             player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.WITHER_SPAWN, 3f, 3f);
             player.spawn(false);
         }
