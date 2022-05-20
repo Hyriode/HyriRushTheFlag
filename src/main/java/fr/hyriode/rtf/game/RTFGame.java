@@ -99,7 +99,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
             player.teleport(this.spawn);
 
-            return this.getPlayer(player).kill();
+            return ((RTFGamePlayer) gamePlayer).kill();
         }, this.createDeathScreen(), HyriDeathProtocol.ScreenHandler.Default.class).withOptions(new HyriDeathProtocol.Options().withYOptions(yOptions)));
 
         this.handleEndGame();
@@ -107,7 +107,11 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
     private HyriDeathProtocol.Screen createDeathScreen() {
         return new HyriDeathProtocol.Screen(5, player -> {
-            final RTFGamePlayer gamePlayer = this.getPlayer(player.getUniqueId());
+            final RTFGamePlayer gamePlayer = this.getPlayer(player);
+
+            if (gamePlayer == null) {
+                return;
+            }
 
             gamePlayer.spawn(true);
         });
@@ -132,6 +136,13 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             account = new HyriRTFPlayer(uuid);
         }
 
+        HyriRTFStatistics statistics = this.plugin.getAPI().getStatisticsManager().getStatistics(uuid);
+
+        if (statistics == null) {
+            statistics = new HyriRTFStatistics();
+        }
+
+        gamePlayer.setStatistics(statistics);
         gamePlayer.setAccount(account);
         gamePlayer.setCooldown(false);
 

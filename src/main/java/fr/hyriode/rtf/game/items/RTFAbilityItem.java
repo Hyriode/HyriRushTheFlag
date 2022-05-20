@@ -28,20 +28,20 @@ public class RTFAbilityItem extends HyriItem<HyriRTF> {
 
     @Override
     public ItemStack onPreGive(IHyrame hyrame, Player player, int slot, ItemStack itemStack) {
-        return super.onPreGive(
-                hyrame,
-                player,
-                slot,
-                new ItemBuilder(itemStack).withName(this.displayName.get().getForPlayer(player)
-                        .replace("%ability%", HyriRTF.getLanguageManager().getValue(player, this.plugin.getGame().getPlayer(player.getUniqueId()).getAbility().getNameKey()))
-                ).build()
-        );
+        return new ItemBuilder(itemStack)
+                .withName(this.displayName.get().getForPlayer(player)
+                        .replace("%ability%", HyriRTF.getLanguageManager().getValue(player, this.plugin.getGame().getPlayer(player.getUniqueId()).getAbility().getNameKey())))
+                .build();
     }
 
     @Override
     public void onRightClick(IHyrame hyrame, PlayerInteractEvent event) {
         Player player = event.getPlayer();
         RTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(player.getUniqueId());
+
+        if (gamePlayer == null) {
+            return;
+        }
 
         if (!gamePlayer.isCooldown()) {
             this.handleAction(gamePlayer);

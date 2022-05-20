@@ -58,6 +58,10 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
         if (game.getState() == HyriGameState.PLAYING) {
             final RTFGamePlayer gamePlayer = game.getPlayer(player.getUniqueId());
 
+            if (gamePlayer == null) {
+                return;
+            }
+
             if (gamePlayer.getTeam().isInBase(player)) {
                 if (game.isHoldingFlag(player)) {
                     game.getHoldingFlag(player).broughtBack();
@@ -98,7 +102,9 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
         }
 
         if (this.plugin.getGame().getState().equals(HyriGameState.PLAYING)) {
-            if (this.plugin.getGame().getPlayer(event.getWhoClicked().getUniqueId()).hasFlag()) {
+            final RTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(event.getWhoClicked().getUniqueId());
+
+            if (gamePlayer != null && gamePlayer.hasFlag()) {
                 event.setCancelled(true);
             }
         }
@@ -111,7 +117,7 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
             final RTFGame game = this.plugin.getGame();
             final RTFGamePlayer gamePlayer = game.getPlayer(player.getUniqueId());
 
-            if (gamePlayer.hasFlag()) {
+            if (gamePlayer != null && gamePlayer.hasFlag()) {
                 event.setCancelled(true);
             }
         }

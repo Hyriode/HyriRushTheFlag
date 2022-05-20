@@ -123,6 +123,11 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             event.setCancelled(true);
         } else {
             final RTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(event.getPlayer().getUniqueId());
+
+            if (gamePlayer == null) {
+                return;
+            }
+
             boolean playerIsOnTheBlock = false;
 
             List<Location> locations = Arrays.asList(
@@ -133,10 +138,10 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
                     event.getBlock().getLocation().add(0, 0, -1)
             );
 
-            for (HyriGamePlayer gamePlayer1 : gamePlayer.getTeam().getPlayers()) {
-                if (!gamePlayer1.equals(gamePlayer)) {
+            for (HyriGamePlayer teammate : gamePlayer.getTeam().getPlayers()) {
+                if (!teammate.equals(gamePlayer)) {
                     for (Location location : locations) {
-                        if (LocationUtil.roundLocation(gamePlayer1.getPlayer().getLocation().subtract(0, 1, 0), 0).equals(location)) {
+                        if (LocationUtil.roundLocation(teammate.getPlayer().getLocation().subtract(0, 1, 0), 0).equals(location)) {
                             playerIsOnTheBlock = true;
                         }
                     }

@@ -94,7 +94,7 @@ public class RTFFlag {
 
             this.holder = null;
 
-            for (RTFGamePlayer player : this.plugin.getGame().getPlayers()) {
+            for (RTFGamePlayer player : game.getPlayers()) {
                 player.getScoreboard().update();
             }
         }
@@ -113,6 +113,11 @@ public class RTFFlag {
     public void capture(Player player) {
         final RTFGame game = this.plugin.getGame();
         final RTFGamePlayer gamePlayer = game.getPlayer(player.getUniqueId());
+
+        if (gamePlayer == null) {
+            return;
+        }
+
         final PlayerInventory inventory = player.getInventory();
         final byte data = this.team.getColor().getDyeColor().getData();
 

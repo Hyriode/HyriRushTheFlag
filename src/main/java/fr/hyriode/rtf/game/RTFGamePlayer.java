@@ -131,7 +131,6 @@ public class RTFGamePlayer extends HyriGamePlayer {
                 index--;
             }
         }.runTaskTimer(this.plugin, 0, 20);
-
     }
 
     public boolean kill() {
