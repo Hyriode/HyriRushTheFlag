@@ -2,6 +2,7 @@ package fr.hyriode.rtf.game;
 
 import fr.hyriode.hyrame.language.HyriLanguageMessage;
 import fr.hyriode.rtf.HyriRTF;
+import org.bukkit.entity.Player;
 
 /**
  * Project: HyriRushTheFlag
@@ -25,15 +26,23 @@ public enum RTFMessage {
     ERROR_PLACE_BLOCK_MESSAGE("message.error-place-block.display"),
     ERROR_SPLEEF_MESSAGE("message.spleef.display"),
     ERROR_BREAK_FLAG_MESSAGE("message.error-break-flag.display"),
+
+    LAST_ABILITY_MESSAGE("message.last-ability.display"),
     ;
 
     private final String key;
+
+    private HyriLanguageMessage languageMessage;
 
     RTFMessage(String key) {
         this.key = key;
     }
 
-    public HyriLanguageMessage get() {
-        return HyriRTF.getLanguageManager().getMessage(this.key);
+    public HyriLanguageMessage asLang() {
+        return this.languageMessage == null ? this.languageMessage = HyriLanguageMessage.get(this.key) : this.languageMessage;
+    }
+
+    public String asString(Player player) {
+        return this.asLang().getForPlayer(player);
     }
 }

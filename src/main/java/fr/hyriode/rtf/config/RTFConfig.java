@@ -1,8 +1,13 @@
 package fr.hyriode.rtf.config;
 
+import fr.hyriode.hyrame.game.waitingroom.HyriWaitingRoom;
 import fr.hyriode.hyrame.utils.Area;
 import fr.hyriode.hyrame.utils.LocationWrapper;
+import fr.hyriode.hyrame.utils.block.Cuboid;
 import fr.hyriode.hystia.api.config.IConfig;
+import org.bukkit.Location;
+
+import java.util.List;
 
 /**
  * Project: HyriRushTheFlag
@@ -11,32 +16,20 @@ import fr.hyriode.hystia.api.config.IConfig;
  */
 public class RTFConfig implements IConfig {
 
-    private final LocationWrapper spawn;
-    private final GameArea spawnArea;
-
+    private final WaitingRoom room;
     private final GameArea area;
-
     private final Team firstTeam;
     private final Team secondTeam;
 
-    public RTFConfig(LocationWrapper spawn, GameArea spawnArea, GameArea area, Team firstTeam, Team secondTeam) {
-        this.spawn = spawn;
-        this.spawnArea = spawnArea;
+    public RTFConfig(WaitingRoom room, GameArea area, Team firstTeam, Team secondTeam) {
+        this.room = room;
         this.area = area;
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
     }
 
-    public LocationWrapper getSpawn() {
-        return spawn;
-    }
-
     public GameArea getArea() {
         return area;
-    }
-
-    public GameArea getSpawnArea() {
-        return this.spawnArea;
     }
 
     public Team getFirstTeam() {
@@ -47,19 +40,29 @@ public class RTFConfig implements IConfig {
         return secondTeam;
     }
 
+    public WaitingRoom getWaitingRoom() {
+        return this.room;
+    }
+
+    public static class WaitingRoom extends HyriWaitingRoom.Config {
+        public WaitingRoom(LocationWrapper waitingSpawn, LocationWrapper waitingSpawnPos1, LocationWrapper waitingSpawnPos2, LocationWrapper npcLocation) {
+            super(waitingSpawn, waitingSpawnPos1, waitingSpawnPos2, npcLocation);
+        }
+    }
+
     public static class Team {
 
         private final LocationWrapper spawn;
 
         private final LocationWrapper spawnAreaFirst;
         private final LocationWrapper spawnAreaSecond;
-        private final LocationWrapper flag;
+        private final List<LocationWrapper> flags;
 
-        public Team(LocationWrapper spawn, LocationWrapper spawnAreaFirst, LocationWrapper spawnAreaSecond, LocationWrapper flag) {
+        public Team(LocationWrapper spawn, LocationWrapper spawnAreaFirst, LocationWrapper spawnAreaSecond, List<LocationWrapper> flags) {
             this.spawn = spawn;
             this.spawnAreaFirst = spawnAreaFirst;
             this.spawnAreaSecond = spawnAreaSecond;
-            this.flag = flag;
+            this.flags = flags;
         }
 
         public LocationWrapper getSpawn() {
@@ -78,8 +81,8 @@ public class RTFConfig implements IConfig {
             return new Area(this.spawnAreaFirst.asBukkit(), this.spawnAreaSecond.asBukkit());
         }
 
-        public LocationWrapper getFlag() {
-            return this.flag;
+        public List<LocationWrapper> getFlag() {
+            return this.flags;
         }
     }
 

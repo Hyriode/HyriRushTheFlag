@@ -67,7 +67,7 @@ public class RTFFlag {
         }
 
         game.sendMessageToAll(target ->  " \n" +
-                RTFMessage.FLAG_RESPAWN_MESSAGE.get().getForPlayer(target)
+                RTFMessage.FLAG_RESPAWN_MESSAGE.asString(target)
                         .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getForPlayer(target))
                 + " \n ");
     }
@@ -83,7 +83,7 @@ public class RTFFlag {
             this.team.removeLife();
 
             game.sendMessageToAll(target ->  " \n" +
-                    RTFMessage.FLAG_BROUGHT_BACK_MESSAGE.get().getForPlayer(target)
+                    RTFMessage.FLAG_BROUGHT_BACK_MESSAGE.asString(target)
                             .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getForPlayer(target))
                             .replace("%player%", this.getFormattedHolderName())
                     + " \n ");
@@ -93,6 +93,10 @@ public class RTFFlag {
             for (RTFGamePlayer player : game.getPlayers()) {
                 player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 3f, 1f);
                 player.getScoreboard().update();
+            }
+
+            if(!this.team.getOppositeTeam().hasLife()) {
+                game.setFlagsAvailable(false);
             }
         }
     }
@@ -105,7 +109,6 @@ public class RTFFlag {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public void capture(Player player) {
         final RTFGame game = this.plugin.getGame();
         final RTFGamePlayer gamePlayer = game.getPlayer(player.getUniqueId());
@@ -144,13 +147,13 @@ public class RTFFlag {
         inventory.setHelmet(new ItemBuilder(Material.WOOL, 1, data).build());
 
         game.sendMessageToAll(target ->  " \n" +
-                RTFMessage.FLAG_CAPTURED_MESSAGE.get().getForPlayer(target)
+                RTFMessage.FLAG_CAPTURED_MESSAGE.asString(target)
                         .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getForPlayer(target))
                         .replace("%player%", this.getFormattedHolderName())
                 + " \n ");
         this.location.getWorld().strikeLightningEffect(this.location);
 
-        this.plugin.getHyrame().getItemManager().giveItem(player, gamePlayer.getAccount().getHotBar().getSlot(HyriRTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
+        this.plugin.getHyrame().getItemManager().giveItem(player, gamePlayer.getAccount().getHotBar().getSlot(HyriRTFHotBar.Item.Power_ITEM), RTFAbilityItem.class);
     }
 
     private String getFormattedHolderName() {

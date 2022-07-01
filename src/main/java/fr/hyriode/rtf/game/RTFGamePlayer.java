@@ -6,14 +6,13 @@ import fr.hyriode.hyrame.actionbar.ActionBar;
 import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.protocol.HyriLastHitterProtocol;
-import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.hyrame.utils.PlayerUtil;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
 import fr.hyriode.rtf.api.statistics.HyriRTFStatistics;
-import fr.hyriode.rtf.game.abilities.RTFAbility;
+import fr.hyriode.rtf.game.ablity.RTFAbility;
 import fr.hyriode.rtf.game.items.RTFAbilityItem;
 import fr.hyriode.rtf.game.scoreboard.RTFScoreboard;
 import org.bukkit.GameMode;
@@ -87,7 +86,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
         inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.SWORD), new ItemBuilder(Material.IRON_SWORD).withEnchant(Enchantment.DAMAGE_ALL, 1).unbreakable().build());
         inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.PICKAXE), new ItemBuilder(Material.IRON_PICKAXE).withEnchant(Enchantment.DIG_SPEED, 2).unbreakable().build());
 
-        this.plugin.getHyrame().getItemManager().giveItem(this.player, this.account.getHotBar().getSlot(HyriRTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
+        this.plugin.getHyrame().getItemManager().giveItem(this.player, this.account.getHotBar().getSlot(HyriRTFHotBar.Item.Power_ITEM), RTFAbilityItem.class);
     }
 
     public void giveArmor() {
@@ -108,7 +107,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
             @Override
             public void run() {
-                final ActionBar bar = new ActionBar(RTFMessage.ABILITY_WAITING_BAR.get().getForPlayer(player).replace("%time%", this.index + "s"));
+                final ActionBar bar = new ActionBar(RTFMessage.ABILITY_WAITING_BAR.asString(player).replace("%time%", this.index + "s"));
 
                 bar.send(player);
                 player.setLevel(this.index);
@@ -120,7 +119,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
                 }
 
                 if (index == 0) {
-                    final ActionBar finishedBar = new ActionBar(RTFMessage.ABILITY_READY_BAR.get().getForPlayer(player));
+                    final ActionBar finishedBar = new ActionBar(RTFMessage.ABILITY_READY_BAR.asString(player));
                     setCooldown(false);
                     player.setLevel(0);
                     bar.remove(player);
@@ -277,8 +276,8 @@ public class RTFGamePlayer extends HyriGamePlayer {
         return this.ability;
     }
 
-    public void setAbility(RTFAbility ability) {
-        this.ability = ability;
+    public void setAbility(RTFAbility Power) {
+        this.ability = Power;
     }
 
     public Player getLastHitterPlayer() {

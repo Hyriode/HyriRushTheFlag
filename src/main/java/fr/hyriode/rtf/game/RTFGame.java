@@ -4,26 +4,23 @@ import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.game.HyriGame;
-import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.HyriGameState;
 import fr.hyriode.hyrame.game.HyriGameType;
+import fr.hyriode.hyrame.game.protocol.HyriAntiSpawnKillProtocol;
 import fr.hyriode.hyrame.game.protocol.HyriDeathProtocol;
 import fr.hyriode.hyrame.game.protocol.HyriLastHitterProtocol;
-import fr.hyriode.hyrame.game.protocol.HyriWaitingProtocol;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
-import fr.hyriode.hyrame.game.util.HyriGameItems;
 import fr.hyriode.hyrame.game.util.HyriGameMessages;
 import fr.hyriode.hyrame.game.util.HyriRewardAlgorithm;
+import fr.hyriode.hyrame.game.waitingroom.HyriWaitingRoom;
 import fr.hyriode.hyrame.language.HyriLanguageMessage;
-import fr.hyriode.hyrame.utils.Area;
 import fr.hyriode.hyrame.utils.Pair;
-import fr.hyriode.hyrame.utils.PlayerUtil;
 import fr.hyriode.hyrame.utils.block.Cuboid;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
 import fr.hyriode.rtf.api.statistics.HyriRTFStatistics;
 import fr.hyriode.rtf.config.RTFConfig;
-import fr.hyriode.rtf.game.abilities.RTFAbility;
+import fr.hyriode.rtf.game.ablity.RTFAbility;
 import fr.hyriode.rtf.game.items.RTFChooseAbilityItem;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -41,21 +38,31 @@ import java.util.UUID;
  */
 public class RTFGame extends HyriGame<RTFGamePlayer> {
 
+    private final HyriWaitingRoom waitingRoom;
+
     private RTFGameTeam firstTeam;
     private RTFGameTeam secondTeam;
 
     private final Location spawn;
     private final HyriRTF plugin;
 
+    private boolean flagsAvailable;
+
     public RTFGame(IHyrame hyrame, HyriRTF plugin) {
-       // DEV super(hyrame, plugin, HyriAPI.get().getGameManager().getGameInfo("rushtheflag"), RTFGamePlayer.class, RTFGameType.SOLO);
         super(hyrame, plugin, HyriAPI.get().getGameManager().getGameInfo("rushtheflag"), RTFGamePlayer.class, HyriGameType.getFromData(RTFGameType.values()));
         this.plugin = plugin;
-        this.spawn = this.plugin.getConfiguration().getSpawn().asBukkit();
 
         this.description = HyriLanguageMessage.get("message.game.description");
 
+        this.reconnectionTime = 120;
+
+        this.waitingRoom = new HyriWaitingRoom(this, Material.BANNER, this.plugin.getConfiguration().getWaitingRoom());
+        this.waitingRoom.setup();
+
+        this.spawn = this.waitingRoom.getConfig().getSpawn().asBukkit();
+
         this.registerTeams();
+        this.flagsAvailable = true;
     }
 
     private void registerTeams() {
@@ -75,12 +82,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
     @Override
     public void start() {
-        final RTFConfig.GameArea spawnArea = this.plugin.getConfiguration().getSpawnArea();
-        final Cuboid cuboid = new Cuboid(spawnArea.getAreaFirst().asBukkit(), spawnArea.getAreaSecond().asBukkit());
-
-        for (Block block : cuboid.getBlocks()) {
-            block.setType(Material.AIR);
-        }
+        this.waitingRoom.remove();
 
         super.start();
 
@@ -101,6 +103,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
             return ((RTFGamePlayer) gamePlayer).kill();
         }, this.createDeathScreen(), HyriDeathProtocol.ScreenHandler.Default.class).withOptions(new HyriDeathProtocol.Options().withYOptions(yOptions)));
+        this.protocolManager.enableProtocol(new HyriAntiSpawnKillProtocol(this.hyrame, new HyriAntiSpawnKillProtocol.Options(2 * 20, true)));
 
         this.handleEndGame();
     }
@@ -153,6 +156,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
         this.hyrame.getItemManager().giveItem(player, 4, RTFChooseAbilityItem.class);
 
         player.teleport(this.spawn);
+        player.sendMessage(RTFMessage.LAST_ABILITY_MESSAGE.asString(player).replace("%ability%", gamePlayer.getAbility().getName(player)));
     }
 
     @Override
@@ -164,8 +168,10 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
         super.handleLogout(player);
 
-        if (this.getState() == HyriGameState.PLAYING) {
-            this.win(this.getWinner());
+        if(this.getState() == HyriGameState.PLAYING) {
+            if(!gamePlayer.getTeam().hasPlayersPlaying()) {
+                this.win(gamePlayer.getTeam().getOppositeTeam());
+            }
         }
     }
 
@@ -240,18 +246,20 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
     public void handleEndGame() {
         this.timer.setOnTimeChanged(index -> {
-            if (index == 300) {
-                endingGame(5);
-            } else if (index == 360) {
-                endingGame(4);
-            } else if (index == 420) {
-                endingGame(3);
-            } else if (index == 480) {
-                endingGame(2);
-            } else if (index == 540) {
-                endingGame(1);
-            } else if (index == 600) {
-                Bukkit.getScheduler().runTask(plugin, this::destroyFlags);
+            if(flagsAvailable) {
+                if (index == 300) {
+                    endingGame(5);
+                } else if (index == 360) {
+                    endingGame(4);
+                } else if (index == 420) {
+                    endingGame(3);
+                } else if (index == 480) {
+                    endingGame(2);
+                } else if (index == 540) {
+                    endingGame(1);
+                } else if (index == 600) {
+                    Bukkit.getScheduler().runTask(plugin, this::destroyFlags);
+                }
             }
         });
     }
@@ -271,7 +279,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
     public void endingGame(int minutesLeft) {
         if (minutesLeft == 1) {
-            sendMessageToAll(player -> " \n " + RTFMessage.ENDING_GAME_MESSAGE.get().getForPlayer(player)
+            sendMessageToAll(player -> " \n " + RTFMessage.ENDING_GAME_MESSAGE.asString(player)
                     .replace("%time%", "1")
                     .replace("minutes", "minute")
                     + " \n "
@@ -280,7 +288,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
                 player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.NOTE_PLING, 3f, 3f);
             }
         } else {
-            sendMessageToAll(player -> " \n " + RTFMessage.ENDING_GAME_MESSAGE.get().getForPlayer(player)
+            sendMessageToAll(player -> " \n " + RTFMessage.ENDING_GAME_MESSAGE.asString(player)
                     .replace("%time%", String.valueOf(minutesLeft))
                     + " \n "
             );
@@ -291,7 +299,8 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     }
 
     public void destroyFlags() {
-        this.sendMessageToAll(player -> " \n " + RTFMessage.END_GAME_MESSAGE.get().getForPlayer(player) + " \n ");
+        this.sendMessageToAll(player -> " \n " + RTFMessage.END_GAME_MESSAGE.asString(player) + " \n ");
+        this.reconnectionTime = -1;
 
         for (HyriGameTeam gameTeam : this.teams) {
             RTFGameTeam team = (RTFGameTeam) gameTeam;
@@ -303,6 +312,8 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
         }
 
         for (RTFGamePlayer player : players) {
+            player.getScoreboard().update();
+
             if (player.isSpectator() || player.isDead()) {
                 continue;
             }
@@ -337,14 +348,17 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             statistics.addCapturedFlags(gamePlayer.getCapturedFlags());
             statistics.addFlagsBroughtBack(gamePlayer.getFlagsBroughtBack());
 
-            this.plugin.getAPI().getPlayerManager().sendPlayer(account);
             this.plugin.getAPI().getStatisticsManager().sensStatistics(gamePlayer.getUUID(), statistics);
         }
-
+        this.plugin.getAPI().getPlayerManager().sendPlayer(account);
     }
 
     @Override
     public RTFGameType getType() {
         return (RTFGameType) super.getType();
+    }
+
+    public void setFlagsAvailable(boolean flagsAvailable) {
+        this.flagsAvailable = flagsAvailable;
     }
 }

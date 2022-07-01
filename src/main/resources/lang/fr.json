@@ -8,7 +8,7 @@
   "team.white.display": "Blanc",
   "team.black.display": "Noir",
 
-  "message.game.description": "&fRécuperez le dreapeau de l'équipe adverse et battez-vous pour\n&fgarder le vôtre. Utilisez vos capacités pour jouer en équipe\n&fet surprendre vos adversaires.",
+  "message.game.description": "&fRécuperez le dreapeau de l'équipe adverse et battez-vous pour\n&fgarder le vôtre. Utilisez vos pouvoirs pour jouer en équipe\n&fet surprendre vos adversaires.",
 
   "message.game.end.1": "&e1er Tueur",
   "message.game.end.2": "&f2ème Tueur",
@@ -18,7 +18,7 @@
 
   "message.eliminated": "&cEliminé!",
 
-  "character.colon": " : ",
+  "character.colon": ": ",
 
   "scoreboard.kills.display": "Kills : ",
   "scoreboard.deaths.display": "Morts : ",
@@ -41,27 +41,54 @@
 
   "message.ability-used.display": "&fVous avez utilisé la capacité : %ability%&f !",
   "message.ability-in-cooldown.display": "&cLa capacité est en attente.",
+  "message.last-ability.display": "&fVotre capacité actuelle est : %ability%&f.",
 
-  "item.choose.name": "&bChoisir sa capacité",
+  "item.choose.name": "&bChoisir son capacité",
   "item.ability.name": "&fCapacité: %ability%",
 
   "ability.gui.name": "&8Capacité: %ability%",
-  "ability.gui.lore-choose" : "&cCliquez pour sélectionner !",
-  "ability.gui.lore-chosen" : "&aClasse sélectionnée !",
+  "ability.gui.type": "&7Type: %value%",
+  "ability.gui.select": "&cCliquez pour sélectionner",
+  "ability.gui.selected": "&aCapacité sélectionnée",
+  "ability.gui.locked": "&cCapacité non débloquée",
+  "ability.gui.buy": "&d× Acheter cette capacité: %value% ⛃",
 
-  "ability.astronaut.name": "&3Astronaute",
-  "ability.astronaut.lore.1": "&7Permet de vous propulser vers l'avant",
-  "ability.astronaut.lore.2": "&7pour surprendre vos adversaires.",
+  "ability.type.movement": "&bMouvement",
+  "ability.type-lore.movement": "&7Capacités permettant de se mouvoir\n&7de façons différentes sur la carte.",
 
-  "ability.shooter.name": "&cTireur",
-  "ability.shooter.lore.1": "&7Permet de tirer une boule de feu explosive",
-  "ability.shooter.lore.2": "&7pour faire tomber vos adversaires dans le vide.",
+  "ability.type.attack": "&bAttaque",
+  "ability.type-lore.attack": "&7Capacités permettant de faire\n&7des dégâts sur les adversaires.",
 
-  "ability.runner.name": "&6Coureur",
-  "ability.runner.lore.1": "&7Permet d'obtenir un effet de",
-  "ability.runner.lore.2": "&7vitesse III pendant cinq secondes.",
+  "ability.type.effect": "&bEffet",
+  "ability.type-lore.effect": "&7Capacités permettant d'obtenir des\n&7effets pendant une durée déterminée.",
 
-  "ability.builder.name": "&aArchitecte",
-  "ability.builder.lore.1": "&7Permet de créer un pont temporaire",
-  "ability.builder.lore.2": "&7pour se déplacer rapidement."
+  "ability.type.special": "&bSpécial",
+  "ability.type-lore.special": "&7Capacités spéciales, donnant des\n&7pouvoirs variés aux joueurs.",
+
+  "ability.type.lore.list": "Capacités disponibles: ",
+  "ability.soon": "&cProchainement",
+
+  "ability.astronaut.name": "&bAstronaute",
+  "ability.astronaut.lore": "&7Permet de vous propulser vers l'avant\n&7pour surprendre vos adversaires.",
+
+  "ability.shooter.name": "&bTireur",
+  "ability.shooter.lore": "&7Permet de tirer une boule de feu explosive\n&7pour faire tomber vos adversaires dans le vide.",
+
+  "ability.runner.name": "&bCoureur",
+  "ability.runner.lore": "&7Permet d'obtenir un effet de\n&7vitesse III pendant cinq secondes.",
+
+  "ability.builder.name": "&bArchitecte",
+  "ability.builder.lore": "&7Permet de créer un pont temporaire\n&7pour se déplacer rapidement.",
+
+  "ability.kangaroo.name": "&bKangourou",
+  "ability.kangaroo.lore": "&7Permet de faire un saut vertical\n&7pour monter rapidement.",
+
+  "ability.ghost.name": "&bFantôme",
+  "ability.ghost.lore": "&7Permet de devenir invisible\n&7pendant quatre secondes...",
+
+  "ability.tank.name": "&bTank",
+  "ability.tank.lore": "&7Permet d'obtenir un effet de\n&7résistance II pendant cinq secondes.",
+
+  "ability.barbarian.name": "&bBarbare",
+  "ability.barbarian.lore": "&7Permet d'obtenir un effet de\n&7force I pendant trois secondes."
 }

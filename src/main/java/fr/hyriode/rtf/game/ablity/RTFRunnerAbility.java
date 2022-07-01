@@ -1,7 +1,7 @@
-package fr.hyriode.rtf.game.abilities;
+package fr.hyriode.rtf.game.ablity;
 
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.abilities.HyriRTFAbilityModel;
+import fr.hyriode.rtf.api.ability.HyriRTFAbilityModel;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -17,17 +17,18 @@ public class RTFRunnerAbility extends RTFAbility {
 
     public RTFRunnerAbility(HyriRTF pl) {
         super(HyriRTFAbilityModel.RUNNER,
-                "ability.runner.name",
-                new String[] {"ability.runner.lore.1", "ability.runner.lore.2"},
+                "runner",
                 Material.SUGAR,
-                14
+                RTFAbilityType.EFFECT,
+                0,
+                20
         );
         abilityMap.put(RTFRunnerAbility.class, this);
     }
 
     @Override
     public void use(Player player) {
-        player.playSound(player.getLocation(), Sound.DRINK, 3f, 3f);
+        player.playSound(player.getLocation(), Sound.DRINK, 3f, 1f);
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5 * 20, 2), false);
     }
 }

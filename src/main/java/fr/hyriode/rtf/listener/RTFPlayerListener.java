@@ -7,20 +7,25 @@ import fr.hyriode.hyrame.game.HyriGameState;
 import fr.hyriode.hyrame.game.event.player.HyriGameDeathEvent;
 import fr.hyriode.hyrame.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.listener.HyriListener;
+import fr.hyriode.hyrame.packet.IPacketContainer;
+import fr.hyriode.hyrame.packet.IPacketHandler;
+import fr.hyriode.hyrame.packet.PacketType;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGame;
 import fr.hyriode.rtf.game.RTFGamePlayer;
+import net.minecraft.server.v1_8_R3.EntityFireball;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -90,6 +95,19 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
             }
         } else {
             event.setCancelled(true);
+        }
+    }
+
+    public void onDamageByEntity(EntityDamageByEntityEvent event) {
+        final RTFGame game = this.plugin.getGame();
+
+        if (game == null) {
+            return;
+        }
+
+        if(event.getEntity() instanceof Fireball) {
+            event.getEntity().remove();
+            event.getEntity().getLocation().getWorld().createExplosion(event.getEntity().getLocation(), 3);
         }
     }
 

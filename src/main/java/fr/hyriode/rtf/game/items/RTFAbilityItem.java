@@ -30,7 +30,7 @@ public class RTFAbilityItem extends HyriItem<HyriRTF> {
     public ItemStack onPreGive(IHyrame hyrame, Player player, int slot, ItemStack itemStack) {
         return new ItemBuilder(itemStack)
                 .withName(this.displayName.get().getForPlayer(player)
-                        .replace("%ability%", HyriRTF.getLanguageManager().getValue(player, this.plugin.getGame().getPlayer(player.getUniqueId()).getAbility().getNameKey())))
+                        .replace("%ability%", this.plugin.getGame().getPlayer(player).getAbility().getName(player)))
                 .build();
     }
 
@@ -46,15 +46,15 @@ public class RTFAbilityItem extends HyriItem<HyriRTF> {
         if (!gamePlayer.isCooldown()) {
             this.handleAction(gamePlayer);
         } else {
-            gamePlayer.sendMessage(RTFMessage.ABILITY_IN_COOLDOWN_MESSAGE.get().getForPlayer(player));
+            gamePlayer.sendMessage(RTFMessage.ABILITY_IN_COOLDOWN_MESSAGE.asString(player));
             player.playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 0.8F, 0.1F);
         }
     }
 
     private void handleAction(RTFGamePlayer gamePlayer) {
 
-        gamePlayer.sendMessage(RTFMessage.ABILITY_USED_MESSAGE.get().getForPlayer(gamePlayer.getPlayer())
-                .replace("%ability%", HyriRTF.getLanguageManager().getValue(gamePlayer.getPlayer(), gamePlayer.getAbility().getNameKey()))
+        gamePlayer.sendMessage(RTFMessage.ABILITY_USED_MESSAGE.asString(gamePlayer.getPlayer())
+                .replace("%ability%", gamePlayer.getAbility().getName(gamePlayer.getPlayer()))
         );
 
         gamePlayer.getAbility().use(gamePlayer.getPlayer());

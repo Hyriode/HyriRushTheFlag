@@ -48,7 +48,7 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
         event.setCancelled(!this.canPlaceBlock(event.getBlockPlaced(), event.getPlayer()));
 
         if (event.isCancelled()) {
-            player.sendMessage(RTFMessage.ERROR_PLACE_BLOCK_MESSAGE.get().getForPlayer(player));
+            player.sendMessage(RTFMessage.ERROR_PLACE_BLOCK_MESSAGE.asString(player));
         }
 
         new BukkitRunnable() {
@@ -115,7 +115,7 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
                         team.getFlag().capture(player);
                     } else {
                         event.setCancelled(true);
-                        player.sendMessage(RTFMessage.ERROR_BREAK_FLAG_MESSAGE.get().getForPlayer(player));
+                        player.sendMessage(RTFMessage.ERROR_BREAK_FLAG_MESSAGE.asString(player));
                     }
                 }
             }
@@ -149,7 +149,7 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             }
             if (playerIsOnTheBlock) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(RTFMessage.ERROR_SPLEEF_MESSAGE.get().getForPlayer(player));
+                event.getPlayer().sendMessage(RTFMessage.ERROR_SPLEEF_MESSAGE.asString(player));
             }
         }
     }

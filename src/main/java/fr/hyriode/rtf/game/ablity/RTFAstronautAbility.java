@@ -1,7 +1,7 @@
-package fr.hyriode.rtf.game.abilities;
+package fr.hyriode.rtf.game.ablity;
 
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.abilities.HyriRTFAbilityModel;
+import fr.hyriode.rtf.api.ability.HyriRTFAbilityModel;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,10 +16,11 @@ public class RTFAstronautAbility extends RTFAbility {
 
     public RTFAstronautAbility(HyriRTF pl) {
         super(HyriRTFAbilityModel.ASTRONAUT,
-                "ability.astronaut.name",
-                new String[] {"ability.astronaut.lore.1", "ability.astronaut.lore.2"},
+                "astronaut",
                 Material.FIREWORK,
-                18);
+                RTFAbilityType.MOVEMENT,
+                20000,
+                20);
 
         abilityMap.put(RTFAstronautAbility.class, this);
     }
@@ -27,7 +28,7 @@ public class RTFAstronautAbility extends RTFAbility {
     @Override
     public void use(Player player) {
         Vector normal = player.getEyeLocation().getDirection();
-        normal.setY(0.85 + Math.abs(normal.getY()) * 0.65);
+        normal.setY(0.75 + Math.abs(normal.getY()) * 0.55);
         player.setVelocity(normal);
         player.playSound(player.getLocation(), Sound.FIREWORK_LAUNCH, 3f, 3f);
     }

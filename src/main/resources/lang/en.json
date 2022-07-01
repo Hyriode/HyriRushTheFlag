@@ -26,8 +26,8 @@
   "scoreboard.time.display": "Time: ",
   "scoreboard.you.display": " &7(YOU)",
 
-  "bar.waiting.display": "&cCapacity in cooldown : %time%",
-  "bar.ready.display": "&aCapacity available",
+  "bar.waiting.display": "&cAbility in cooldown : %time%",
+  "bar.ready.display": "&aAbility available",
 
   "message.flag-captured.display": "%team%&3 team flag has been captured by %player%&3!",
   "message.flag-respawn.display": "%team%&3 team flag just respawned!",
@@ -39,29 +39,60 @@
   "message.spleef.display": "&cDo not try to spleef your teammates!",
   "message.error-break-flag.display": "&cYou cannot break your own flag!",
 
-  "message.ability-used.display": "&fYou used the ability: %ability%&f!",
-  "message.ability-in-cooldown.display": "&cThe ability is in cooldown.",
+  "message.power-used.display": "&fYou used the ability: %ability%&f!",
+  "message.power-in-cooldown.display": "&cThe ability is in cooldown.",
+  "message.last-ability.display": "&fYour actual ability is: %ability%&f.",
 
   "item.choose.name": "&bChoose your ability",
   "item.ability.name": "&fAbility: %ability%",
 
   "ability.gui.name": "&8Ability: %ability%",
-  "ability.gui.lore-choose" : "&cClick to select!",
-  "ability.gui.lore-chosen" : "&aSelected ability!",
+  "ability.gui.type": "&7Type: %value%",
+  "ability.gui.select" : "&cClick to select",
+  "ability.gui.selected" : "&aSelected ability",
+  "ability.gui.locked" : "&cLocked ability",
+  "ability.gui.buy" : "&d× Buy this ability: %value% ⛃",
 
-  "ability.astronaut.name": "&3Astronaut",
-  "ability.astronaut.lore.1": "&7Allows you to propel yourself",
-  "ability.astronaut.lore.2": "&7forward to surprise your opponents.",
+  "ability.buy-gui.name": "&8Confirmation of purchase",
+  "ability.buy-gui.confirm": "&aConfirm",
+  "ability.buy-gui.cancel": "&cCancel",
 
-  "ability.shooter.name": "&cShooter",
-  "ability.shooter.lore.1": "&7Allows you to shoot an explosive fireball",
-  "ability.shooter.lore.2": "&7to knock your opponents into the void.",
+  "ability.type.movement": "&bMovement",
+  "ability.type-lore.movement": "&7Abilities to move in\n&7different ways on the map",
 
-  "ability.runner.name": "&6Runner",
-  "ability.runner.lore.1": "&7Grants a speed III effect",
-  "ability.runner.lore.2": "&7for five seconds.",
+  "ability.type.attack": "&bAttack",
+  "ability.type-lore.attack": "&7Abilities to do\n&7damage on the opponents.",
 
-  "ability.builder.name": "&aBuilder",
-  "ability.builder.lore.1": "&7Allows you to create a temporary",
-  "ability.builder.lore.2": "&7bridge to move quickly."
+  "ability.type.effect": "&bEffect",
+  "ability.type-lore.effect": "&7Abilities to obtain effects\n&7for a specific period of time.",
+
+  "ability.type.special": "&bSpecial",
+  "ability.type-lore.special": "&7Special abilities, giving\n&7various powers to players.",
+
+  "ability.type.lore.list": "Available abilities: ",
+  "ability.soon": "&cSoon",
+
+  "ability.astronaut.name": "&bAstronaut",
+  "ability.astronaut.lore": "&7Allows you to propel yourself\n&7forward to surprise your opponents.",
+
+  "ability.shooter.name": "&bShooter",
+  "ability.shooter.lore": "&7Allows you to shoot an explosive fireball\n&7to knock your opponents into the void.",
+
+  "ability.runner.name": "&bRunner",
+  "ability.runner.lore": "&7Grants a speed III effect\n&7for five seconds.",
+
+  "ability.builder.name": "&bBuilder",
+  "ability.builder.lore": "&7Allows you to create a temporary\n&7bridge to move quickly.",
+
+  "ability.kangaroo.name": "&bKangaroo",
+  "ability.kangaroo.lore": "&7Allows you to make a vertical jump\n&7to go up quickly.",
+
+  "ability.ghost.name": "&bGhost",
+  "ability.ghost.lore": "&7Allows you to be invisible\n&7for 4 seconds...",
+
+  "ability.tank.name": "&bTank",
+  "ability.tank.lore": "&7Grants a resistance II effect\n&7for five seconds.",
+
+  "ability.barbarian.name": "&bBarbare",
+  "ability.barbarian.lore": "&7Grants a strength I effect\n&7for three seconds."
 }
