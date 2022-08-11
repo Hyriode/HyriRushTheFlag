@@ -11,7 +11,7 @@ import fr.hyriode.hyrame.utils.PlayerUtil;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
-import fr.hyriode.rtf.api.statistics.HyriRTFStatistics;
+import fr.hyriode.rtf.api.statistics.RTFStatistics;
 import fr.hyriode.rtf.game.ablity.RTFAbility;
 import fr.hyriode.rtf.game.items.RTFAbilityItem;
 import fr.hyriode.rtf.game.scoreboard.RTFScoreboard;
@@ -39,7 +39,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
     private boolean cooldown = false;
 
     private HyriRTFPlayer account;
-    private HyriRTFStatistics statistics;
+    private RTFStatistics statistics;
     private long kills;
     private long finalKills;
     private long deaths;
@@ -86,7 +86,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
         inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.SWORD), new ItemBuilder(Material.IRON_SWORD).withEnchant(Enchantment.DAMAGE_ALL, 1).unbreakable().build());
         inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.PICKAXE), new ItemBuilder(Material.IRON_PICKAXE).withEnchant(Enchantment.DIG_SPEED, 2).unbreakable().build());
 
-        this.plugin.getHyrame().getItemManager().giveItem(this.player, this.account.getHotBar().getSlot(HyriRTFHotBar.Item.Power_ITEM), RTFAbilityItem.class);
+        this.plugin.getHyrame().getItemManager().giveItem(this.player, this.account.getHotBar().getSlot(HyriRTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
     }
 
     public void giveArmor() {
@@ -199,11 +199,11 @@ public class RTFGamePlayer extends HyriGamePlayer {
         this.account = account;
     }
 
-    public HyriRTFStatistics getStatistics() {
+    public RTFStatistics getStatistics() {
         return this.statistics;
     }
 
-    public void setStatistics(HyriRTFStatistics statistics) {
+    public void setStatistics(RTFStatistics statistics) {
         this.statistics = statistics;
     }
 

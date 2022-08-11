@@ -7,6 +7,7 @@ import fr.hyriode.hyrame.utils.block.Cuboid;
 import fr.hyriode.hystia.api.config.IConfig;
 import org.bukkit.Location;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,14 +16,11 @@ import java.util.List;
  * on 22/04/2022 at 16:28
  */
 public class RTFConfig implements IConfig {
-
-    private final WaitingRoom room;
     private final GameArea area;
     private final Team firstTeam;
     private final Team secondTeam;
 
-    public RTFConfig(WaitingRoom room, GameArea area, Team firstTeam, Team secondTeam) {
-        this.room = room;
+    public RTFConfig(GameArea area, Team firstTeam, Team secondTeam) {
         this.area = area;
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
@@ -40,16 +38,6 @@ public class RTFConfig implements IConfig {
         return secondTeam;
     }
 
-    public WaitingRoom getWaitingRoom() {
-        return this.room;
-    }
-
-    public static class WaitingRoom extends HyriWaitingRoom.Config {
-        public WaitingRoom(LocationWrapper waitingSpawn, LocationWrapper waitingSpawnPos1, LocationWrapper waitingSpawnPos2, LocationWrapper npcLocation) {
-            super(waitingSpawn, waitingSpawnPos1, waitingSpawnPos2, npcLocation);
-        }
-    }
-
     public static class Team {
 
         private final LocationWrapper spawn;
@@ -58,11 +46,16 @@ public class RTFConfig implements IConfig {
         private final LocationWrapper spawnAreaSecond;
         private final List<LocationWrapper> flags;
 
+        private final List<Location> flagsBukkit;
+
         public Team(LocationWrapper spawn, LocationWrapper spawnAreaFirst, LocationWrapper spawnAreaSecond, List<LocationWrapper> flags) {
             this.spawn = spawn;
             this.spawnAreaFirst = spawnAreaFirst;
             this.spawnAreaSecond = spawnAreaSecond;
             this.flags = flags;
+
+            this.flagsBukkit = new ArrayList<>();
+            this.flags.forEach(flag -> flagsBukkit.add(flag.asBukkit()));
         }
 
         public LocationWrapper getSpawn() {
@@ -81,8 +74,11 @@ public class RTFConfig implements IConfig {
             return new Area(this.spawnAreaFirst.asBukkit(), this.spawnAreaSecond.asBukkit());
         }
 
-        public List<LocationWrapper> getFlag() {
+        public List<LocationWrapper> getFlags() {
             return this.flags;
+        }
+        public List<Location> getFlagsAsBukkit() {
+            return this.flagsBukkit;
         }
     }
 

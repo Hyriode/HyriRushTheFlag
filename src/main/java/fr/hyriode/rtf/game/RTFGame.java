@@ -13,12 +13,13 @@ import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.game.util.HyriGameMessages;
 import fr.hyriode.hyrame.game.util.HyriRewardAlgorithm;
 import fr.hyriode.hyrame.game.waitingroom.HyriWaitingRoom;
-import fr.hyriode.hyrame.language.HyriLanguageMessage;
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.utils.Pair;
 import fr.hyriode.hyrame.utils.block.Cuboid;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.player.HyriRTFPlayer;
-import fr.hyriode.rtf.api.statistics.HyriRTFStatistics;
+import fr.hyriode.rtf.api.statistics.RTFStatistics;
+import fr.hyriode.rtf.api.statistics.RTFStatistics;
 import fr.hyriode.rtf.config.RTFConfig;
 import fr.hyriode.rtf.game.ablity.RTFAbility;
 import fr.hyriode.rtf.game.items.RTFChooseAbilityItem;
@@ -56,9 +57,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
         this.reconnectionTime = 120;
 
-        this.waitingRoom = new HyriWaitingRoom(this, Material.BANNER, this.plugin.getConfiguration().getWaitingRoom());
-        this.waitingRoom.setup();
-
+        this.waitingRoom = new RTFWaitingRoom(this);
         this.spawn = this.waitingRoom.getConfig().getSpawn().asBukkit();
 
         this.registerTeams();
@@ -139,11 +138,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             account = new HyriRTFPlayer(uuid);
         }
 
-        HyriRTFStatistics statistics = this.plugin.getAPI().getStatisticsManager().getStatistics(uuid);
-
-        if (statistics == null) {
-            statistics = new HyriRTFStatistics();
-        }
+        RTFStatistics statistics = RTFStatistics.get(uuid);
 
         gamePlayer.setStatistics(statistics);
         gamePlayer.setAccount(account);
@@ -188,8 +183,8 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
         }
 
         for (RTFGamePlayer gamePlayer : this.players) {
-            if (winner.contains(gamePlayer.getUUID())) {
-                gamePlayer.getStatistics().addVictories(1);
+            if (winner.contains(gamePlayer.getUniqueId())) {
+                gamePlayer.getStatistics().getData(this.getType()).addVictories(1);
             }
 
             this.refreshAPIPlayer(gamePlayer);
@@ -202,15 +197,15 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
             for (int i = 0; i <= 2; i++) {
                 final RTFGamePlayer endPlayer = topKillers.size() > i ? topKillers.get(i) : null;
-                final String line = HyriLanguageMessage.get("message.game.end.kills").getForPlayer(player).replace("%position%", HyriLanguageMessage.get("message.game.end." + (i + 1)).getForPlayer(player));
+                final String line = HyriLanguageMessage.get("message.game.end.kills").getValue(player).replace("%position%", HyriLanguageMessage.get("message.game.end." + (i + 1)).getValue(player));
 
                 if (endPlayer == null) {
-                    killsLines.add(line.replace("%player%", HyriLanguageMessage.get("message.game.end.nobody").getForPlayer(player))
+                    killsLines.add(line.replace("%player%", HyriLanguageMessage.get("message.game.end.nobody").getValue(player))
                             .replace("%kills%", "0"));
                     continue;
                 }
 
-                final IHyriPlayer account = HyriAPI.get().getPlayerManager().getPlayer(endPlayer.getUUID());
+                final IHyriPlayer account = HyriAPI.get().getPlayerManager().getPlayer(endPlayer.getUniqueId());
 
                 killsLines.add(line.replace("%player%", account.hasNickname() ? account.getNickname().getName() : account.getNameWithRank())
                         .replace("%kills%", String.valueOf(endPlayer.getKills())));
@@ -306,7 +301,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             RTFGameTeam team = (RTFGameTeam) gameTeam;
             team.getFlag().resetHolder();
             if(team.hasLife()) {
-                team.getFlag().getBlock().setType(Material.AIR);
+                team.getFlag().getBlocks().forEach(block -> block.setType(Material.AIR));
                 team.removeLife();
             }
         }
@@ -333,22 +328,23 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
     private void refreshAPIPlayer(RTFGamePlayer gamePlayer) {
         final HyriRTFPlayer account = gamePlayer.getAccount();
-        final HyriRTFStatistics statistics = gamePlayer.getStatistics();
+        final RTFStatistics statistics = gamePlayer.getStatistics();
+        final RTFStatistics.Data data = statistics.getData(this.getType());
 
         account.setLastAbility(gamePlayer.getAbility().getModel());
 
         if (this.getState() != HyriGameState.READY && this.getState() != HyriGameState.WAITING) {
             gamePlayer.getScoreboard().hide();
 
-            statistics.setPlayedTime(statistics.getPlayedTime() + gamePlayer.getPlayedTime());
-            statistics.addGamesPlayed(1);
-            statistics.addKills(gamePlayer.getKills());
-            statistics.addFinalKills(gamePlayer.getFinalKills());
-            statistics.addDeaths(gamePlayer.getDeaths());
-            statistics.addCapturedFlags(gamePlayer.getCapturedFlags());
-            statistics.addFlagsBroughtBack(gamePlayer.getFlagsBroughtBack());
+            data.setPlayedTime(data.getPlayedTime() + gamePlayer.getPlayedTime());
+            data.addGamesPlayed(1);
+            data.addKills(gamePlayer.getKills());
+            data.addFinalKills(gamePlayer.getFinalKills());
+            data.addDeaths(gamePlayer.getDeaths());
+            data.addCapturedFlags(gamePlayer.getCapturedFlags());
+            data.addFlagsBroughtBack(gamePlayer.getFlagsBroughtBack());
 
-            this.plugin.getAPI().getStatisticsManager().sensStatistics(gamePlayer.getUUID(), statistics);
+            statistics.update(account.getUniqueId());
         }
         this.plugin.getAPI().getPlayerManager().sendPlayer(account);
     }
@@ -360,5 +356,9 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
     public void setFlagsAvailable(boolean flagsAvailable) {
         this.flagsAvailable = flagsAvailable;
+    }
+
+    public RTFWaitingRoom getWaitingRoom() {
+        return (RTFWaitingRoom) this.waitingRoom;
     }
 }

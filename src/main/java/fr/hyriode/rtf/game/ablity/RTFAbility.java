@@ -1,7 +1,7 @@
 package fr.hyriode.rtf.game.ablity;
 
 import fr.hyriode.api.transaction.IHyriTransactionContent;
-import fr.hyriode.hyrame.language.HyriLanguageMessage;
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.ability.HyriRTFAbilityModel;
 import org.bukkit.Material;
@@ -90,11 +90,11 @@ public abstract class RTFAbility {
     }
 
     public String getName(Player player) {
-        return this.name.getForPlayer(player);
+        return this.name.getValue(player);
     }
 
     public List<String> getLore(Player player) {
-        final String str = this.lore.getForPlayer(player);
+        final String str = this.lore.getValue(player);
         final String[] splitLore = str.split("\n");
 
         return new ArrayList<>(Arrays.asList(splitLore));

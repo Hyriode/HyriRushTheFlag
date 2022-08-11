@@ -1,5 +1,6 @@
 package fr.hyriode.rtf.game.scoreboard;
 
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.game.scoreboard.HyriGameScoreboard;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGame;
@@ -63,8 +64,8 @@ public class RTFScoreboard extends HyriGameScoreboard<RTFGame> {
     }
 
     private String getTeamLine(RTFGameTeam team) {
-        final String teamDisplay = team.getColor().getChatColor() + team.getDisplayName().getForPlayer(this.player) + ChatColor.RESET;
-        final String colon = ChatColor.WHITE + HyriRTF.getLanguageManager().getValue(this.player, "character.colon");
+        final String teamDisplay = team.getColor().getChatColor() + team.getDisplayName().getValue(this.player) + ChatColor.RESET;
+        final String colon = ChatColor.WHITE + HyriLanguageMessage.get("character.colon").getValue(this.player);
 
         if (this.getGamePlayer().getTeam().equals(team)) {
             if(team.hasLife()) {
@@ -86,8 +87,7 @@ public class RTFScoreboard extends HyriGameScoreboard<RTFGame> {
     }
 
     private String getLinePrefix(String prefix) {
-        return HyriRTF.getLanguageManager().getValue(this.player, "scoreboard." + prefix + ".display");
-        //
+        return HyriLanguageMessage.get("scoreboard." + prefix + ".display").getValue(this.player);
     }
 
 }

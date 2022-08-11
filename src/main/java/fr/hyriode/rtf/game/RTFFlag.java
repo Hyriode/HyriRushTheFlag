@@ -1,7 +1,6 @@
 package fr.hyriode.rtf.game;
 
 import fr.hyriode.hyrame.item.ItemBuilder;
-import fr.hyriode.hyrame.language.IHyriLanguageManager;
 import fr.hyriode.hyrame.title.Title;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
@@ -15,6 +14,10 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.material.Wool;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Project: HyriRushTheFlag
  * Created by AstFaster
@@ -26,8 +29,8 @@ public class RTFFlag {
 
     private Player holder;
 
-    private final Block block;
-    private final Location location;
+    private final List<Block> blocks;
+    private final List<Location> locations;
 
     private final RTFGameTeam team;
     private final HyriRTF plugin;
@@ -35,26 +38,30 @@ public class RTFFlag {
     public RTFFlag(HyriRTF plugin, RTFGameTeam team) {
         this.plugin = plugin;
         this.team = team;
-        this.location = this.team.getConfig().getFlag().asBukkit();
-        this.block = HyriRTF.WORLD.get().getBlockAt(this.location);
+        this.locations = team.getConfig().getFlagsAsBukkit();
+
+        this.blocks = new ArrayList<>();
+        this.locations.forEach(location -> this.blocks.add(HyriRTF.WORLD.get().getBlockAt(location)));
     }
 
     public void place() {
-        this.block.setType(Material.WOOL);
+        this.blocks.forEach(block -> {
+            block.setType(Material.WOOL);
 
-        final BlockState blockState = this.block.getState();
-        final MaterialData data = blockState.getData();
+            final BlockState blockState = block.getState();
+            final MaterialData data = blockState.getData();
 
-        if (data instanceof Wool) {
-            final Wool wool = (Wool) data;
+            if (data instanceof Wool) {
+                final Wool wool = (Wool) data;
 
-            wool.setColor(team.getColor().getDyeColor());
+                wool.setColor(team.getColor().getDyeColor());
 
-            blockState.setData(data);
-            blockState.update();
-        }
+                blockState.setData(data);
+                blockState.update();
+            }
 
-        this.block.setMetadata(METADATA_KEY, new FixedMetadataValue(this.plugin, this.team.getName()));
+            block.setMetadata(METADATA_KEY, new FixedMetadataValue(this.plugin, this.team.getName()));
+        });
     }
 
     public void respawn() {
@@ -68,7 +75,7 @@ public class RTFFlag {
 
         game.sendMessageToAll(target ->  " \n" +
                 RTFMessage.FLAG_RESPAWN_MESSAGE.asString(target)
-                        .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getForPlayer(target))
+                        .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
                 + " \n ");
     }
 
@@ -84,7 +91,7 @@ public class RTFFlag {
 
             game.sendMessageToAll(target ->  " \n" +
                     RTFMessage.FLAG_BROUGHT_BACK_MESSAGE.asString(target)
-                            .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getForPlayer(target))
+                            .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
                             .replace("%player%", this.getFormattedHolderName())
                     + " \n ");
 
@@ -134,7 +141,7 @@ public class RTFFlag {
         player.setGameMode(GameMode.ADVENTURE);
 
         this.holder = player;
-        this.block.setType(Material.AIR);
+        this.blocks.forEach(block -> block.setType(Material.AIR));
 
         gamePlayer.addCapturedFlag();
 
@@ -148,12 +155,12 @@ public class RTFFlag {
 
         game.sendMessageToAll(target ->  " \n" +
                 RTFMessage.FLAG_CAPTURED_MESSAGE.asString(target)
-                        .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getForPlayer(target))
+                        .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
                         .replace("%player%", this.getFormattedHolderName())
                 + " \n ");
-        this.location.getWorld().strikeLightningEffect(this.location);
+        this.locations.forEach(location -> location.getWorld().strikeLightningEffect(location));
 
-        this.plugin.getHyrame().getItemManager().giveItem(player, gamePlayer.getAccount().getHotBar().getSlot(HyriRTFHotBar.Item.Power_ITEM), RTFAbilityItem.class);
+        this.plugin.getHyrame().getItemManager().giveItem(player, gamePlayer.getAccount().getHotBar().getSlot(HyriRTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
     }
 
     private String getFormattedHolderName() {
@@ -171,7 +178,7 @@ public class RTFFlag {
         this.holder = null;
     }
 
-    public Block getBlock() {
-        return block;
+    public List<Block> getBlocks() {
+        return this.blocks;
     }
 }

@@ -1,7 +1,7 @@
 package fr.hyriode.rtf.game;
 
 import fr.hyriode.hyrame.game.team.HyriGameTeamColor;
-import fr.hyriode.hyrame.language.HyriLanguageMessage;
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.utils.Pair;
 import fr.hyriode.rtf.HyriRTF;
 
@@ -35,7 +35,7 @@ public enum RTFTeam {
         RTFTeam(String name, HyriGameTeamColor color) {
             this.name = name;
             this.color = color;
-            this.displayName = () -> HyriRTF.getLanguageManager().getMessage("team." + this.name + ".display");
+            this.displayName = () -> HyriLanguageMessage.get("team." + this.name + ".display");
         }
 
     public String getName() {

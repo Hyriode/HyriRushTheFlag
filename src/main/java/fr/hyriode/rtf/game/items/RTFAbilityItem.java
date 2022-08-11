@@ -3,8 +3,7 @@ package fr.hyriode.rtf.game.items;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.item.HyriItem;
 import fr.hyriode.hyrame.item.ItemBuilder;
-import fr.hyriode.hyrame.language.HyriLanguageMessage;
-import fr.hyriode.api.settings.HyriLanguage;
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGamePlayer;
 import fr.hyriode.rtf.game.RTFMessage;
@@ -23,13 +22,13 @@ import org.bukkit.inventory.ItemStack;
 public class RTFAbilityItem extends HyriItem<HyriRTF> {
 
     public RTFAbilityItem(HyriRTF plugin) {
-        super(plugin, "ability_item", () -> HyriRTF.getLanguageManager().getMessage("item.ability.name"), Material.NETHER_STAR);
+        super(plugin, "ability_item", () -> HyriLanguageMessage.get("item.ability.name"), Material.NETHER_STAR);
     }
 
     @Override
     public ItemStack onPreGive(IHyrame hyrame, Player player, int slot, ItemStack itemStack) {
         return new ItemBuilder(itemStack)
-                .withName(this.displayName.get().getForPlayer(player)
+                .withName(this.displayName.get().getValue(player)
                         .replace("%ability%", this.plugin.getGame().getPlayer(player).getAbility().getName(player)))
                 .build();
     }

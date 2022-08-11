@@ -5,7 +5,7 @@ import fr.hyriode.api.event.HyriEventHandler;
 import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGameState;
 import fr.hyriode.hyrame.game.event.player.HyriGameDeathEvent;
-import fr.hyriode.hyrame.language.HyriLanguageMessage;
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.listener.HyriListener;
 import fr.hyriode.hyrame.packet.IPacketContainer;
 import fr.hyriode.hyrame.packet.IPacketHandler;
@@ -75,8 +75,8 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
         }
 
         if (game.getState().isAccessible()) {
-            if (this.plugin.getConfiguration().getSpawnArea().asArea().getMin().getY() >= event.getTo().getY()) {
-                player.teleport(this.plugin.getConfiguration().getSpawn().asBukkit().clone());
+            if (this.plugin.getGame().getWaitingRoom().getSpawnArea().getMin().getY() >= event.getTo().getY()) {
+                player.teleport(this.plugin.getGame().getWaitingRoom().getConfig().getSpawn().asBukkit());
             }
         }
     }

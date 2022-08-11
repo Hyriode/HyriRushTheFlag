@@ -1,7 +1,6 @@
 package fr.hyriode.rtf.game;
 
-import fr.hyriode.hyrame.language.HyriLanguageMessage;
-import fr.hyriode.rtf.HyriRTF;
+import fr.hyriode.api.language.HyriLanguageMessage;
 import org.bukkit.entity.Player;
 
 /**
@@ -43,6 +42,6 @@ public enum RTFMessage {
     }
 
     public String asString(Player player) {
-        return this.asLang().getForPlayer(player);
+        return this.asLang().getValue(player);
     }
 }

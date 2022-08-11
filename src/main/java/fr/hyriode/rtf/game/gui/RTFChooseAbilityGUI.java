@@ -1,10 +1,10 @@
 package fr.hyriode.rtf.game.gui;
 
 import fr.hyriode.api.HyriAPI;
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.hyrame.inventory.HyriInventory;
 import fr.hyriode.hyrame.item.ItemBuilder;
-import fr.hyriode.hyrame.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.utils.Symbols;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGamePlayer;
@@ -30,7 +30,7 @@ public class RTFChooseAbilityGUI extends HyriInventory {
 
     public RTFChooseAbilityGUI(RTFGamePlayer owner, RTFAbilityType type) {
 
-        super(owner.getPlayer(), HyriRTF.getLanguageManager().getValue(owner.getPlayer(), "ability.gui.name")
+        super(owner.getPlayer(), HyriLanguageMessage.get("ability.gui.name").getValue(owner)
                         .replace("%ability%", owner.getAbility().getName(owner.getPlayer()))
                 , 54);
 
@@ -77,7 +77,7 @@ public class RTFChooseAbilityGUI extends HyriInventory {
             if (this.inventory.getItem(slot) == null) {
                 this.setItem(slot, new ItemBuilder(Material.BARRIER).withName(ChatColor.GOLD + "" + ChatColor.MAGIC + "hyriode")
                         .withAllItemFlags()
-                        .withLore(HyriLanguageMessage.get("ability.soon").getForPlayer(gamePlayer.getPlayer()))
+                        .withLore(HyriLanguageMessage.get("ability.soon").getValue(gamePlayer.getPlayer()))
                         .build(), event -> event.setCancelled(true));
             }
         }
@@ -110,7 +110,7 @@ public class RTFChooseAbilityGUI extends HyriInventory {
         final Player player = gamePlayer.getPlayer();
         List<String> lore = new ArrayList<>();
 
-        lore.add(HyriLanguageMessage.get("ability.gui.type").getForPlayer(player).replace("%value%", ability.getType().getDisplayName(player)));
+        lore.add(HyriLanguageMessage.get("ability.gui.type").getValue(player).replace("%value%", ability.getType().getDisplayName(player)));
         lore.add(" ");
         lore.addAll(2, ability.getLore(player));
         lore.add(" ");
@@ -121,10 +121,10 @@ public class RTFChooseAbilityGUI extends HyriInventory {
 
         switch (status) {
             case SELECT:
-                lore.add(HyriLanguageMessage.get("ability.gui.select").getForPlayer(player));
+                lore.add(HyriLanguageMessage.get("ability.gui.select").getValue(player));
                 break;
             case SELECTED:
-                lore.add(HyriLanguageMessage.get("ability.gui.selected").getForPlayer(player));
+                lore.add(HyriLanguageMessage.get("ability.gui.selected").getValue(player));
                 builder.withGlow();
                 break;
             default:
@@ -141,7 +141,7 @@ public class RTFChooseAbilityGUI extends HyriInventory {
 
         lore.addAll(0, type.getLore(player));
         lore.add(" ");
-        lore.add(ChatColor.DARK_GRAY + Symbols.DOT_BOLD + ChatColor.GRAY + " " + HyriLanguageMessage.get("ability.type.lore.list").getForPlayer(player) + ChatColor.AQUA + i);
+        lore.add(ChatColor.DARK_GRAY + Symbols.DOT_BOLD + ChatColor.GRAY + " " + HyriLanguageMessage.get("ability.type.lore.list").getValue(player) + ChatColor.AQUA + i);
 
         ItemBuilder builder = new ItemBuilder(type.getMaterial())
                 .withName(type.getDisplayName(player))

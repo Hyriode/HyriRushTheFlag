@@ -1,5 +1,6 @@
 package fr.hyriode.rtf.game.items;
 
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.item.HyriItem;
 import fr.hyriode.rtf.HyriRTF;
@@ -17,7 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class RTFChooseAbilityItem extends HyriItem<HyriRTF> {
 
     public RTFChooseAbilityItem(HyriRTF plugin) {
-        super(plugin, "ability_choose", () -> HyriRTF.getLanguageManager().getMessage("item.choose.name"), Material.NAME_TAG);
+        super(plugin, "ability_choose", () -> HyriLanguageMessage.get("item.choose.name"), Material.NAME_TAG);
     }
 
     @Override

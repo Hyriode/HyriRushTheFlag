@@ -4,7 +4,6 @@ import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.server.IHyriServer;
 import fr.hyriode.hyrame.HyrameLoader;
 import fr.hyriode.hyrame.IHyrame;
-import fr.hyriode.hyrame.language.IHyriLanguageManager;
 import fr.hyriode.rtf.api.HyriRTFAPI;
 import fr.hyriode.rtf.config.RTFConfig;
 import fr.hyriode.rtf.game.RTFGame;
@@ -27,9 +26,6 @@ public class HyriRTF extends JavaPlugin {
 
     public static final String NAME = "RTF";
     public static final Supplier<World> WORLD = () -> Bukkit.getWorld("world");
-
-    private static IHyriLanguageManager languageManager;
-
     private RTFConfig configuration;
     private IHyrame hyrame;
     private HyriRTFAPI api;
@@ -67,8 +63,6 @@ public class HyriRTF extends JavaPlugin {
         this.hyrame = HyrameLoader.load(new HyriRTFProvider(this));
 
         this.configuration = HyriAPI.get().getServer().getConfig(RTFConfig.class);
-
-        languageManager = this.hyrame.getLanguageManager();
 
         this.api = new HyriRTFAPI();
         this.game = new RTFGame(this.hyrame, this);
@@ -110,10 +104,6 @@ public class HyriRTF extends JavaPlugin {
 
     public IHyrame getHyrame() {
         return this.hyrame;
-    }
-
-    public static IHyriLanguageManager getLanguageManager() {
-        return languageManager;
     }
 
     public HyriRTFAPI getAPI() {
