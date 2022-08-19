@@ -1,4 +1,4 @@
-package fr.hyriode.rtf.game.items;
+package fr.hyriode.rtf.game.item;
 
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.item.HyriItem;
@@ -6,8 +6,7 @@ import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGamePlayer;
-import fr.hyriode.rtf.game.RTFMessage;
-import org.bukkit.ChatColor;
+import fr.hyriode.rtf.util.RTFMessage;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

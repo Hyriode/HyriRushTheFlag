@@ -32,7 +32,7 @@
   "message.flag-captured.display": "%team%&3 team flag has been captured by %player%&3!",
   "message.flag-respawn.display": "%team%&3 team flag just respawned!",
   "message.flag-brought-back.display": "%player%&3 has brought back the %team%&3 team flag to his base!",
-  "message.ending-game.display": "&fAll the flags will be destroyed in &3%time% minutes&f!",
+  "message.ending-game.display": "&fAll the flags will be destroyed in &3%time% minute(s)&f!",
   "message.end-game.display": "&cAll the flags has been destroyed!",
 
   "message.error-place-block.display": "&cYou cannot place blocks here!",
@@ -42,6 +42,15 @@
   "message.power-used.display": "&fYou used the ability: %ability%&f!",
   "message.power-in-cooldown.display": "&cThe ability is in cooldown.",
   "message.last-ability.display": "&fYour actual ability is: %ability%&f.",
+
+  "waiting-room.npc.data.kills": "Kills",
+  "waiting-room.npc.data.final-kills": "Final kills",
+  "waiting-room.npc.data.deaths": "Deaths",
+  "waiting-room.npc.data.captured-flags": "Captured flags",
+  "waiting-room.npc.data.flags-brought-back": "Flags brought back",
+  "waiting-room.npc.data.victories": "Victories",
+  "waiting-room.npc.data.games-played": "Games played",
+  "waiting-room.npc.data.played-time": "Played time",
 
   "item.choose.name": "&bChoose your ability",
   "item.ability.name": "&fAbility: %ability%",
@@ -94,5 +103,25 @@
   "ability.tank.lore": "&7Grants a resistance II effect\n&7for five seconds.",
 
   "ability.barbarian.name": "&bBarbare",
-  "ability.barbarian.lore": "&7Grants a strength I effect\n&7for three seconds."
+  "ability.barbarian.lore": "&7Grants a strength I effect\n&7for three seconds.",
+
+  "gui.host.abilities.name": "&8Abilities",
+
+  "ability.host.category.lore": "\n&8Information:\n&8▪ &7Enabled: %enabled%\n&8▪ &7Cooldown: &b%cooldown%s\n\n&3Click to edit",
+
+  "host.category.rtf-main.name": "&bRushTheFlag",
+  "host.category.rtf-main.description": "&7Edit the settings linked\n&7to the game.",
+  "host.category.rtf-abilities.name": "&bAbilities",
+  "host.category.rtf-abilities.description": "&7Edit how each capacity\n&7works.",
+
+  "host.option.lives.name": "&bLives",
+  "host.option.lives.description": "&7Set the amount of lives\n&7of each team.",
+  "host.option.respawn-time.name": "&bRespawn time",
+  "host.option.respawn-time.description": "&7Set the time before respawing\n&7when a player dies.",
+  "host.option.game-time.name": "&bGame time",
+  "host.option.game-time.description": "&7Set the maximum time that\n&7will last the game.",
+  "host.option.rtf-ability-enabled.name": "&bState",
+  "host.option.rtf-ability-enabled.description": "&7Set whether the ability\n&7is enabled or not.",
+  "host.option.rtf-ability-cooldown.name": "&bCooldown",
+  "host.option.rtf-ability-cooldown.description": "&7Set the time between each\n&7use of the ability."
 }

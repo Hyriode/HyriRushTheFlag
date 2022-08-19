@@ -1,4 +1,4 @@
-package fr.hyriode.rtf.game.ablity;
+package fr.hyriode.rtf.game.ability;
 
 import fr.hyriode.api.language.HyriLanguageMessage;
 import org.bukkit.Material;
@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**

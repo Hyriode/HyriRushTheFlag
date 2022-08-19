@@ -1,14 +1,14 @@
-package fr.hyriode.rtf.game.ablity;
+package fr.hyriode.rtf.game.ability.effect;
 
 import fr.hyriode.hyrame.game.HyriGamePlayer;
-import fr.hyriode.hyrame.tablist.ITabListManager;
 import fr.hyriode.hyrame.utils.PlayerUtil;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.ability.HyriRTFAbilityModel;
+import fr.hyriode.rtf.api.ability.RTFAbilityModel;
 import fr.hyriode.rtf.game.RTFGame;
 import fr.hyriode.rtf.game.RTFGamePlayer;
-import fr.hyriode.rtf.game.RTFGameTeam;
-import org.bukkit.Bukkit;
+import fr.hyriode.rtf.game.ability.RTFAbility;
+import fr.hyriode.rtf.game.ability.RTFAbilityType;
+import fr.hyriode.rtf.game.team.RTFGameTeam;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,9 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Project: Hyriode-Development
@@ -30,14 +27,12 @@ public class RTFGhostAbility extends RTFAbility {
     private final HyriRTF plugin;
 
     public RTFGhostAbility(HyriRTF pl) {
-        super(HyriRTFAbilityModel.GHOST,
+        super(RTFAbilityModel.GHOST,
                 "ghost",
                 Material.GHAST_TEAR,
                 RTFAbilityType.EFFECT,
                 15000,
                 30);
-
-        abilityMap.put(RTFGhostAbility.class, this);
 
         this.plugin = pl;
     }

@@ -1,11 +1,11 @@
-package fr.hyriode.rtf.game.items;
+package fr.hyriode.rtf.game.item;
 
 import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.item.HyriItem;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGamePlayer;
-import fr.hyriode.rtf.game.ablity.RTFAbility;
+import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.gui.RTFChooseAbilityGUI;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;

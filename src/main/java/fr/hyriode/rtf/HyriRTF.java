@@ -4,17 +4,15 @@ import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.server.IHyriServer;
 import fr.hyriode.hyrame.HyrameLoader;
 import fr.hyriode.hyrame.IHyrame;
-import fr.hyriode.rtf.api.HyriRTFAPI;
 import fr.hyriode.rtf.config.RTFConfig;
 import fr.hyriode.rtf.game.RTFGame;
-import fr.hyriode.rtf.game.ablity.RTFAbility;
+import fr.hyriode.rtf.game.ability.RTFAbility;
+import fr.hyriode.rtf.game.host.category.RTFHostMainCategory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.function.Supplier;
 import java.util.logging.Level;
 
 /**
@@ -25,14 +23,17 @@ import java.util.logging.Level;
 public class HyriRTF extends JavaPlugin {
 
     public static final String NAME = "RTF";
-    public static final Supplier<World> WORLD = () -> Bukkit.getWorld("world");
+
+    private static HyriRTF instance;
+
     private RTFConfig configuration;
     private IHyrame hyrame;
-    private HyriRTFAPI api;
     private RTFGame game;
 
     @Override
     public void onEnable() {
+        instance = this;
+
         final ChatColor color = ChatColor.RED;
         final ConsoleCommandSender sender = Bukkit.getConsoleSender();
 
@@ -61,14 +62,15 @@ public class HyriRTF extends JavaPlugin {
         HyriAPI.get().getHystiaAPI().getWorldManager().saveWorld(IHyrame.WORLD.get().getUID(), "rushtheflag", RTFGameType.EVENT.getName(), "Pokémon");*/
 
         this.hyrame = HyrameLoader.load(new HyriRTFProvider(this));
-
         this.configuration = HyriAPI.get().getServer().getConfig(RTFConfig.class);
-
-        this.api = new HyriRTFAPI();
         this.game = new RTFGame(this.hyrame, this);
         this.hyrame.getGameManager().registerGame(() -> this.game);
 
-        RTFAbility.register(this);
+        RTFAbility.init(this);
+
+        if (HyriAPI.get().getServer().isHost()) {
+            this.hyrame.getHostController().addCategory(25, new RTFHostMainCategory());
+        }
 
         HyriAPI.get().getServer().setState(IHyriServer.State.READY);
     }
@@ -98,16 +100,16 @@ public class HyriRTF extends JavaPlugin {
         this.hyrame.getGameManager().unregisterGame(game);
     }
 
+    public static HyriRTF get() {
+        return instance;
+    }
+
     public RTFConfig getConfiguration() {
         return this.configuration;
     }
 
     public IHyrame getHyrame() {
         return this.hyrame;
-    }
-
-    public HyriRTFAPI getAPI() {
-        return this.api;
     }
 
     public RTFGame getGame() {

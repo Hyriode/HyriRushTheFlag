@@ -1,18 +1,15 @@
 package fr.hyriode.rtf.game.gui;
 
-import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.language.HyriLanguageMessage;
-import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.hyrame.inventory.HyriInventory;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.hyrame.utils.Symbols;
-import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGamePlayer;
-import fr.hyriode.rtf.game.ablity.RTFAbility;
-import fr.hyriode.rtf.game.ablity.RTFAbilityType;
-import fr.hyriode.rtf.utils.InventoryUtil;
+import fr.hyriode.rtf.game.ability.RTFAbility;
+import fr.hyriode.rtf.game.ability.RTFAbilityType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -26,14 +23,27 @@ import java.util.List;
  */
 public class RTFChooseAbilityGUI extends HyriInventory {
 
+    private static final int[] ABILITIES_SLOTS = new int[] {
+            11, 12, 13, 14, 15, 16,
+            20, 21, 22, 23, 24, 25,
+            29, 30 ,31, 32, 33, 34,
+            38, 39, 40, 41, 42, 43
+    };
+    private static final int[] CATEGORIES_SLOTS = new int[] {0, 9, 18, 27, 36, 45};
+    private static final int[] SEPARATOR_SLOTS = new int[] {
+            1, 2, 3, 4, 5, 6, 7, 8,
+            10, 17,
+            19, 26,
+            28, 35,
+            37, 44,
+            46, 47,
+            48, 49, 50, 51, 52, 53
+    };
+
     private final RTFGamePlayer gamePlayer;
 
     public RTFChooseAbilityGUI(RTFGamePlayer owner, RTFAbilityType type) {
-
-        super(owner.getPlayer(), HyriLanguageMessage.get("ability.gui.name").getValue(owner)
-                        .replace("%ability%", owner.getAbility().getName(owner.getPlayer()))
-                , 54);
-
+        super(owner.getPlayer(), HyriLanguageMessage.get("ability.gui.name").getValue(owner).replace("%ability%", owner.getAbility() == null ? ChatColor.RED + Symbols.CROSS_STYLIZED_BOLD : owner.getAbility().getName(owner.getPlayer())), 54);
         this.gamePlayer = owner;
         this.fillInventory(type);
     }
@@ -45,26 +55,21 @@ public class RTFChooseAbilityGUI extends HyriInventory {
     }
 
     private void addBorders() {
-        for (int separatorSlot : InventoryUtil.getSeparatorSlots()) {
-            this.setItem(separatorSlot, new ItemBuilder(Material.STAINED_GLASS_PANE, 1, 9).withName(" ")
-                    .withAllItemFlags()
-                    .build());
+        for (int separatorSlot : SEPARATOR_SLOTS) {
+            this.setItem(separatorSlot, new ItemBuilder(Material.STAINED_GLASS_PANE, 1, 9).withName(" ").build());
         }
     }
 
     private void addCategories(RTFAbilityType type) {
-        final int[] slots = new int[]{
-                0, 9, 18, 27, 36, 45
-        };
-
         for (RTFAbilityType value : RTFAbilityType.values()) {
-            for (int slot : slots) {
+            for (int slot : CATEGORIES_SLOTS) {
                 if (this.inventory.getItem(slot) == null) {
                     if (type.equals(value)) {
-                        this.setItem(slot, this.addCategoryItem(value, true), event -> event.setCancelled(true));
+                        this.setItem(slot, this.addCategoryItem(value, true));
                     } else {
                         this.setItem(slot, this.addCategoryItem(value, false), event -> {
-                            event.setCancelled(true);
+                            this.owner.playSound(this.owner.getLocation(), Sound.CLICK, 0.5F, 2.0F);
+
                             new RTFChooseAbilityGUI(gamePlayer, value).open();
                         });
                     }
@@ -73,9 +78,9 @@ public class RTFChooseAbilityGUI extends HyriInventory {
             }
         }
 
-        for (int slot : slots) {
+        for (int slot : CATEGORIES_SLOTS) {
             if (this.inventory.getItem(slot) == null) {
-                this.setItem(slot, new ItemBuilder(Material.BARRIER).withName(ChatColor.GOLD + "" + ChatColor.MAGIC + "hyriode")
+                this.setItem(slot, new ItemBuilder(Material.BARRIER).withName(ChatColor.GOLD + "" + ChatColor.MAGIC + "*******")
                         .withAllItemFlags()
                         .withLore(HyriLanguageMessage.get("ability.soon").getValue(gamePlayer.getPlayer()))
                         .build(), event -> event.setCancelled(true));
@@ -85,22 +90,28 @@ public class RTFChooseAbilityGUI extends HyriInventory {
 
     private void addItems(RTFAbilityType type) {
         for (RTFAbility ability : RTFAbility.getAbilities(type)) {
-            for (int availableSlot : InventoryUtil.getAvailableSlots()) {
-                if (this.inventory.getItem(availableSlot) == null) {
-                        if (this.gamePlayer.getAbility().equals(ability)) {
-                            this.setItem(availableSlot, this.getAbilityItem(this.gamePlayer, ability, AbilityStatus.SELECTED), event -> {
-                                event.setCancelled(true);
-                            });
-                        } else {
-                            this.setItem(availableSlot, this.getAbilityItem(this.gamePlayer, ability, AbilityStatus.SELECT), event -> {
-                                event.setCancelled(true);
-                                gamePlayer.setAbility(ability);
-                                gamePlayer.getAccount().setLastAbility(ability.getModel());
-                                new RTFChooseAbilityGUI(gamePlayer, gamePlayer.getAbility().getType()).open();
-                            });
-                        }
-                    break;
+            if (!ability.isEnabled()) {
+                continue;
+            }
+
+            for (int availableSlot : ABILITIES_SLOTS) {
+                if (this.inventory.getItem(availableSlot) != null) {
+                    continue;
                 }
+
+                if (this.gamePlayer.getAbility().equals(ability)) {
+                    this.setItem(availableSlot, this.getAbilityItem(this.gamePlayer, ability, AbilityStatus.SELECTED));
+                } else {
+                    this.setItem(availableSlot, this.getAbilityItem(this.gamePlayer, ability, AbilityStatus.SELECT), event -> {
+                        gamePlayer.setAbility(ability);
+                        gamePlayer.getAccount().setLastAbility(ability.getModel());
+
+                        this.owner.playSound(this.owner.getLocation(), Sound.CLICK, 0.5F, 2.0F);
+
+                        new RTFChooseAbilityGUI(gamePlayer, gamePlayer.getAbility().getType()).open();
+                    });
+                }
+                break;
             }
         }
     }
@@ -137,11 +148,10 @@ public class RTFChooseAbilityGUI extends HyriInventory {
     private ItemStack addCategoryItem(RTFAbilityType type, boolean selected) {
         final List<String> lore = new ArrayList<>();
         final Player player = this.gamePlayer.getPlayer();
-        final int i = RTFAbility.getAbilities(type).size();
 
         lore.addAll(0, type.getLore(player));
         lore.add(" ");
-        lore.add(ChatColor.DARK_GRAY + Symbols.DOT_BOLD + ChatColor.GRAY + " " + HyriLanguageMessage.get("ability.type.lore.list").getValue(player) + ChatColor.AQUA + i);
+        lore.add(ChatColor.DARK_GRAY + Symbols.DOT_BOLD + ChatColor.GRAY + " " + HyriLanguageMessage.get("ability.type.lore.list").getValue(player) + ChatColor.AQUA + RTFAbility.getEnabledAbilities(type).size());
 
         ItemBuilder builder = new ItemBuilder(type.getMaterial())
                 .withName(type.getDisplayName(player))
@@ -155,9 +165,9 @@ public class RTFChooseAbilityGUI extends HyriInventory {
         return builder.build();
     }
 
-    public enum AbilityStatus {
+    private enum AbilityStatus {
         SELECTED,
-        SELECT;
+        SELECT
     }
 
 }

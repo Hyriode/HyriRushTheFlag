@@ -7,17 +7,14 @@ import fr.hyriode.api.transaction.IHyriTransactionContent;
  * Created by Akkashi
  * on 11/03/2022 at 18:26
  */
-public enum HyriRTFAbilityModel implements IHyriTransactionContent {
+public enum RTFAbilityModel implements IHyriTransactionContent {
 
     ASTRONAUT,
     SHOOTER,
-
-   // BUILDER,
     RUNNER,
     KANGAROO,
     GHOST,
     BARBARIAN,
-    TANK,
+    TANK
 
-    ;
 }

@@ -1,7 +1,9 @@
-package fr.hyriode.rtf.game.ablity;
+package fr.hyriode.rtf.game.ability.effect;
 
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.ability.HyriRTFAbilityModel;
+import fr.hyriode.rtf.api.ability.RTFAbilityModel;
+import fr.hyriode.rtf.game.ability.RTFAbility;
+import fr.hyriode.rtf.game.ability.RTFAbilityType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,14 +18,12 @@ import org.bukkit.potion.PotionEffectType;
 public class RTFBarbarianAbility extends RTFAbility {
 
     public RTFBarbarianAbility(HyriRTF pl) {
-        super(HyriRTFAbilityModel.BARBARIAN,
+        super(RTFAbilityModel.BARBARIAN,
                 "barbarian",
                 Material.IRON_SWORD,
                 RTFAbilityType.EFFECT,
                 6000,
                 24);
-
-        abilityMap.put(RTFBarbarianAbility.class, this);
     }
 
     @Override

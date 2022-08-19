@@ -24,14 +24,14 @@ import java.util.function.Function;
  */
 public class RTFWaitingRoom extends HyriWaitingRoom {
 
-    private static final Function<String, HyriLanguageMessage> LANG_DATA = name -> HyriLanguageMessage.get("waiting-room.npc.data.prefix." + name);
+    private static final Function<String, HyriLanguageMessage> LANG_DATA = name -> HyriLanguageMessage.get("waiting-room.npc.data." + name);
 
     public RTFWaitingRoom(HyriGame<?> game) {
         super(game, Material.BANNER, createConfig());
 
-        this.addStatistics(29, RTFGameType.SOLO);
-        this.addStatistics(31, RTFGameType.DOUBLES);
-        this.addStatistics(33, RTFGameType.MDT);
+        this.addStatistics(20, RTFGameType.SOLO);
+        this.addStatistics(22, RTFGameType.DOUBLES);
+        this.addStatistics(24, RTFGameType.MDT);
     }
 
     private void addStatistics(int slot, RTFGameType gameType) {
@@ -40,6 +40,7 @@ public class RTFWaitingRoom extends HyriWaitingRoom {
         normal.addData(new NPCData(LANG_DATA.apply("kills"), account -> String.valueOf(this.getStatistics(gameType, account).getKills())));
         normal.addData(new NPCData(LANG_DATA.apply("final-kills"), account -> String.valueOf(this.getStatistics(gameType, account).getFinalKills())));
         normal.addData(new NPCData(LANG_DATA.apply("deaths"), account -> String.valueOf(this.getStatistics(gameType, account).getDeaths())));
+        normal.addData(NPCData.voidData());
         normal.addData(new NPCData(LANG_DATA.apply("captured-flags"), account -> String.valueOf(this.getStatistics(gameType, account).getCapturedFlags())));
         normal.addData(new NPCData(LANG_DATA.apply("flags-brought-back"), account -> String.valueOf(this.getStatistics(gameType, account).getFlagsBroughtBack())));
         normal.addData(NPCData.voidData());
@@ -61,14 +62,7 @@ public class RTFWaitingRoom extends HyriWaitingRoom {
     }
 
     private static Config createConfig() {
-        final UUID world = IHyrame.WORLD.get().getUID();
-
-        return new Config(new LocationWrapper(world, 0, 120, 0), new LocationWrapper(world, 30, 222, -18), new LocationWrapper(world, -22, 192, 22), new LocationWrapper(world, 5.5F, 200, -2.5F, 90, 0));
+        return new Config(new LocationWrapper(0.5, 170.5, 0.5, -90, 0), new LocationWrapper(30, 222, -18), new LocationWrapper(-22, 160, 22), new LocationWrapper(5.5F, 170, -2.5F, 90, 0));
     }
-
-    public Area getSpawnArea() {
-        return new Area(this.config.getFirstPos().asBukkit(), this.getConfig().getSecondPos().asBukkit());
-    }
-
 
 }

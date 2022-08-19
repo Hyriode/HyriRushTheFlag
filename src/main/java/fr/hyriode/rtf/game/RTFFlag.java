@@ -1,22 +1,23 @@
 package fr.hyriode.rtf.game;
 
+import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.item.ItemBuilder;
-import fr.hyriode.hyrame.title.Title;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
-import fr.hyriode.rtf.game.items.RTFAbilityItem;
-import org.bukkit.*;
+import fr.hyriode.rtf.api.hotbar.RTFHotBar;
+import fr.hyriode.rtf.game.item.RTFAbilityItem;
+import fr.hyriode.rtf.game.team.RTFGameTeam;
+import fr.hyriode.rtf.util.RTFMessage;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.Wool;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Project: HyriRushTheFlag
@@ -39,27 +40,19 @@ public class RTFFlag {
         this.plugin = plugin;
         this.team = team;
         this.locations = team.getConfig().getFlagsAsBukkit();
-
         this.blocks = new ArrayList<>();
-        this.locations.forEach(location -> this.blocks.add(HyriRTF.WORLD.get().getBlockAt(location)));
+        this.locations.forEach(location -> this.blocks.add(IHyrame.WORLD.get().getBlockAt(location)));
     }
 
+    @SuppressWarnings("deprecation")
     public void place() {
+        if (!this.team.hasLife()) {
+            return;
+        }
+
         this.blocks.forEach(block -> {
             block.setType(Material.WOOL);
-
-            final BlockState blockState = block.getState();
-            final MaterialData data = blockState.getData();
-
-            if (data instanceof Wool) {
-                final Wool wool = (Wool) data;
-
-                wool.setColor(team.getColor().getDyeColor());
-
-                blockState.setData(data);
-                blockState.update();
-            }
-
+            block.setData(this.team.getColor().getDyeColor().getWoolData());
             block.setMetadata(METADATA_KEY, new FixedMetadataValue(this.plugin, this.team.getName()));
         });
     }
@@ -73,10 +66,7 @@ public class RTFFlag {
             player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.PISTON_EXTEND, 5f, 1f);
         }
 
-        game.sendMessageToAll(target ->  " \n" +
-                RTFMessage.FLAG_RESPAWN_MESSAGE.asString(target)
-                        .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
-                + " \n ");
+        game.sendMessageToAll(target ->  " \n" + RTFMessage.FLAG_RESPAWN_MESSAGE.asString(target).replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target)) + " \n");
     }
 
     public void broughtBack() {
@@ -89,11 +79,9 @@ public class RTFFlag {
 
             this.team.removeLife();
 
-            game.sendMessageToAll(target ->  " \n" +
-                    RTFMessage.FLAG_BROUGHT_BACK_MESSAGE.asString(target)
+            game.sendMessageToAll(target ->  "\n " + RTFMessage.FLAG_BROUGHT_BACK_MESSAGE.asString(target)
                             .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
-                            .replace("%player%", this.getFormattedHolderName())
-                    + " \n ");
+                    .replace("%player%", this.getFormattedHolderName()) + "\n ");
 
             this.holder = null;
 
@@ -116,6 +104,7 @@ public class RTFFlag {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void capture(Player player) {
         final RTFGame game = this.plugin.getGame();
         final RTFGamePlayer gamePlayer = game.getPlayer(player.getUniqueId());
@@ -127,7 +116,7 @@ public class RTFFlag {
         final PlayerInventory inventory = player.getInventory();
         final byte data = this.team.getColor().getDyeColor().getData();
 
-        for (HyriRTFHotBar.Item item : gamePlayer.getAccount().getHotBar().getItems().keySet()) {
+        for (RTFHotBar.Item item : gamePlayer.getAccount().getHotBar().getItems().keySet()) {
             if (gamePlayer.getAccount().getHotBar().getSlot(item) != null) {
                 for (int i = 0; i <= 9; i++) {
                     if (inventory.getItem(i) != null) {
@@ -153,14 +142,15 @@ public class RTFFlag {
 
         inventory.setHelmet(new ItemBuilder(Material.WOOL, 1, data).build());
 
-        game.sendMessageToAll(target ->  " \n" +
-                RTFMessage.FLAG_CAPTURED_MESSAGE.asString(target)
+        game.sendMessageToAll(target ->  "\n" + RTFMessage.FLAG_CAPTURED_MESSAGE.asString(target)
                         .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
                         .replace("%player%", this.getFormattedHolderName())
                 + " \n ");
         this.locations.forEach(location -> location.getWorld().strikeLightningEffect(location));
 
-        this.plugin.getHyrame().getItemManager().giveItem(player, gamePlayer.getAccount().getHotBar().getSlot(HyriRTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
+        if (gamePlayer.getAbility() != null) {
+            this.plugin.getHyrame().getItemManager().giveItem(player, gamePlayer.getAccount().getHotBar().getSlot(RTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
+        }
     }
 
     private String getFormattedHolderName() {

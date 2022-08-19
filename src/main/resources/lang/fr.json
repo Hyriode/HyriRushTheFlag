@@ -32,7 +32,7 @@
   "message.flag-captured.display": "&3Le drapeau de l'équipe %team%&3 a été capturé par %player%&3 !",
   "message.flag-respawn.display": "&3Le drapeau de l'équipe %team%&3 vient de réapparaître !",
   "message.flag-brought-back.display": "%player%&3 a ramené le drapeau de l'équipe %team%&3 à sa base !",
-  "message.ending-game.display": "&fTous les drapeaux seront détruits dans &3%time% minutes&f !",
+  "message.ending-game.display": "&fTous les drapeaux seront détruits dans &3%time% minute(s)&f !",
   "message.end-game.display": "&cTous les drapeaux ont été détruits !",
 
   "message.error-place-block.display": "&cVous ne pouvez pas poser de blocs ici !",
@@ -43,7 +43,16 @@
   "message.ability-in-cooldown.display": "&cLa capacité est en attente.",
   "message.last-ability.display": "&fVotre capacité actuelle est : %ability%&f.",
 
-  "item.choose.name": "&bChoisir son capacité",
+  "waiting-room.npc.data.kills": "Kills",
+  "waiting-room.npc.data.final-kills": "Final kills",
+  "waiting-room.npc.data.deaths": "Morts",
+  "waiting-room.npc.data.captured-flags": "Drapeaux capturés",
+  "waiting-room.npc.data.flags-brought-back": "Drapeaux ramenés",
+  "waiting-room.npc.data.victories": "Victoires",
+  "waiting-room.npc.data.games-played": "Parties jouées",
+  "waiting-room.npc.data.played-time": "Temps de jeu",
+
+  "item.choose.name": "&bChoisir sa capacité",
   "item.ability.name": "&fCapacité: %ability%",
 
   "ability.gui.name": "&8Capacité: %ability%",
@@ -90,5 +99,25 @@
   "ability.tank.lore": "&7Permet d'obtenir un effet de\n&7résistance II pendant cinq secondes.",
 
   "ability.barbarian.name": "&bBarbare",
-  "ability.barbarian.lore": "&7Permet d'obtenir un effet de\n&7force I pendant trois secondes."
+  "ability.barbarian.lore": "&7Permet d'obtenir un effet de\n&7force I pendant trois secondes.",
+
+  "gui.host.abilities.name": "&8Capacités",
+
+  "ability.host.category.lore": "\n&8Informations:\n&8▪ &7Activée: %enabled%\n&8▪ &7Cooldown: &b%cooldown%s\n\n&3Cliquer pour modifier",
+
+  "host.category.rtf-main.name": "&bRushTheFlag",
+  "host.category.rtf-main.description": "&7Modifie les options liées\n&7au jeu.",
+  "host.category.rtf-abilities.name": "&bCapacités",
+  "host.category.rtf-abilities.description": "&7Modifie le fonctionnement de\n&7chaque capacité.",
+
+  "host.option.lives.name": "&bVies",
+  "host.option.lives.description": "&7Définis le nombre de vies\n&7des équipes.",
+  "host.option.respawn-time.name": "&bTemps de réapparation",
+  "host.option.respawn-time.description": "&7Définis le temps de réapparation\n&7d'un joueur après sa mort.",
+  "host.option.game-time.name": "&bTemps de jeu",
+  "host.option.game-time.description": "&7Définis le temps maximum que\n&7pourra durer la partie.",
+  "host.option.rtf-ability-enabled.name": "&bEtat",
+  "host.option.rtf-ability-enabled.description": "&7Définis la capacité est\n&7activée ou non.",
+  "host.option.rtf-ability-cooldown.name": "&bCooldown",
+  "host.option.rtf-ability-cooldown.description": "&7Définis le temps entre chaque\n&7utilisation de la capacité."
 }

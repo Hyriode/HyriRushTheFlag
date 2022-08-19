@@ -77,8 +77,9 @@ public class RTFConfig implements IConfig {
         public List<LocationWrapper> getFlags() {
             return this.flags;
         }
+
         public List<Location> getFlagsAsBukkit() {
-            return this.flagsBukkit;
+            return this.flagsBukkit == null ? new ArrayList<>() : this.flagsBukkit;
         }
     }
 

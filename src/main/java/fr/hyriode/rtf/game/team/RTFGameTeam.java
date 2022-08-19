@@ -1,10 +1,9 @@
-package fr.hyriode.rtf.game;
+package fr.hyriode.rtf.game.team;
 
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
-import fr.hyriode.hyrame.utils.LocationUtil;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.config.RTFConfig;
-import org.bukkit.Location;
+import fr.hyriode.rtf.game.RTFFlag;
 import org.bukkit.entity.Player;
 
 /**
@@ -26,8 +25,6 @@ public class RTFGameTeam extends HyriGameTeam {
         this.config = config;
         this.spawnLocation = this.config.getSpawn().asBukkit();
         this.flag = new RTFFlag(plugin, this);
-
-        this.lives = 1;
     }
 
     public boolean isInBase(Player player) {
@@ -55,6 +52,10 @@ public class RTFGameTeam extends HyriGameTeam {
 
     public int getLives() {
         return this.lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
     }
 
     public void addLife() {

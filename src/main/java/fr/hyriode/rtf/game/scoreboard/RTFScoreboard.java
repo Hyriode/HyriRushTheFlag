@@ -5,7 +5,7 @@ import fr.hyriode.hyrame.game.scoreboard.HyriGameScoreboard;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGame;
 import fr.hyriode.rtf.game.RTFGamePlayer;
-import fr.hyriode.rtf.game.RTFGameTeam;
+import fr.hyriode.rtf.game.team.RTFGameTeam;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

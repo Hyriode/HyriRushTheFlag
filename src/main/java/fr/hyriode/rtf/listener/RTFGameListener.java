@@ -1,15 +1,17 @@
 package fr.hyriode.rtf.listener;
 
 import fr.hyriode.api.event.HyriEventHandler;
+import fr.hyriode.hyrame.game.HyriGameSpectator;
 import fr.hyriode.hyrame.game.event.player.HyriGameDeathEvent;
 import fr.hyriode.hyrame.game.event.player.HyriGameReconnectEvent;
 import fr.hyriode.hyrame.game.event.player.HyriGameReconnectedEvent;
+import fr.hyriode.hyrame.game.event.player.HyriGameSpectatorEvent;
 import fr.hyriode.hyrame.game.protocol.HyriDeathProtocol;
 import fr.hyriode.hyrame.listener.HyriListener;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGame;
 import fr.hyriode.rtf.game.RTFGamePlayer;
-import fr.hyriode.rtf.game.RTFGameTeam;
+import fr.hyriode.rtf.game.team.RTFGameTeam;
 
 /**
  * Project: Hyriode
@@ -41,4 +43,13 @@ public class RTFGameListener extends HyriListener<HyriRTF> {
 
         game.getProtocolManager().getProtocol(HyriDeathProtocol.class).runDeath(HyriGameDeathEvent.Reason.VOID, player.getPlayer());
     }
+
+    @HyriEventHandler
+    public void onSpectator(HyriGameSpectatorEvent event) {
+        final RTFGame game = (RTFGame) event.getGame();
+        final HyriGameSpectator spectator = event.getSpectator();
+
+        spectator.getPlayer().teleport(game.getWaitingRoom().getConfig().getSpawn().asBukkit());
+    }
+
 }

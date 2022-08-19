@@ -67,16 +67,8 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
                 return;
             }
 
-            if (gamePlayer.getTeam().isInBase(player)) {
-                if (game.isHoldingFlag(player)) {
-                    game.getHoldingFlag(player).broughtBack();
-                }
-            }
-        }
-
-        if (game.getState().isAccessible()) {
-            if (this.plugin.getGame().getWaitingRoom().getSpawnArea().getMin().getY() >= event.getTo().getY()) {
-                player.teleport(this.plugin.getGame().getWaitingRoom().getConfig().getSpawn().asBukkit());
+            if (gamePlayer.getTeam().isInBase(player) && game.isHoldingFlag(player)) {
+                game.getHoldingFlag(player).broughtBack();
             }
         }
     }
@@ -98,6 +90,7 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
         }
     }
 
+    @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent event) {
         final RTFGame game = this.plugin.getGame();
 
@@ -105,7 +98,7 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
             return;
         }
 
-        if(event.getEntity() instanceof Fireball) {
+        if (event.getEntity() instanceof Fireball) {
             event.getEntity().remove();
             event.getEntity().getLocation().getWorld().createExplosion(event.getEntity().getLocation(), 3);
         }
@@ -142,8 +135,8 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
     }
 
     @EventHandler
-    public void onDrop(PlayerDropItemEvent e) {
-        e.setCancelled(true);
+    public void onDrop(PlayerDropItemEvent event) {
+        event.setCancelled(true);
     }
 
 }

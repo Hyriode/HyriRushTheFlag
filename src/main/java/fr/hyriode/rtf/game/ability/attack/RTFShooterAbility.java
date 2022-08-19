@@ -1,7 +1,9 @@
-package fr.hyriode.rtf.game.ablity;
+package fr.hyriode.rtf.game.ability.attack;
 
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.ability.HyriRTFAbilityModel;
+import fr.hyriode.rtf.api.ability.RTFAbilityModel;
+import fr.hyriode.rtf.game.ability.RTFAbility;
+import fr.hyriode.rtf.game.ability.RTFAbilityType;
 import net.minecraft.server.v1_8_R3.EntityFireball;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftFireball;
@@ -16,14 +18,13 @@ import org.bukkit.util.Vector;
  */
 public class RTFShooterAbility extends RTFAbility {
     public RTFShooterAbility(HyriRTF pl) {
-        super(HyriRTFAbilityModel.SHOOTER,
+        super(RTFAbilityModel.SHOOTER,
                 "shooter",
                 Material.FIREBALL,
                 RTFAbilityType.ATTACK,
                 5000,
                 20
         );
-        abilityMap.put(RTFShooterAbility.class, this);
     }
 
     @Override

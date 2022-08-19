@@ -1,7 +1,9 @@
-package fr.hyriode.rtf.game.ablity;
+package fr.hyriode.rtf.game.ability.movement;
 
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.ability.HyriRTFAbilityModel;
+import fr.hyriode.rtf.api.ability.RTFAbilityModel;
+import fr.hyriode.rtf.game.ability.RTFAbility;
+import fr.hyriode.rtf.game.ability.RTFAbilityType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -15,14 +17,12 @@ import org.bukkit.util.Vector;
 public class RTFAstronautAbility extends RTFAbility {
 
     public RTFAstronautAbility(HyriRTF pl) {
-        super(HyriRTFAbilityModel.ASTRONAUT,
+        super(RTFAbilityModel.ASTRONAUT,
                 "astronaut",
                 Material.FIREWORK,
                 RTFAbilityType.MOVEMENT,
                 20000,
                 20);
-
-        abilityMap.put(RTFAstronautAbility.class, this);
     }
 
     @Override

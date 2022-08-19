@@ -1,7 +1,9 @@
-package fr.hyriode.rtf.game.ablity;
+package fr.hyriode.rtf.game.ability.attack;
 
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.ability.HyriRTFAbilityModel;
+import fr.hyriode.rtf.api.ability.RTFAbilityModel;
+import fr.hyriode.rtf.game.ability.RTFAbility;
+import fr.hyriode.rtf.game.ability.RTFAbilityType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,14 +18,12 @@ import org.bukkit.potion.PotionEffectType;
 public class RTFTankAbility extends RTFAbility {
 
     public RTFTankAbility(HyriRTF pl) {
-        super(HyriRTFAbilityModel.TANK,
+        super(RTFAbilityModel.TANK,
                 "tank",
                 Material.IRON_CHESTPLATE,
                 RTFAbilityType.EFFECT,
                 6000,
                 20);
-
-        abilityMap.put(RTFTankAbility.class, this);
     }
 
     @Override

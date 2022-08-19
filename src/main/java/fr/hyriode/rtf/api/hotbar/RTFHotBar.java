@@ -8,17 +8,16 @@ import java.util.Map;
  * Created by AstFaster
  * on 31/12/2021 at 18:35
  */
-public class HyriRTFHotBar {
+public class RTFHotBar {
 
     private final Map<Item, Integer> items;
 
-    public HyriRTFHotBar() {
+    public RTFHotBar() {
         this.items = new HashMap<>();
 
-        this.items.put(Item.SWORD, 0);
-        this.items.put(Item.PICKAXE, 2);
-        this.items.put(Item.GOLDEN_APPLE, 3);
-        this.items.put(Item.ABILITY_ITEM, 4);
+        for (Item item : Item.values()) {
+            this.items.put(item, item.getDefaultSlot());
+        }
     }
 
     public void setItem(Item item, int slot) {
@@ -26,7 +25,9 @@ public class HyriRTFHotBar {
     }
 
     public Integer getSlot(Item item) {
-        return this.items.get(item);
+        final Object o = this.items.get(item);
+
+        return o == null ? item.getDefaultSlot() : (int) o;
     }
 
     public Map<Item, Integer> getItems() {
@@ -34,21 +35,29 @@ public class HyriRTFHotBar {
     }
 
     public enum Item {
-        SWORD("IRON_SWORD"),
-        PICKAXE("IRON_PICKAXE"),
-        GOLDEN_APPLE("GOLDEN_APPLE"),
-        ABILITY_ITEM("NETHER_STAR"),
+
+        SWORD("IRON_SWORD", 0),
+        PICKAXE("IRON_PICKAXE", 2),
+        GOLDEN_APPLE("GOLDEN_APPLE", 3),
+        ABILITY_ITEM("NETHER_STAR", 4),
         ;
 
         private final String name;
+        private final int defaultSlot;
 
-        Item(String name) {
+        Item(String name, int defaultSlot) {
             this.name = name;
+            this.defaultSlot = defaultSlot;
         }
 
         public String getName() {
             return name;
         }
+
+        public int getDefaultSlot() {
+            return this.defaultSlot;
+        }
+
     }
 
 }

@@ -1,6 +1,5 @@
 package fr.hyriode.rtf.game;
 
-import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.hyrame.actionbar.ActionBar;
 import fr.hyriode.hyrame.game.HyriGame;
@@ -9,12 +8,14 @@ import fr.hyriode.hyrame.game.protocol.HyriLastHitterProtocol;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.hyrame.utils.PlayerUtil;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.hotbar.HyriRTFHotBar;
-import fr.hyriode.rtf.api.player.HyriRTFPlayer;
+import fr.hyriode.rtf.api.hotbar.RTFHotBar;
+import fr.hyriode.rtf.api.player.RTFPlayer;
 import fr.hyriode.rtf.api.statistics.RTFStatistics;
-import fr.hyriode.rtf.game.ablity.RTFAbility;
-import fr.hyriode.rtf.game.items.RTFAbilityItem;
+import fr.hyriode.rtf.game.ability.RTFAbility;
+import fr.hyriode.rtf.game.item.RTFAbilityItem;
 import fr.hyriode.rtf.game.scoreboard.RTFScoreboard;
+import fr.hyriode.rtf.game.team.RTFGameTeam;
+import fr.hyriode.rtf.util.RTFMessage;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -25,6 +26,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Project: HyriRushTheFlag
@@ -38,7 +40,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
     private boolean cooldown = false;
 
-    private HyriRTFPlayer account;
+    private RTFPlayer account;
     private RTFStatistics statistics;
     private long kills;
     private long finalKills;
@@ -56,15 +58,24 @@ public class RTFGamePlayer extends HyriGamePlayer {
         this.scoreboard = new RTFScoreboard(this.plugin, this.player);
         this.scoreboard.show();
 
+        if (this.ability == null) {
+            final List<RTFAbility> enabledAbilities = RTFAbility.getEnabledAbilities();
+
+            if (enabledAbilities.size() != 0) {
+                this.ability = enabledAbilities.get(ThreadLocalRandom.current().nextInt(0, enabledAbilities.size()));
+            }
+        }
+
         this.spawn(true);
     }
 
     public IHyriPlayer asHyriode() {
-        return HyriAPI.get().getPlayerManager().getPlayer(this.player.getUniqueId());
+        return IHyriPlayer.get(this.player.getUniqueId());
     }
 
     public void spawn(boolean teleport) {
         PlayerUtil.resetPlayer(this.player, true);
+
         this.player.setGameMode(GameMode.SURVIVAL);
 
         this.giveHotBar();
@@ -72,7 +83,10 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
         if (teleport) {
             this.player.teleport(this.team.getSpawnLocation());
-            this.handleCooldown(this.getAbility().getCooldown() / 2);
+
+            if (this.ability != null) {
+                this.handleCooldown(this.ability.getCooldown() / 2);
+            }
         }
     }
 
@@ -82,11 +96,13 @@ public class RTFGamePlayer extends HyriGamePlayer {
         this.player.setLevel(0);
 
         inventory.addItem(new ItemBuilder(Material.SANDSTONE, 64 * 9, 2).build());
-        inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.GOLDEN_APPLE), new ItemBuilder(Material.GOLDEN_APPLE, 16).build());
-        inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.SWORD), new ItemBuilder(Material.IRON_SWORD).withEnchant(Enchantment.DAMAGE_ALL, 1).unbreakable().build());
-        inventory.setItem(this.account.getHotBar().getSlot(HyriRTFHotBar.Item.PICKAXE), new ItemBuilder(Material.IRON_PICKAXE).withEnchant(Enchantment.DIG_SPEED, 2).unbreakable().build());
+        inventory.setItem(this.account.getHotBar().getSlot(RTFHotBar.Item.GOLDEN_APPLE), new ItemBuilder(Material.GOLDEN_APPLE, 16).build());
+        inventory.setItem(this.account.getHotBar().getSlot(RTFHotBar.Item.SWORD), new ItemBuilder(Material.IRON_SWORD).withEnchant(Enchantment.DAMAGE_ALL, 1).unbreakable().build());
+        inventory.setItem(this.account.getHotBar().getSlot(RTFHotBar.Item.PICKAXE), new ItemBuilder(Material.IRON_PICKAXE).withEnchant(Enchantment.DIG_SPEED, 2).unbreakable().build());
 
-        this.plugin.getHyrame().getItemManager().giveItem(this.player, this.account.getHotBar().getSlot(HyriRTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
+        if (this.ability != null) {
+            this.plugin.getHyrame().getItemManager().giveItem(this.player, this.account.getHotBar().getSlot(RTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
+        }
     }
 
     public void giveArmor() {
@@ -99,14 +115,23 @@ public class RTFGamePlayer extends HyriGamePlayer {
     }
 
     public void handleCooldown(final int i) {
+        if (!this.isOnline()) {
+            return;
+        }
+
         if (!this.isCooldown()) {
             this.setCooldown(true);
         }
+
         new BukkitRunnable() {
             private int index = i;
 
             @Override
             public void run() {
+                if (!isOnline()) {
+                    return;
+                }
+
                 final ActionBar bar = new ActionBar(RTFMessage.ABILITY_WAITING_BAR.asString(player).replace("%time%", this.index + "s"));
 
                 bar.send(player);
@@ -138,15 +163,16 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
         final PlayerInventory playerInventory = this.player.getInventory();
 
-        for (HyriRTFHotBar.Item item : this.account.getHotBar().getItems().keySet()) {
+        for (RTFHotBar.Item item : this.account.getHotBar().getItems().keySet()) {
+            if (this.account.getHotBar().getSlot(item) == null || item == null) {
+                continue;
+            }
 
-            if (this.account.getHotBar().getSlot(item) != null) {
-                for (int i = 0; i <= 9; i++) {
-                    if (playerInventory.getItem(i) != null) {
-                        if (playerInventory.getItem(i).getType() == Material.getMaterial(item.getName())) {
-                            this.account.getHotBar().setItem(item, i);
-                        }
-                    }
+            for (int i = 0; i <= 9; i++) {
+                final ItemStack itemStack = playerInventory.getItem(i);
+
+                if (itemStack != null && itemStack.getType() == Material.getMaterial(item.getName())) {
+                    this.account.getHotBar().setItem(item, i);
                 }
             }
         }
@@ -191,11 +217,11 @@ public class RTFGamePlayer extends HyriGamePlayer {
         return team.getOppositeTeam().getFlag().getHolder() != null && team.getOppositeTeam().getFlag().getHolder().equals(this.getPlayer());
     }
 
-    public HyriRTFPlayer getAccount() {
+    public RTFPlayer getAccount() {
         return this.account;
     }
 
-    public void setAccount(HyriRTFPlayer account) {
+    public void setAccount(RTFPlayer account) {
         this.account = account;
     }
 
@@ -276,8 +302,8 @@ public class RTFGamePlayer extends HyriGamePlayer {
         return this.ability;
     }
 
-    public void setAbility(RTFAbility Power) {
-        this.ability = Power;
+    public void setAbility(RTFAbility ability) {
+        this.ability = ability;
     }
 
     public Player getLastHitterPlayer() {
@@ -291,13 +317,11 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
     public RTFGamePlayer getLastHitterGamePlayer() {
         final Player player = this.getLastHitterPlayer();
-        if (player != null) {
-            final RTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(player.getUniqueId());
 
-            if (gamePlayer != null) {
-                return gamePlayer;
-            }
+        if (player != null) {
+            return this.plugin.getGame().getPlayer(player.getUniqueId());
         }
         return null;
     }
+
 }

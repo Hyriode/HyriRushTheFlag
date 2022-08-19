@@ -1,7 +1,9 @@
-package fr.hyriode.rtf.game.ablity;
+package fr.hyriode.rtf.game.ability.movement;
 
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.ability.HyriRTFAbilityModel;
+import fr.hyriode.rtf.api.ability.RTFAbilityModel;
+import fr.hyriode.rtf.game.ability.RTFAbility;
+import fr.hyriode.rtf.game.ability.RTFAbilityType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -15,14 +17,12 @@ import org.bukkit.util.Vector;
 public class RTFKangarooAbility extends RTFAbility {
 
     public RTFKangarooAbility(HyriRTF pl) {
-        super(HyriRTFAbilityModel.KANGAROO,
+        super(RTFAbilityModel.KANGAROO,
                 "kangaroo",
                 Material.RABBIT_FOOT,
                 RTFAbilityType.MOVEMENT,
                 8000,
                 26);
-
-        abilityMap.put(RTFKangarooAbility.class, this);
     }
 
     @Override
