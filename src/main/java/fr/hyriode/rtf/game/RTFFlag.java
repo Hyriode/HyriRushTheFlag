@@ -80,7 +80,7 @@ public class RTFFlag {
             this.team.removeLife();
 
             game.sendMessageToAll(target ->  "\n " + RTFMessage.FLAG_BROUGHT_BACK_MESSAGE.asString(target)
-                            .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
+                    .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
                     .replace("%player%", this.getFormattedHolderName()) + "\n ");
 
             this.holder = null;
@@ -127,6 +127,7 @@ public class RTFFlag {
                 }
             }
         }
+
         player.setGameMode(GameMode.ADVENTURE);
 
         this.holder = player;
@@ -171,4 +172,5 @@ public class RTFFlag {
     public List<Block> getBlocks() {
         return this.blocks;
     }
+
 }

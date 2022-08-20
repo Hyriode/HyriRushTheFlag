@@ -9,6 +9,7 @@ import fr.hyriode.rtf.game.RTFFlag;
 import fr.hyriode.rtf.game.RTFGamePlayer;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.util.RTFMessage;
+import fr.hyriode.rtf.util.RTFValues;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -44,38 +45,31 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         final Player player = event.getPlayer();
+        final Block block = event.getBlockPlaced();
 
-        event.setCancelled(!this.canPlaceBlock(event.getBlockPlaced(), event.getPlayer()));
+        event.setCancelled(!this.canPlaceBlock(block, event.getPlayer()));
 
         if (event.isCancelled()) {
             player.sendMessage(RTFMessage.ERROR_PLACE_BLOCK_MESSAGE.asString(player));
         }
 
-        new BukkitRunnable() {
-            private int index = 180;
+        if (!RTFValues.REMOVE_BLOCKS.get()) {
+            return;
+        }
 
-            @Override
-            public void run() {
-                if (index == 3) {
-                    Bukkit.getScheduler().runTask(plugin, () -> {
-                        if (event.getBlockPlaced().getType().equals(Material.SANDSTONE)) {
-                            event.getBlockPlaced().setType(Material.STAINED_GLASS);
-                            event.getBlockPlaced().setData((byte) 14);
-                            event.getBlockPlaced().setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(plugin, true));
-                        }
-                    });
-                }
-                if (index == 0) {
-                    Bukkit.getScheduler().runTask(plugin, () -> {
-                        if (event.getBlockPlaced().getType().equals(Material.STAINED_GLASS)) {
-                            event.getBlockPlaced().breakNaturally();
-                        }
-                    });
-                    this.cancel();
-                }
-                index--;
+        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+            if (block.getType().equals(Material.SANDSTONE)) {
+                block.setType(Material.STAINED_GLASS);
+                block.setData((byte) 14);
+                block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(plugin, true));
+
+                Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+                    if (block.getType().equals(Material.STAINED_GLASS)) {
+                        block.breakNaturally();
+                    }
+                }, 3 * 20L);
             }
-        }.runTaskTimerAsynchronously(this.plugin, 0, 20);
+        }, 177 * 20L);
     }
 
     @EventHandler
@@ -121,7 +115,7 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             }
         } else if (!block.hasMetadata(SANDSTONE_METADATA_KEY)) {
             event.setCancelled(true);
-        } else {
+        } else if (!RTFValues.SPLEEF.get()){
             final RTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(event.getPlayer().getUniqueId());
 
             if (gamePlayer == null) {
