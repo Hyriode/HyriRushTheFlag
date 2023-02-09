@@ -72,7 +72,7 @@ public class RTFGhostAbility extends RTFAbility {
 
     private void hide(Player player) {
         final RTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(player);
-        final RTFGameTeam oppositeTeam = gamePlayer.getTeam().getOppositeTeam();
+        final RTFGameTeam oppositeTeam = ((RTFGameTeam) gamePlayer.getTeam()).getOppositeTeam();
 
         for (HyriGamePlayer oppositeTeamPlayer : oppositeTeam.getPlayers()) {
             final Player oppositePlayer = oppositeTeamPlayer.getPlayer();

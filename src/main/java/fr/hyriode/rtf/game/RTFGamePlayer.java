@@ -2,7 +2,6 @@ package fr.hyriode.rtf.game;
 
 import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.hyrame.actionbar.ActionBar;
-import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.protocol.HyriLastHitterProtocol;
 import fr.hyriode.hyrame.item.ItemBuilder;
@@ -50,8 +49,8 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
     private HyriRTF plugin;
 
-    public RTFGamePlayer(HyriGame<?> game, Player player) {
-        super(game, player);
+    public RTFGamePlayer(Player player) {
+        super(player);
     }
 
     public void startGame() {
@@ -82,7 +81,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
         this.giveArmor();
 
         if (teleport) {
-            this.player.teleport(this.team.getSpawnLocation());
+            this.player.teleport(((RTFGameTeam) this.getTeam()).getSpawnLocation());
 
             if (this.ability != null) {
                 this.handleCooldown(this.ability.getCooldown() / 2);
@@ -159,7 +158,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
     public boolean kill() {
         final RTFGame game = this.plugin.getGame();
-        final boolean hasLife = this.getTeam().hasLife();
+        final boolean hasLife = ((RTFGameTeam) this.getTeam()).hasLife();
 
         final PlayerInventory playerInventory = this.player.getInventory();
 
@@ -206,14 +205,14 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
     private ItemStack getArmorPiece(Material material) {
         return new ItemBuilder(material)
-                .withLeatherArmorColor(this.team.getColor().getDyeColor().getColor())
+                .withLeatherArmorColor(this.getTeam().getColor().getDyeColor().getColor())
                 .withEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                 .unbreakable()
                 .build();
     }
 
     public boolean hasFlag() {
-        RTFGameTeam team = (RTFGameTeam) this.team;
+        RTFGameTeam team = (RTFGameTeam) this.getTeam();
         return team.getOppositeTeam().getFlag().getHolder() != null && team.getOppositeTeam().getFlag().getHolder().equals(this.getPlayer());
     }
 
@@ -285,11 +284,6 @@ public class RTFGamePlayer extends HyriGamePlayer {
         this.plugin = plugin;
     }
 
-    @Override
-    public RTFGameTeam getTeam() {
-        return (RTFGameTeam) this.team;
-    }
-
     public boolean isCooldown() {
         return this.cooldown;
     }
@@ -307,7 +301,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
     }
 
     public Player getLastHitterPlayer() {
-        final List<HyriLastHitterProtocol.LastHitter> lastHitters = this.game.getProtocolManager().getProtocol(HyriLastHitterProtocol.class).getLastHitters(this.player);
+        final List<HyriLastHitterProtocol.LastHitter> lastHitters = this.plugin.getGame().getProtocolManager().getProtocol(HyriLastHitterProtocol.class).getLastHitters(this.player);
 
         if (lastHitters != null) {
             return lastHitters.get(0).asPlayer();

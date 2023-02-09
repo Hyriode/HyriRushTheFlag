@@ -4,6 +4,7 @@ import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.config.RTFConfig;
 import fr.hyriode.rtf.game.RTFFlag;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -15,12 +16,13 @@ public class RTFGameTeam extends HyriGameTeam {
 
     private int lives;
     private final HyriRTF plugin;
+    private final Location spawnLocation;
 
     private final RTFConfig.Team config;
     private final RTFFlag flag;
 
     public RTFGameTeam(HyriRTF plugin, RTFTeam team, RTFConfig.Team config, int teamSize) {
-        super(plugin.getGame(), team.getName(), team.getDisplayName(), team.getColor(), teamSize);
+        super(team.getName(), team.getDisplayName(), team.getColor(), teamSize);
         this.plugin = plugin;
         this.config = config;
         this.spawnLocation = this.config.getSpawn().asBukkit();
@@ -70,4 +72,7 @@ public class RTFGameTeam extends HyriGameTeam {
         return this.lives > 0;
     }
 
+    public Location getSpawnLocation() {
+        return this.spawnLocation;
+    }
 }

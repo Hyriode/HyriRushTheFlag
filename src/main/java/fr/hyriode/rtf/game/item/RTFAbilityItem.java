@@ -1,9 +1,9 @@
 package fr.hyriode.rtf.game.item;
 
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.item.HyriItem;
 import fr.hyriode.hyrame.item.ItemBuilder;
-import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGamePlayer;
 import fr.hyriode.rtf.util.RTFMessage;
@@ -21,13 +21,13 @@ import org.bukkit.inventory.ItemStack;
 public class RTFAbilityItem extends HyriItem<HyriRTF> {
 
     public RTFAbilityItem(HyriRTF plugin) {
-        super(plugin, "ability_item", () -> HyriLanguageMessage.get("item.ability.name"), Material.NETHER_STAR);
+        super(plugin, "ability_item", () -> HyriLanguageMessage.get("item.ability.name"), () -> HyriLanguageMessage.get("item.ability.lore"), Material.NETHER_STAR);
     }
 
     @Override
     public ItemStack onPreGive(IHyrame hyrame, Player player, int slot, ItemStack itemStack) {
         return new ItemBuilder(itemStack)
-                .withName(this.displayName.get().getValue(player)
+                .withName(this.display.get().getValue(player)
                         .replace("%ability%", this.plugin.getGame().getPlayer(player).getAbility().getName(player)))
                 .build();
     }
@@ -44,14 +44,14 @@ public class RTFAbilityItem extends HyriItem<HyriRTF> {
         if (!gamePlayer.isCooldown()) {
             this.handleAction(gamePlayer);
         } else {
-            gamePlayer.sendMessage(RTFMessage.ABILITY_IN_COOLDOWN_MESSAGE.asString(player));
+            gamePlayer.getPlayer().sendMessage(RTFMessage.ABILITY_IN_COOLDOWN_MESSAGE.asString(player));
             player.playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 0.8F, 0.1F);
         }
     }
 
     private void handleAction(RTFGamePlayer gamePlayer) {
 
-        gamePlayer.sendMessage(RTFMessage.ABILITY_USED_MESSAGE.asString(gamePlayer.getPlayer())
+        gamePlayer.getPlayer().sendMessage(RTFMessage.ABILITY_USED_MESSAGE.asString(gamePlayer.getPlayer())
                 .replace("%ability%", gamePlayer.getAbility().getName(gamePlayer.getPlayer()))
         );
 

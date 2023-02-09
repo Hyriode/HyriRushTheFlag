@@ -66,7 +66,7 @@ public class RTFFlag {
             player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.PISTON_EXTEND, 5f, 1f);
         }
 
-        game.sendMessageToAll(target ->  " \n" + RTFMessage.FLAG_RESPAWN_MESSAGE.asString(target).replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target)) + " \n");
+        game.getPlayers().forEach(target ->  target.getPlayer().sendMessage(" \n" + RTFMessage.FLAG_RESPAWN_MESSAGE.asString(target.getPlayer()).replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target)) + " \n"));
     }
 
     public void broughtBack() {
@@ -79,9 +79,9 @@ public class RTFFlag {
 
             this.team.removeLife();
 
-            game.sendMessageToAll(target ->  "\n " + RTFMessage.FLAG_BROUGHT_BACK_MESSAGE.asString(target)
+            game.getPlayers().forEach(target ->  target.getPlayer().sendMessage("\n " + RTFMessage.FLAG_BROUGHT_BACK_MESSAGE.asString(target.getPlayer())
                     .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
-                    .replace("%player%", this.getFormattedHolderName()) + "\n ");
+                    .replace("%player%", this.getFormattedHolderName()) + "\n "));
 
             this.holder = null;
 
@@ -143,10 +143,10 @@ public class RTFFlag {
 
         inventory.setHelmet(new ItemBuilder(Material.WOOL, 1, data).build());
 
-        game.sendMessageToAll(target ->  "\n" + RTFMessage.FLAG_CAPTURED_MESSAGE.asString(target)
+        game.getPlayers().forEach(target ->  target.getPlayer().sendMessage("\n" + RTFMessage.FLAG_CAPTURED_MESSAGE.asString(target.getPlayer())
                         .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
                         .replace("%player%", this.getFormattedHolderName())
-                + " \n ");
+                + " \n "));
         this.locations.forEach(location -> location.getWorld().strikeLightningEffect(location));
 
         if (gamePlayer.getAbility() != null) {

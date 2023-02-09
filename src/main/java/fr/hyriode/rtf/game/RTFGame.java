@@ -2,6 +2,8 @@ package fr.hyriode.rtf.game;
 
 import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.player.IHyriPlayer;
+import fr.hyriode.api.player.IHyriPlayerSession;
+import fr.hyriode.hyggdrasil.api.server.HyggServer;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGameState;
@@ -143,7 +145,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
         if (this.getState() == HyriGameState.PLAYING) {
             if (!gamePlayer.getTeam().hasPlayersPlaying()) {
-                this.win(gamePlayer.getTeam().getOppositeTeam());
+                this.win(((RTFGameTeam) gamePlayer.getTeam()).getOppositeTeam());
             }
         }
     }
@@ -183,17 +185,17 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
                     continue;
                 }
 
-                final IHyriPlayer account = IHyriPlayer.get(endPlayer.getUniqueId());
+                final IHyriPlayerSession session = IHyriPlayerSession.get(endPlayer.getUniqueId());
 
                 killsLines.add(line
-                        .replace("%player%", account.hasNickname() ? account.getNickname().getName() : account.getNameWithRank())
+                        .replace("%player%", session.hasNickname() ? session.getNickname().getName() : session.getNameWithRank())
                         .replace("%kills%", String.valueOf(endPlayer.getKills())));
             }
 
             final int kills = (int) gamePlayer.getKills();
             final boolean isWinner = winner.contains(gamePlayer);
-            final long hyris = HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayedTime(), isWinner);
-            final long xp = HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayedTime(), isWinner);
+            final long hyris = HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayTime(), isWinner);
+            final double xp = HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayTime(), isWinner);
             final List<String> rewards = new ArrayList<>();
 
             rewards.add(ChatColor.LIGHT_PURPLE + String.valueOf(hyris) + " Hyris");
@@ -254,7 +256,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     }
 
     public void endingGame(int minutesLeft) {
-        this.sendMessageToAll(player -> " \n" + RTFMessage.ENDING_GAME_MESSAGE.asString(player).replace("%time%", String.valueOf(minutesLeft)) + "\n ");
+        this.players.forEach(player -> player.getPlayer().sendMessage(" \n" + RTFMessage.ENDING_GAME_MESSAGE.asString(player.getPlayer()).replace("%time%", String.valueOf(minutesLeft)) + "\n "));
 
         if (minutesLeft == 1) {
             for (RTFGamePlayer player : players) {
@@ -272,7 +274,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             return;
         }
 
-        this.sendMessageToAll(player -> " \n" + RTFMessage.END_GAME_MESSAGE.asString(player) + "\n ");
+        this.getPlayers().forEach(player -> player.getPlayer().sendMessage(" \n" + RTFMessage.END_GAME_MESSAGE.asString(player.getPlayer()) + "\n "));
         this.reconnectionTime = -1;
 
         for (HyriGameTeam gameTeam : this.teams) {
@@ -311,8 +313,8 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
         account.setLastAbility(gamePlayer.getAbility().getModel());
 
-        if (this.getState() != HyriGameState.READY && this.getState() != HyriGameState.WAITING && !HyriAPI.get().getServer().isHost()) {
-            data.setPlayedTime(data.getPlayedTime() + gamePlayer.getPlayedTime());
+        if (this.getState() != HyriGameState.READY && this.getState() != HyriGameState.WAITING && !HyriAPI.get().getServer().getAccessibility().equals(HyggServer.Accessibility.HOST)) {
+            data.setPlayedTime(data.getPlayedTime() + gamePlayer.getPlayTime());
             data.addGamesPlayed(1);
             data.addKills(gamePlayer.getKills());
             data.addFinalKills(gamePlayer.getFinalKills());

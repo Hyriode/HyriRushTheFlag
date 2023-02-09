@@ -27,7 +27,7 @@ public class RTFGameListener extends HyriListener<HyriRTF> {
     @HyriEventHandler
     public void onReconnection(HyriGameReconnectEvent event) {
         final RTFGamePlayer player = (RTFGamePlayer) event.getGamePlayer();
-        final RTFGameTeam team = player.getTeam();
+        final RTFGameTeam team = (RTFGameTeam) player.getTeam();
 
         if(team.hasLife()) {
             event.allow();

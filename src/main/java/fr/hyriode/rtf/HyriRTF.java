@@ -1,7 +1,7 @@
 package fr.hyriode.rtf;
 
 import fr.hyriode.api.HyriAPI;
-import fr.hyriode.api.server.IHyriServer;
+import fr.hyriode.hyggdrasil.api.server.HyggServer;
 import fr.hyriode.hyrame.HyrameLoader;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.rtf.config.RTFConfig;
@@ -68,11 +68,11 @@ public class HyriRTF extends JavaPlugin {
 
         RTFAbility.init(this);
 
-        if (HyriAPI.get().getServer().isHost()) {
+        if (HyriAPI.get().getServer().getAccessibility().equals(HyggServer.Accessibility.HOST)) {
             this.hyrame.getHostController().addCategory(25, new RTFHostMainCategory());
         }
 
-        HyriAPI.get().getServer().setState(IHyriServer.State.READY);
+        HyriAPI.get().getServer().setState(HyggServer.State.READY);
     }
 
     public static void log(Level level, String message) {

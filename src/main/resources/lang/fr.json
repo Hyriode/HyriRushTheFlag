@@ -53,7 +53,9 @@
   "waiting-room.npc.data.played-time": "Temps de jeu",
 
   "item.choose.name": "&bChoisir sa capacité",
+  "item.choose.lore": "&7Cliquez pour choisir votre capacité !",
   "item.ability.name": "&fCapacité: %ability%",
+  "item.ability.lore": "&7Cliquez pour utiliser votre capacité !",
 
   "ability.gui.name": "&8Capacité: %ability%",
   "ability.gui.type": "&7Type: %value%",
