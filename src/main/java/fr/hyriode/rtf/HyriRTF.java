@@ -4,6 +4,7 @@ import fr.hyriode.api.HyriAPI;
 import fr.hyriode.hyggdrasil.api.server.HyggServer;
 import fr.hyriode.hyrame.HyrameLoader;
 import fr.hyriode.hyrame.IHyrame;
+import fr.hyriode.hyrame.utils.LocationWrapper;
 import fr.hyriode.rtf.config.RTFConfig;
 import fr.hyriode.rtf.game.RTFGame;
 import fr.hyriode.rtf.game.ability.RTFAbility;
@@ -13,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Arrays;
 import java.util.logging.Level;
 
 /**
@@ -62,7 +64,28 @@ public class HyriRTF extends JavaPlugin {
         HyriAPI.get().getHystiaAPI().getWorldManager().saveWorld(IHyrame.WORLD.get().getUID(), "rushtheflag", RTFGameType.EVENT.getName(), "Pokémon");*/
 
         this.hyrame = HyrameLoader.load(new HyriRTFProvider(this));
-        this.configuration = HyriAPI.get().getServer().getConfig(RTFConfig.class);
+
+        this.configuration = HyriAPI.get().getConfig().isDevEnvironment() ?
+                new RTFConfig(
+                        new RTFConfig.GameArea(
+                                new LocationWrapper(-40.0f, 90.0f, -20.0f),
+                                new LocationWrapper(85.0f, 125.0f, 25.0f)),
+                        new RTFConfig.Team(
+                                new LocationWrapper(65.0f, 100.0f, 9.0f),
+                                new LocationWrapper(74.0f, 98.0f, 14.0f),
+                                new LocationWrapper(61.0f, 107.0f, -3.0f),
+                                Arrays.asList(
+                                        new LocationWrapper(65.0f, 100.0f, 1.0f),
+                                        new LocationWrapper(65.0f, 100.0f, 4.0f))),
+                        new RTFConfig.Team(
+                                new LocationWrapper(-28.0f, 100.0f, 1.0f),
+                                new LocationWrapper(-37.0f, 98.0f, -3.0f),
+                                new LocationWrapper(-24.0f, 110.0f, 14.0f),
+                                Arrays.asList(
+                                        new LocationWrapper(-28.0f, 102.0f, 6.0f),
+                                        new LocationWrapper(-28.0f, 100.0f, 9.0f)))) :
+                HyriAPI.get().getServer().getConfig(RTFConfig.class);
+
         this.game = new RTFGame(this.hyrame, this);
         this.hyrame.getGameManager().registerGame(() -> this.game);
 
