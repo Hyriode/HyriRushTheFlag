@@ -14,6 +14,8 @@
   "message.game.end.2": "&f2nd Killer",
   "message.game.end.3": "&63rd Killer",
   "message.game.end.nobody": "&7Nobody",
+  "message.game.end.winner": "Winner",
+  "message.game.end.rewards": "Rewards",
   "message.game.end.kills": "%position% &7- %player% &7- %kills%",
 
   "message.eliminated": "&cEliminated!",
