@@ -50,7 +50,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     private boolean flagsAvailable;
 
     public RTFGame(IHyrame hyrame, HyriRTF plugin) {
-        super(hyrame, plugin, HyriAPI.get().getConfig().isDevEnvironment() ? HyriAPI.get().getGameManager().createGameInfo("rushtheflag", "Rooh") : HyriAPI.get().getGameManager().getGameInfo("rushtheflag"), RTFGamePlayer.class, HyriAPI.get().getConfig().isDevEnvironment() ? RTFGameType.SOLO : HyriGameType.getFromData(RTFGameType.values()));
+        super(hyrame, plugin, HyriAPI.get().getConfig().isDevEnvironment() ? HyriAPI.get().getGameManager().createGameInfo("rushtheflag", "Rush The Flag") : HyriAPI.get().getGameManager().getGameInfo("rushtheflag"), RTFGamePlayer.class, HyriAPI.get().getConfig().isDevEnvironment() ? RTFGameType.SOLO : HyriGameType.getFromData(RTFGameType.values()));
         this.plugin = plugin;
         this.description = HyriLanguageMessage.get("message.game.description");
         this.reconnectionTime = 120;
