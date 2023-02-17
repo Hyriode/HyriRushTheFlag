@@ -1,6 +1,7 @@
 package fr.hyriode.rtf.game;
 
 import fr.hyriode.api.HyriAPI;
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.api.player.IHyriPlayerSession;
 import fr.hyriode.hyggdrasil.api.server.HyggServer;
@@ -14,7 +15,6 @@ import fr.hyriode.hyrame.game.protocol.HyriLastHitterProtocol;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.game.util.HyriGameMessages;
 import fr.hyriode.hyrame.game.util.HyriRewardAlgorithm;
-import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.utils.Pair;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.player.RTFPlayer;
@@ -25,7 +25,10 @@ import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.game.team.RTFTeam;
 import fr.hyriode.rtf.util.RTFMessage;
 import fr.hyriode.rtf.util.RTFValues;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -47,7 +50,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     private boolean flagsAvailable;
 
     public RTFGame(IHyrame hyrame, HyriRTF plugin) {
-        super(hyrame, plugin, HyriAPI.get().getGameManager().getGameInfo("rushtheflag"), RTFGamePlayer.class, HyriGameType.getFromData(RTFGameType.values()));
+        super(hyrame, plugin, HyriAPI.get().getConfig().isDevEnvironment() ? HyriAPI.get().getGameManager().createGameInfo("rushtheflag", "Rooh") : HyriAPI.get().getGameManager().getGameInfo("rushtheflag"), RTFGamePlayer.class, HyriAPI.get().getConfig().isDevEnvironment() ? RTFGameType.SOLO : HyriGameType.getFromData(RTFGameType.values()));
         this.plugin = plugin;
         this.description = HyriLanguageMessage.get("message.game.description");
         this.reconnectionTime = 120;
@@ -71,10 +74,10 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     public void start() {
         super.start();
 
-        this.firstTeam.getFlag().place();
-        this.secondTeam.getFlag().place();
         this.firstTeam.setLives(RTFValues.LIVES.get());
         this.secondTeam.setLives(RTFValues.LIVES.get());
+        this.firstTeam.getFlag().place();
+        this.secondTeam.getFlag().place();
 
         for (RTFGamePlayer player : this.players) {
             player.startGame();
@@ -137,6 +140,10 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     @Override
     public void handleLogout(Player player) {
         super.handleLogout(player);
+
+        if (this.getState().equals(HyriGameState.WAITING) || this.getState().equals(HyriGameState.READY)) {
+            return;
+        }
 
         final UUID uuid = player.getUniqueId();
         final RTFGamePlayer gamePlayer = this.getPlayer(uuid);

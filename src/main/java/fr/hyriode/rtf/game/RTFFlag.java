@@ -51,6 +51,8 @@ public class RTFFlag {
         }
 
         this.blocks.forEach(block -> {
+            System.out.println(block.getLocation());
+
             block.setType(Material.WOOL);
             block.setData(this.team.getColor().getDyeColor().getWoolData());
             block.setMetadata(METADATA_KEY, new FixedMetadataValue(this.plugin, this.team.getName()));
@@ -66,7 +68,9 @@ public class RTFFlag {
             player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.PISTON_EXTEND, 5f, 1f);
         }
 
-        game.getPlayers().forEach(target ->  target.getPlayer().sendMessage(" \n" + RTFMessage.FLAG_RESPAWN_MESSAGE.asString(target.getPlayer()).replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target)) + " \n"));
+        game.getPlayers().forEach(target ->
+                target.getPlayer().sendMessage(" \n" + RTFMessage.FLAG_RESPAWN_MESSAGE.asString(target.getPlayer())
+                        .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target)) + " \n"));
     }
 
     public void broughtBack() {
