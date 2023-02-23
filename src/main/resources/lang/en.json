@@ -74,11 +74,11 @@
   "ability.type.attack": "&bAttack",
   "ability.type-lore.attack": "&7Abilities to do\n&7damage on the opponents.",
 
-  "ability.type.effect": "&bEffect",
-  "ability.type-lore.effect": "&7Abilities to obtain effects\n&7for a specific period of time.",
-
   "ability.type.special": "&bSpecial",
   "ability.type-lore.special": "&7Special abilities, giving\n&7various powers to players.",
+
+  "ability.type.build": "&bBuild",
+  "ability.type-lore.build": "&7Build abilities, giving\n&7the possibility to easily\n&7edit the map.",
 
   "ability.type.lore.list": "Available abilities: ",
   "ability.soon": "&cSoon",
@@ -90,7 +90,7 @@
   "ability.shooter.lore": "&7Allows you to shoot an explosive fireball\n&7to knock your opponents into the void.",
 
   "ability.runner.name": "&bRunner",
-  "ability.runner.lore": "&7Grants a speed III effect\n&7for five seconds.",
+  "ability.runner.lore": "&7Grants a speed II effect\n&7for height seconds.",
 
   "ability.builder.name": "&bBuilder",
   "ability.builder.lore": "&7Allows you to create a temporary\n&7bridge to move quickly.",
@@ -106,6 +106,9 @@
 
   "ability.barbarian.name": "&bBarbare",
   "ability.barbarian.lore": "&7Grants a strength I effect\n&7for three seconds.",
+
+  "ability.bridge.name": "&bBridge",
+  "ability.bridge.lore": "&7Allows you to create a temporary\n&7bridge to move quickly.",
 
   "gui.host.abilities.name": "&8Abilities",
 

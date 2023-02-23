@@ -1,10 +1,8 @@
 package fr.hyriode.rtf.config;
 
-import fr.hyriode.hyrame.game.waitingroom.HyriWaitingRoom;
+import fr.hyriode.api.config.IHyriConfig;
 import fr.hyriode.hyrame.utils.Area;
 import fr.hyriode.hyrame.utils.LocationWrapper;
-import fr.hyriode.hyrame.utils.block.Cuboid;
-import fr.hyriode.hystia.api.config.IConfig;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ import java.util.List;
  * Created by Akkashi
  * on 22/04/2022 at 16:28
  */
-public class RTFConfig implements IConfig {
+public class RTFConfig implements IHyriConfig {
     private final GameArea area;
     private final Team firstTeam;
     private final Team secondTeam;

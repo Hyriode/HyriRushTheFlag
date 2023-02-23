@@ -1,7 +1,8 @@
 package fr.hyriode.rtf.api.player;
 
-import fr.hyriode.api.player.HyriPlayerData;
+import fr.hyriode.api.mongodb.MongoDocument;
 import fr.hyriode.api.player.IHyriPlayer;
+import fr.hyriode.api.player.model.IHyriPlayerData;
 import fr.hyriode.rtf.api.ability.RTFAbilityModel;
 import fr.hyriode.rtf.api.hotbar.RTFHotBar;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
  * Created by AstFaster
  * on 31/12/2021 at 18:18
  */
-public class RTFPlayer extends HyriPlayerData {
+public class RTFPlayer implements IHyriPlayerData {
 
     private final UUID uniqueId;
     private RTFHotBar hotBar;
@@ -48,7 +49,7 @@ public class RTFPlayer extends HyriPlayerData {
     }
 
     public static RTFPlayer getPlayer(UUID uuid) {
-        final RTFPlayer rtfPlayer = IHyriPlayer.get(uuid).getData("rushtheflag", RTFPlayer.class);
+        final RTFPlayer rtfPlayer = IHyriPlayer.get(uuid).getData().read("rushtheflag", new RTFPlayer(uuid));
 
         return rtfPlayer == null ? new RTFPlayer(uuid) : rtfPlayer;
     }
@@ -56,8 +57,17 @@ public class RTFPlayer extends HyriPlayerData {
     public static void updatePlayer(RTFPlayer player) {
         final IHyriPlayer account = IHyriPlayer.get(player.getUniqueId());
 
-        account.addData("rushtheflag", player);
+        account.getData().add("rushtheflag", player);
         account.update();
     }
 
+    @Override
+    public void save(MongoDocument document) {
+
+    }
+
+    @Override
+    public void load(MongoDocument document) {
+
+    }
 }

@@ -72,11 +72,11 @@
   "ability.type.attack": "&bAttaque",
   "ability.type-lore.attack": "&7Capacités permettant de faire\n&7des dégâts sur les adversaires.",
 
-  "ability.type.effect": "&bEffet",
-  "ability.type-lore.effect": "&7Capacités permettant d'obtenir des\n&7effets pendant une durée déterminée.",
-
   "ability.type.special": "&bSpécial",
   "ability.type-lore.special": "&7Capacités spéciales, donnant des\n&7pouvoirs variés aux joueurs.",
+
+  "ability.type.build": "&bConstruction",
+  "ability.type-lore.build": "&7Capacités permettant de manipuler\n&7la carte très facilement.",
 
   "ability.type.lore.list": "Capacités disponibles: ",
   "ability.soon": "&cProchainement",
@@ -88,7 +88,7 @@
   "ability.shooter.lore": "&7Permet de tirer une boule de feu explosive\n&7pour faire tomber vos adversaires dans le vide.",
 
   "ability.runner.name": "&bCoureur",
-  "ability.runner.lore": "&7Permet d'obtenir un effet de\n&7vitesse III pendant cinq secondes.",
+  "ability.runner.lore": "&7Permet d'obtenir un effet de\n&7vitesse II pendant huit secondes.",
 
   "ability.builder.name": "&bArchitecte",
   "ability.builder.lore": "&7Permet de créer un pont temporaire\n&7pour se déplacer rapidement.",
@@ -104,6 +104,9 @@
 
   "ability.barbarian.name": "&bBarbare",
   "ability.barbarian.lore": "&7Permet d'obtenir un effet de\n&7force I pendant trois secondes.",
+
+  "ability.bridge.name": "&bPont",
+  "ability.bridge.lore": "&7Permet de créer un pont temporaire\n&7pour se déplacer rapidement.",
 
   "gui.host.abilities.name": "&8Capacités",
 
