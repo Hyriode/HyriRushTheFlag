@@ -1,4 +1,4 @@
-package fr.hyriode.rtf.game.ability.effect;
+package fr.hyriode.rtf.game.ability.attack;
 
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.ability.RTFAbilityModel;
@@ -21,7 +21,7 @@ public class RTFBarbarianAbility extends RTFAbility {
         super(RTFAbilityModel.BARBARIAN,
                 "barbarian",
                 Material.IRON_SWORD,
-                RTFAbilityType.EFFECT,
+                RTFAbilityType.ATTACK,
                 6000,
                 24);
     }

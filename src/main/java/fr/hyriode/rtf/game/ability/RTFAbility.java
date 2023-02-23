@@ -5,14 +5,14 @@ import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.ability.RTFAbilityModel;
 import fr.hyriode.rtf.game.ability.attack.RTFShooterAbility;
 import fr.hyriode.rtf.game.ability.attack.RTFTankAbility;
-import fr.hyriode.rtf.game.ability.effect.RTFBarbarianAbility;
-import fr.hyriode.rtf.game.ability.effect.RTFGhostAbility;
-import fr.hyriode.rtf.game.ability.effect.RTFRunnerAbility;
+import fr.hyriode.rtf.game.ability.attack.RTFBarbarianAbility;
+import fr.hyriode.rtf.game.ability.build.BridgeAbility;
+import fr.hyriode.rtf.game.ability.special.RTFGhostAbility;
+import fr.hyriode.rtf.game.ability.movement.RTFRunnerAbility;
 import fr.hyriode.rtf.game.ability.movement.RTFAstronautAbility;
 import fr.hyriode.rtf.game.ability.movement.RTFKangarooAbility;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,6 +62,7 @@ public abstract class RTFAbility {
         registerAbility(new RTFGhostAbility(pl));
         registerAbility(new RTFBarbarianAbility(pl));
         registerAbility(new RTFTankAbility(pl));
+        registerAbility(new BridgeAbility(pl));
 
         if (!ABILITY.isEmpty()) {
             HyriRTF.log("Registered " + ABILITY.size() + " abilities!");

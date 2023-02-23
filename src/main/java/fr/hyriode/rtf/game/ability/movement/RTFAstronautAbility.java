@@ -22,7 +22,7 @@ public class RTFAstronautAbility extends RTFAbility {
                 Material.FIREWORK,
                 RTFAbilityType.MOVEMENT,
                 20000,
-                20);
+                22);
     }
 
     @Override

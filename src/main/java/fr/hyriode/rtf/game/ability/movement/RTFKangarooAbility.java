@@ -22,7 +22,7 @@ public class RTFKangarooAbility extends RTFAbility {
                 Material.RABBIT_FOOT,
                 RTFAbilityType.MOVEMENT,
                 8000,
-                26);
+                28);
     }
 
     @Override
