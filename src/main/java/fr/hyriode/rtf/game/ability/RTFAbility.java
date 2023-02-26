@@ -6,7 +6,9 @@ import fr.hyriode.rtf.api.ability.RTFAbilityModel;
 import fr.hyriode.rtf.game.ability.attack.RTFShooterAbility;
 import fr.hyriode.rtf.game.ability.attack.RTFTankAbility;
 import fr.hyriode.rtf.game.ability.attack.RTFBarbarianAbility;
-import fr.hyriode.rtf.game.ability.build.BridgeAbility;
+import fr.hyriode.rtf.game.ability.buildAbility.BridgeAbility;
+import fr.hyriode.rtf.game.ability.buildAbility.WallAbility;
+import fr.hyriode.rtf.game.ability.special.PushAbility;
 import fr.hyriode.rtf.game.ability.special.RTFGhostAbility;
 import fr.hyriode.rtf.game.ability.movement.RTFRunnerAbility;
 import fr.hyriode.rtf.game.ability.movement.RTFAstronautAbility;
@@ -63,6 +65,8 @@ public abstract class RTFAbility {
         registerAbility(new RTFBarbarianAbility(pl));
         registerAbility(new RTFTankAbility(pl));
         registerAbility(new BridgeAbility(pl));
+        registerAbility(new WallAbility(pl));
+        registerAbility(new PushAbility());
 
         if (!ABILITY.isEmpty()) {
             HyriRTF.log("Registered " + ABILITY.size() + " abilities!");

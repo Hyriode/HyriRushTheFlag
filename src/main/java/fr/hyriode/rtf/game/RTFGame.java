@@ -198,7 +198,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
                 final IHyriPlayerSession session = IHyriPlayerSession.get(endPlayer.getUniqueId());
 
                 killsLines.add(line
-                        .replace("%player%", session.getNickname() != null ? session.getNickname().getName() : session.getNameWithRank())
+                        .replace("%player%", session.getNickname().has() ? session.getNickname().getName() : session.getNameWithRank())
                         .replace("%kills%", String.valueOf(endPlayer.getKills())));
             }
 

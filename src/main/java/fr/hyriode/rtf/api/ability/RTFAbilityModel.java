@@ -11,7 +11,7 @@ public enum RTFAbilityModel {
     TANK,
     BRIDGE,
     WALL,
-    PULL,
+    PUSH,
     ;
 
 }

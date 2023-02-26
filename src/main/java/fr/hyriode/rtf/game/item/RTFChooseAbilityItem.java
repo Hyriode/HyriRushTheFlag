@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class RTFChooseAbilityItem extends HyriItem<HyriRTF> {
 
     public RTFChooseAbilityItem(HyriRTF plugin) {
-        super(plugin, "ability_choose", () -> HyriLanguageMessage.get("item.choose.name"), () -> HyriLanguageMessage.get("item.choose.lore"), Material.NETHER_STAR);
+        super(plugin, "ability_choose", () -> HyriLanguageMessage.get("item.choose.name"), null, Material.NETHER_STAR);
     }
 
     @Override
