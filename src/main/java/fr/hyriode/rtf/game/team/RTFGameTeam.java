@@ -1,5 +1,6 @@
 package fr.hyriode.rtf.game.team;
 
+import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.config.RTFConfig;
@@ -23,8 +24,11 @@ public class RTFGameTeam extends HyriGameTeam {
         super(plugin.getGame(), team.getName(), team.getDisplayName(), team.getColor(), teamSize);
         this.plugin = plugin;
         this.config = config;
-        this.spawnLocation = this.config.getSpawn().asBukkit();
         this.flag = new RTFFlag(plugin, this);
+    }
+
+    public boolean hasOnlinePlayers() {
+        return this.players.stream().anyMatch(HyriGamePlayer::isOnline);
     }
 
     public boolean isInBase(Player player) {

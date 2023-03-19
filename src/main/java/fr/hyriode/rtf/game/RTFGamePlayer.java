@@ -82,7 +82,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
         this.giveArmor();
 
         if (teleport) {
-            this.player.teleport(this.team.getSpawnLocation());
+            this.player.teleport(((RTFGameTeam) this.team).getConfig().getSpawn().asBukkit());
 
             if (this.ability != null) {
                 this.handleCooldown(this.ability.getCooldown() / 2);
@@ -92,6 +92,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
     public void giveHotBar() {
         final PlayerInventory inventory = this.player.getInventory();
+
         this.player.setExp(0);
         this.player.setLevel(0);
 

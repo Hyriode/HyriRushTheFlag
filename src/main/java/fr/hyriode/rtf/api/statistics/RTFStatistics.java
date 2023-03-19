@@ -63,6 +63,7 @@ public class RTFStatistics extends HyriPlayerData {
 
 
     public static class Data {
+
         private long kills;
         private long finalKills;
         private long deaths;

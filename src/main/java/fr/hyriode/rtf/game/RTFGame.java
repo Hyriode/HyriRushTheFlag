@@ -142,7 +142,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
         this.refreshAPIPlayer(gamePlayer);
 
         if (this.getState() == HyriGameState.PLAYING) {
-            if (!gamePlayer.getTeam().hasPlayersPlaying()) {
+            if (!gamePlayer.getTeam().hasOnlinePlayers()) {
                 this.win(gamePlayer.getTeam().getOppositeTeam());
             }
         }
