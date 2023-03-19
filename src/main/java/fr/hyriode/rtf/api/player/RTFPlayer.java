@@ -17,7 +17,6 @@ public class RTFPlayer implements IHyriPlayerData {
 
     private final UUID uniqueId;
     private RTFHotBar hotBar;
-
     private RTFAbilityModel lastAbility;
 
     public RTFPlayer(UUID uniqueId) {
@@ -63,7 +62,7 @@ public class RTFPlayer implements IHyriPlayerData {
 
     @Override
     public void save(MongoDocument document) {
-
+        document.append("hotbar", this.hotBar);
     }
 
     @Override

@@ -1,5 +1,8 @@
 package fr.hyriode.rtf.api.hotbar;
 
+import fr.hyriode.api.mongodb.MongoDocument;
+import fr.hyriode.api.mongodb.MongoSerializable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +11,7 @@ import java.util.Map;
  * Created by AstFaster
  * on 31/12/2021 at 18:35
  */
-public class RTFHotBar {
+public class RTFHotBar implements MongoSerializable {
 
     private final Map<Item, Integer> items;
 
@@ -32,6 +35,16 @@ public class RTFHotBar {
 
     public Map<Item, Integer> getItems() {
         return this.items;
+    }
+
+    @Override
+    public void save(MongoDocument document) {
+
+    }
+
+    @Override
+    public void load(MongoDocument document) {
+
     }
 
     public enum Item {
