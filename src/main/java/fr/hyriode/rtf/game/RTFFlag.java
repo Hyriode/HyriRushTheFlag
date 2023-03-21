@@ -5,6 +5,7 @@ import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.RTFHotBar;
 import fr.hyriode.rtf.game.item.RTFAbilityItem;
+import fr.hyriode.rtf.game.scoreboard.RTFScoreboard;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.util.RTFMessage;
 import org.bukkit.GameMode;
@@ -89,8 +90,9 @@ public class RTFFlag {
 
             for (RTFGamePlayer player : game.getPlayers()) {
                 player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 3f, 1f);
-                player.getScoreboard().update();
             }
+
+            IHyrame.get().getScoreboardManager().getScoreboards(RTFScoreboard.class).forEach(RTFScoreboard::update);
 
             if (!this.team.getOppositeTeam().hasLife()) {
                 game.setFlagsAvailable(false);

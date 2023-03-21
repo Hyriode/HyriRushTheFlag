@@ -21,6 +21,7 @@ import fr.hyriode.rtf.api.RTFData;
 import fr.hyriode.rtf.api.RTFStatistics;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.item.RTFChooseAbilityItem;
+import fr.hyriode.rtf.game.scoreboard.RTFScoreboard;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.game.team.RTFTeam;
 import fr.hyriode.rtf.util.RTFMessage;
@@ -164,9 +165,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
     @Override
     public void win(HyriGameTeam winner) {
-        for (RTFGamePlayer gamePlayer : this.players) {
-            gamePlayer.getScoreboard().update();
-        }
+        IHyrame.get().getScoreboardManager().getScoreboards(RTFScoreboard.class).forEach(RTFScoreboard::update);
 
         super.win(winner);
 
@@ -293,15 +292,15 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             RTFGameTeam team = (RTFGameTeam) gameTeam;
             team.getFlag().resetHolder();
 
-            if(team.hasLife()) {
+            if (team.hasLife()) {
                 team.getFlag().getBlocks().forEach(block -> block.setType(Material.AIR));
                 team.removeLife();
             }
         }
 
-        for (RTFGamePlayer player : players) {
-            player.getScoreboard().update();
+        IHyrame.get().getScoreboardManager().getScoreboards(RTFScoreboard.class).forEach(RTFScoreboard::update);
 
+        for (RTFGamePlayer player : players) {
             if (player.isSpectator() || player.isDead()) {
                 continue;
             }

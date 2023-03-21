@@ -25,7 +25,7 @@ jobs:
       - name: Edit libraries folder permissions
         run: sudo chmod -R 777 libs/
 
-      - name: Build  Jar
+      - name: Build Jar
         run: gradle build
         env:
           GITHUB_USERNAME: ${{ github.actor }}
