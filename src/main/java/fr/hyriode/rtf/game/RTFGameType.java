@@ -12,7 +12,6 @@ public enum RTFGameType implements HyriGameType {
     SOLO("Solo", 1, 2, 2),
     DOUBLES("Doubles", 2, 4, 4),
     MDT("4v4", 4, 6, 8),
-    EVENT("Event 25v25", 25, 50, 50),
     ;
 
     private final String displayName;
@@ -50,4 +49,5 @@ public enum RTFGameType implements HyriGameType {
     public int getTeamSize() {
         return this.teamSize;
     }
+
 }

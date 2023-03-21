@@ -5,6 +5,7 @@ import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.config.RTFConfig;
 import fr.hyriode.rtf.game.RTFFlag;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -21,19 +22,19 @@ public class RTFGameTeam extends HyriGameTeam {
     private final RTFFlag flag;
 
     public RTFGameTeam(HyriRTF plugin, RTFTeam team, RTFConfig.Team config, int teamSize) {
-        super(plugin.getGame(), team.getName(), team.getDisplayName(), team.getColor(), teamSize);
+        super(team.getName(), team.getDisplayName(), team.getColor(), teamSize);
         this.plugin = plugin;
         this.config = config;
         this.flag = new RTFFlag(plugin, this);
     }
 
     public boolean hasOnlinePlayers() {
-        return this.players.stream().anyMatch(HyriGamePlayer::isOnline);
+        return this.players.values().stream().anyMatch(HyriGamePlayer::isOnline);
     }
 
     public boolean isInBase(Player player) {
         if (this.contains(player.getUniqueId())) {
-            return this.config.getArea().isInArea(player.getLocation());
+            return this.config.getSpawnArea().asArea().isInArea(player.getLocation());
         }
         return false;
     }
@@ -72,6 +73,10 @@ public class RTFGameTeam extends HyriGameTeam {
 
     public boolean hasLife() {
         return this.lives > 0;
+    }
+
+    public Location getSpawnLocation() {
+        return this.config.getSpawn().asBukkit();
     }
 
 }

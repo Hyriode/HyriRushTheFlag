@@ -1,7 +1,7 @@
 package fr.hyriode.rtf.game.ability.attack;
 
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.ability.RTFAbilityModel;
+import fr.hyriode.rtf.api.RTFAbilityModel;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.ability.RTFAbilityType;
 import net.minecraft.server.v1_8_R3.EntityFireball;

@@ -10,10 +10,12 @@
 
   "message.game.description": "&fCapture the opposing team's flag and fight to keep yours.\n&fUse your abilities to play as a team and surprise your\n&fopponents.",
 
-  "message.game.end.1": "&e1st Killer",
-  "message.game.end.2": "&f2nd Killer",
-  "message.game.end.3": "&63rd Killer",
+  "message.game.end.1": "§e1st",
+  "message.game.end.2": "§62nd",
+  "message.game.end.3": "§c3th",
   "message.game.end.nobody": "&7Nobody",
+  "message.game.end.winner": "Winner",
+  "message.game.end.rewards": "Rewards",
   "message.game.end.kills": "%position% &7- %player% &7- %kills%",
 
   "message.eliminated": "&cEliminated!",
@@ -29,9 +31,9 @@
   "bar.waiting.display": "&cAbility in cooldown : %time%",
   "bar.ready.display": "&aAbility available",
 
-  "message.flag-captured.display": "%team%&3 team flag has been captured by %player%&3!",
-  "message.flag-respawn.display": "%team%&3 team flag just respawned!",
-  "message.flag-brought-back.display": "%player%&3 has brought back the %team%&3 team flag to his base!",
+  "message.flag-captured.display": "%team%&f team flag has been captured by %player%&f!",
+  "message.flag-respawn.display": "%team%&f team flag just respawned!",
+  "message.flag-brought-back.display": "%player%&f has brought back the %team%&f team flag to his base!",
   "message.ending-game.display": "&fAll the flags will be destroyed in &3%time% minute(s)&f!",
   "message.end-game.display": "&cAll the flags has been destroyed!",
 
@@ -44,7 +46,7 @@
   "message.last-ability.display": "&fYour actual ability is: %ability%&f.",
 
   "waiting-room.npc.data.kills": "Kills",
-  "waiting-room.npc.data.final-kills": "Final kills",
+  "waiting-room.npc.data.final-kills": "Final Kills",
   "waiting-room.npc.data.deaths": "Deaths",
   "waiting-room.npc.data.captured-flags": "Captured flags",
   "waiting-room.npc.data.flags-brought-back": "Flags brought back",

@@ -10,28 +10,28 @@
 
   "message.game.description": "&fRécuperez le dreapeau de l'équipe adverse et battez-vous pour\n&fgarder le vôtre. Utilisez vos pouvoirs pour jouer en équipe\n&fet surprendre vos adversaires.",
 
-  "message.game.end.1": "&e1er Tueur",
-  "message.game.end.2": "&f2ème Tueur",
-  "message.game.end.3": "&63ème Tueur",
+  "message.game.end.1": "§e1er",
+  "message.game.end.2": "§62ème",
+  "message.game.end.3": "§c3ème",
   "message.game.end.nobody": "&7Personne",
+  "message.game.end.winner": "Gagnant",
+  "message.game.end.rewards": "Récompenses",
   "message.game.end.kills": "%position% &7- %player% &7- %kills%",
 
   "message.eliminated": "&cEliminé!",
 
-  "character.colon": ": ",
-
-  "scoreboard.kills.display": "Kills : ",
-  "scoreboard.deaths.display": "Morts : ",
-  "scoreboard.final-kills.display": "Final Kills : ",
-  "scoreboard.time.display": "Temps : ",
+  "scoreboard.kills.display": "Kills: ",
+  "scoreboard.deaths.display": "Morts: ",
+  "scoreboard.final-kills.display": "Final Kills: ",
+  "scoreboard.time.display": "Temps: ",
   "scoreboard.you.display": " &7(VOUS)",
 
   "bar.waiting.display": "&cCapacité en attente : %time%",
   "bar.ready.display": "&aCapacité disponible",
 
-  "message.flag-captured.display": "&3Le drapeau de l'équipe %team%&3 a été capturé par %player%&3 !",
-  "message.flag-respawn.display": "&3Le drapeau de l'équipe %team%&3 vient de réapparaître !",
-  "message.flag-brought-back.display": "%player%&3 a ramené le drapeau de l'équipe %team%&3 à sa base !",
+  "message.flag-captured.display": "&fLe drapeau de l'équipe %team%&f a été capturé par %player%&f !",
+  "message.flag-respawn.display": "&fLe drapeau de l'équipe %team%&f vient de réapparaître !",
+  "message.flag-brought-back.display": "%player%&f a ramené le drapeau de l'équipe %team%&f à sa base !",
   "message.ending-game.display": "&fTous les drapeaux seront détruits dans &3%time% minute(s)&f !",
   "message.end-game.display": "&cTous les drapeaux ont été détruits !",
 
@@ -44,7 +44,7 @@
   "message.last-ability.display": "&fVotre capacité actuelle est : %ability%&f.",
 
   "waiting-room.npc.data.kills": "Kills",
-  "waiting-room.npc.data.final-kills": "Final kills",
+  "waiting-room.npc.data.final-kills": "Final Kills",
   "waiting-room.npc.data.deaths": "Morts",
   "waiting-room.npc.data.captured-flags": "Drapeaux capturés",
   "waiting-room.npc.data.flags-brought-back": "Drapeaux ramenés",
@@ -53,7 +53,9 @@
   "waiting-room.npc.data.played-time": "Temps de jeu",
 
   "item.choose.name": "&bChoisir sa capacité",
+  "item.choose.lore": "&7Cliquez pour choisir votre capacité !",
   "item.ability.name": "&fCapacité: %ability%",
+  "item.ability.lore": "&7Cliquez pour utiliser votre capacité !",
 
   "ability.gui.name": "&8Capacité: %ability%",
   "ability.gui.type": "&7Type: %value%",

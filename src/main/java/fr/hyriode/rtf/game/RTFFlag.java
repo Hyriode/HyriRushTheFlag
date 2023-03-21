@@ -3,7 +3,7 @@ package fr.hyriode.rtf.game;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.hotbar.RTFHotBar;
+import fr.hyriode.rtf.api.RTFHotBar;
 import fr.hyriode.rtf.game.item.RTFAbilityItem;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.util.RTFMessage;
@@ -66,7 +66,9 @@ public class RTFFlag {
             player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.PISTON_EXTEND, 5f, 1f);
         }
 
-        game.sendMessageToAll(target ->  " \n" + RTFMessage.FLAG_RESPAWN_MESSAGE.asString(target).replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target)) + " \n");
+        game.getPlayers().forEach(target ->
+                target.getPlayer().sendMessage(" \n" + RTFMessage.FLAG_RESPAWN_MESSAGE.asString(target.getPlayer())
+                        .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target)) + " \n"));
     }
 
     public void broughtBack() {
@@ -79,9 +81,9 @@ public class RTFFlag {
 
             this.team.removeLife();
 
-            game.sendMessageToAll(target ->  "\n " + RTFMessage.FLAG_BROUGHT_BACK_MESSAGE.asString(target)
+            game.getPlayers().forEach(target ->  target.getPlayer().sendMessage("\n " + RTFMessage.FLAG_BROUGHT_BACK_MESSAGE.asString(target.getPlayer())
                     .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
-                    .replace("%player%", this.getFormattedHolderName()) + "\n ");
+                    .replace("%player%", this.getFormattedHolderName()) + "\n "));
 
             this.holder = null;
 
@@ -90,7 +92,7 @@ public class RTFFlag {
                 player.getScoreboard().update();
             }
 
-            if(!this.team.getOppositeTeam().hasLife()) {
+            if (!this.team.getOppositeTeam().hasLife()) {
                 game.setFlagsAvailable(false);
             }
         }
@@ -116,13 +118,11 @@ public class RTFFlag {
         final PlayerInventory inventory = player.getInventory();
         final byte data = this.team.getColor().getDyeColor().getData();
 
-        for (RTFHotBar.Item item : gamePlayer.getAccount().getHotBar().getItems().keySet()) {
-            if (gamePlayer.getAccount().getHotBar().getSlot(item) != null) {
-                for (int i = 0; i <= 9; i++) {
-                    if (inventory.getItem(i) != null) {
-                        if (inventory.getItem(i).getType() == Material.getMaterial(item.getName())) {
-                            gamePlayer.getAccount().getHotBar().setItem(item, i);
-                        }
+        for (RTFHotBar.Item item : gamePlayer.getData().getHotBar().getItems().keySet()) {
+            for (int i = 0; i <= 9; i++) {
+                if (inventory.getItem(i) != null) {
+                    if (inventory.getItem(i).getType() == Material.getMaterial(item.getName())) {
+                        gamePlayer.getData().getHotBar().setItem(item, i);
                     }
                 }
             }
@@ -143,14 +143,14 @@ public class RTFFlag {
 
         inventory.setHelmet(new ItemBuilder(Material.WOOL, 1, data).build());
 
-        game.sendMessageToAll(target ->  "\n" + RTFMessage.FLAG_CAPTURED_MESSAGE.asString(target)
+        game.getPlayers().forEach(target ->  target.getPlayer().sendMessage("\n" + RTFMessage.FLAG_CAPTURED_MESSAGE.asString(target.getPlayer())
                         .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
                         .replace("%player%", this.getFormattedHolderName())
-                + " \n ");
+                + " \n "));
         this.locations.forEach(location -> location.getWorld().strikeLightningEffect(location));
 
         if (gamePlayer.getAbility() != null) {
-            this.plugin.getHyrame().getItemManager().giveItem(player, gamePlayer.getAccount().getHotBar().getSlot(RTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
+            this.plugin.getHyrame().getItemManager().giveItem(player, gamePlayer.getData().getHotBar().getSlot(RTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
         }
     }
 

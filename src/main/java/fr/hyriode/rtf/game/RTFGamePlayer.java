@@ -1,16 +1,16 @@
 package fr.hyriode.rtf.game;
 
 import fr.hyriode.api.player.IHyriPlayer;
+import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.actionbar.ActionBar;
-import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.protocol.HyriLastHitterProtocol;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.hyrame.utils.PlayerUtil;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.hotbar.RTFHotBar;
-import fr.hyriode.rtf.api.player.RTFPlayer;
-import fr.hyriode.rtf.api.statistics.RTFStatistics;
+import fr.hyriode.rtf.api.RTFHotBar;
+import fr.hyriode.rtf.api.RTFData;
+import fr.hyriode.rtf.api.RTFStatistics;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.item.RTFAbilityItem;
 import fr.hyriode.rtf.game.scoreboard.RTFScoreboard;
@@ -40,22 +40,21 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
     private boolean cooldown = false;
 
-    private RTFPlayer account;
+    private RTFData data;
     private RTFStatistics statistics;
+
     private long kills;
     private long finalKills;
     private long deaths;
     private long capturedFlags;
     private long flagsBroughtBack;
 
-    private HyriRTF plugin;
-
-    public RTFGamePlayer(HyriGame<?> game, Player player) {
-        super(game, player);
+    public RTFGamePlayer(Player player) {
+        super(player);
     }
 
     public void startGame() {
-        this.scoreboard = new RTFScoreboard(this.plugin, this.player);
+        this.scoreboard = new RTFScoreboard(HyriRTF.get(), this.player);
         this.scoreboard.show();
 
         if (this.ability == null) {
@@ -69,11 +68,11 @@ public class RTFGamePlayer extends HyriGamePlayer {
         this.spawn(true);
     }
 
-    public IHyriPlayer asHyriode() {
-        return IHyriPlayer.get(this.player.getUniqueId());
-    }
-
     public void spawn(boolean teleport) {
+        if (!this.isOnline()) {
+            return;
+        }
+
         PlayerUtil.resetPlayer(this.player, true);
 
         this.player.setGameMode(GameMode.SURVIVAL);
@@ -82,7 +81,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
         this.giveArmor();
 
         if (teleport) {
-            this.player.teleport(((RTFGameTeam) this.team).getConfig().getSpawn().asBukkit());
+            this.player.teleport(((RTFGameTeam) this.getTeam()).getSpawnLocation());
 
             if (this.ability != null) {
                 this.handleCooldown(this.ability.getCooldown() / 2);
@@ -97,12 +96,12 @@ public class RTFGamePlayer extends HyriGamePlayer {
         this.player.setLevel(0);
 
         inventory.addItem(new ItemBuilder(Material.SANDSTONE, 64 * 9, 2).build());
-        inventory.setItem(this.account.getHotBar().getSlot(RTFHotBar.Item.GOLDEN_APPLE), new ItemBuilder(Material.GOLDEN_APPLE, 16).build());
-        inventory.setItem(this.account.getHotBar().getSlot(RTFHotBar.Item.SWORD), new ItemBuilder(Material.IRON_SWORD).withEnchant(Enchantment.DAMAGE_ALL, 1).unbreakable().build());
-        inventory.setItem(this.account.getHotBar().getSlot(RTFHotBar.Item.PICKAXE), new ItemBuilder(Material.IRON_PICKAXE).withEnchant(Enchantment.DIG_SPEED, 2).unbreakable().build());
+        inventory.setItem(this.data.getHotBar().getSlot(RTFHotBar.Item.GOLDEN_APPLE), new ItemBuilder(Material.GOLDEN_APPLE, 16).build());
+        inventory.setItem(this.data.getHotBar().getSlot(RTFHotBar.Item.SWORD), new ItemBuilder(Material.IRON_SWORD).withEnchant(Enchantment.DAMAGE_ALL, 1).unbreakable().build());
+        inventory.setItem(this.data.getHotBar().getSlot(RTFHotBar.Item.PICKAXE), new ItemBuilder(Material.IRON_PICKAXE).withEnchant(Enchantment.DIG_SPEED, 2).unbreakable().build());
 
         if (this.ability != null) {
-            this.plugin.getHyrame().getItemManager().giveItem(this.player, this.account.getHotBar().getSlot(RTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
+            IHyrame.get().getItemManager().giveItem(this.player, this.data.getHotBar().getSlot(RTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
         }
     }
 
@@ -155,25 +154,21 @@ public class RTFGamePlayer extends HyriGamePlayer {
                 }
                 index--;
             }
-        }.runTaskTimer(this.plugin, 0, 20);
+        }.runTaskTimer(HyriRTF.get(), 0, 20);
     }
 
     public boolean kill() {
-        final RTFGame game = this.plugin.getGame();
-        final boolean hasLife = this.getTeam().hasLife();
+        final RTFGame game = HyriRTF.get().getGame();
+        final boolean hasLife = ((RTFGameTeam) this.getTeam()).hasLife();
 
         final PlayerInventory playerInventory = this.player.getInventory();
 
-        for (RTFHotBar.Item item : this.account.getHotBar().getItems().keySet()) {
-            if (this.account.getHotBar().getSlot(item) == null || item == null) {
-                continue;
-            }
-
+        for (RTFHotBar.Item item : this.data.getHotBar().getItems().keySet()) {
             for (int i = 0; i <= 9; i++) {
                 final ItemStack itemStack = playerInventory.getItem(i);
 
                 if (itemStack != null && itemStack.getType() == Material.getMaterial(item.getName())) {
-                    this.account.getHotBar().setItem(item, i);
+                    this.data.getHotBar().setItem(item, i);
                 }
             }
         }
@@ -207,23 +202,23 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
     private ItemStack getArmorPiece(Material material) {
         return new ItemBuilder(material)
-                .withLeatherArmorColor(this.team.getColor().getDyeColor().getColor())
+                .withLeatherArmorColor(this.getTeam().getColor().getDyeColor().getColor())
                 .withEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                 .unbreakable()
                 .build();
     }
 
     public boolean hasFlag() {
-        RTFGameTeam team = (RTFGameTeam) this.team;
+        RTFGameTeam team = (RTFGameTeam) this.getTeam();
         return team.getOppositeTeam().getFlag().getHolder() != null && team.getOppositeTeam().getFlag().getHolder().equals(this.getPlayer());
     }
 
-    public RTFPlayer getAccount() {
-        return this.account;
+    public RTFData getData() {
+        return this.data;
     }
 
-    public void setAccount(RTFPlayer account) {
-        this.account = account;
+    public void setData(RTFData data) {
+        this.data = data;
     }
 
     public RTFStatistics getStatistics() {
@@ -278,19 +273,6 @@ public class RTFGamePlayer extends HyriGamePlayer {
         return this.scoreboard;
     }
 
-    public void setScoreboard(RTFScoreboard scoreboard) {
-        this.scoreboard = scoreboard;
-    }
-
-    void setPlugin(HyriRTF plugin) {
-        this.plugin = plugin;
-    }
-
-    @Override
-    public RTFGameTeam getTeam() {
-        return (RTFGameTeam) this.team;
-    }
-
     public boolean isCooldown() {
         return this.cooldown;
     }
@@ -308,7 +290,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
     }
 
     public Player getLastHitterPlayer() {
-        final List<HyriLastHitterProtocol.LastHitter> lastHitters = this.game.getProtocolManager().getProtocol(HyriLastHitterProtocol.class).getLastHitters(this.player);
+        final List<HyriLastHitterProtocol.LastHitter> lastHitters = HyriRTF.get().getGame().getProtocolManager().getProtocol(HyriLastHitterProtocol.class).getLastHitters(this.player);
 
         if (lastHitters != null) {
             return lastHitters.get(0).asPlayer();
@@ -320,7 +302,7 @@ public class RTFGamePlayer extends HyriGamePlayer {
         final Player player = this.getLastHitterPlayer();
 
         if (player != null) {
-            return this.plugin.getGame().getPlayer(player.getUniqueId());
+            return HyriRTF.get().getGame().getPlayer(player);
         }
         return null;
     }

@@ -103,8 +103,8 @@ public class RTFChooseAbilityGUI extends HyriInventory {
                     this.setItem(availableSlot, this.getAbilityItem(this.gamePlayer, ability, AbilityStatus.SELECTED));
                 } else {
                     this.setItem(availableSlot, this.getAbilityItem(this.gamePlayer, ability, AbilityStatus.SELECT), event -> {
-                        gamePlayer.setAbility(ability);
-                        gamePlayer.getAccount().setLastAbility(ability.getModel());
+                        this.gamePlayer.setAbility(ability);
+                        this.gamePlayer.getData().setLastAbility(ability.getModel());
 
                         this.owner.playSound(this.owner.getLocation(), Sound.CLICK, 0.5F, 2.0F);
 

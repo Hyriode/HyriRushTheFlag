@@ -3,7 +3,7 @@ package fr.hyriode.rtf.game.ability.effect;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.utils.PlayerUtil;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.ability.RTFAbilityModel;
+import fr.hyriode.rtf.api.RTFAbilityModel;
 import fr.hyriode.rtf.game.RTFGame;
 import fr.hyriode.rtf.game.RTFGamePlayer;
 import fr.hyriode.rtf.game.ability.RTFAbility;
@@ -72,7 +72,7 @@ public class RTFGhostAbility extends RTFAbility {
 
     private void hide(Player player) {
         final RTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(player);
-        final RTFGameTeam oppositeTeam = gamePlayer.getTeam().getOppositeTeam();
+        final RTFGameTeam oppositeTeam = ((RTFGameTeam) gamePlayer.getTeam()).getOppositeTeam();
 
         for (HyriGamePlayer oppositeTeamPlayer : oppositeTeam.getPlayers()) {
             final Player oppositePlayer = oppositeTeamPlayer.getPlayer();

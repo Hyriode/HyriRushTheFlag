@@ -75,6 +75,7 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
     @EventHandler
     public void onExplode(EntityExplodeEvent event) {
         event.setCancelled(true);
+
         for (Block block : event.blockList()) {
             if (block.hasMetadata(SANDSTONE_METADATA_KEY)) {
                 block.breakNaturally();
@@ -162,8 +163,8 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             return false;
         }
 
-        return !firstTeamConfig.getArea().isInArea(location) &&
-                !secondTeamConfig.getArea().isInArea(location) &&
+        return !firstTeamConfig.getSpawnArea().asArea().isInArea(location) &&
+                !secondTeamConfig.getSpawnArea().asArea().isInArea(location) &&
                 config.getArea().asArea().isInArea(location);
     }
 

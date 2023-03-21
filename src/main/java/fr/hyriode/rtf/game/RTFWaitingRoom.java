@@ -1,20 +1,20 @@
 package fr.hyriode.rtf.game;
 
+import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.language.HyriLanguage;
 import fr.hyriode.api.player.IHyriPlayer;
 
-import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.waitingroom.HyriWaitingRoom;
 import fr.hyriode.api.language.HyriLanguageMessage;
-import fr.hyriode.hyrame.utils.Area;
 import fr.hyriode.hyrame.utils.DurationFormatter;
 import fr.hyriode.hyrame.utils.LocationWrapper;
-import fr.hyriode.rtf.api.statistics.RTFStatistics;
-import fr.hyriode.rtf.api.statistics.RTFStatistics;
+import fr.hyriode.hyrame.utils.Symbols;
+import fr.hyriode.rtf.HyriRTF;
+import fr.hyriode.rtf.api.RTFStatistics;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-import java.util.UUID;
 import java.util.function.Function;
 
 /**
@@ -27,7 +27,7 @@ public class RTFWaitingRoom extends HyriWaitingRoom {
     private static final Function<String, HyriLanguageMessage> LANG_DATA = name -> HyriLanguageMessage.get("waiting-room.npc.data." + name);
 
     public RTFWaitingRoom(HyriGame<?> game) {
-        super(game, Material.BANNER, createConfig());
+        super(game, Material.BANNER, HyriRTF.get().getConfiguration().getWaitingRoom());
 
         this.addStatistics(20, RTFGameType.SOLO);
         this.addStatistics(22, RTFGameType.DOUBLES);
@@ -46,23 +46,19 @@ public class RTFWaitingRoom extends HyriWaitingRoom {
         normal.addData(NPCData.voidData());
         normal.addData(new NPCData(LANG_DATA.apply("victories"), account -> String.valueOf(this.getStatistics(gameType, account).getVictories())));
         normal.addData(new NPCData(LANG_DATA.apply("games-played"), account -> String.valueOf(this.getStatistics(gameType, account).getGamesPlayed())));
-        normal.addData(new NPCData(LANG_DATA.apply("played-time"), account -> this.formatPlayedTime(account, this.getStatistics(gameType, account).getPlayedTime())));
+        normal.addData(new NPCData(LANG_DATA.apply("played-time"), account -> this.formatPlayedTime(account, account.getStatistics().getPlayTime(HyriAPI.get().getServer().getType()))));
 
         this.addNPCCategory(slot, normal);
     }
 
     private String formatPlayedTime(IHyriPlayer account, long playedTime) {
-        return new DurationFormatter()
+        return playedTime < 1000 ? ChatColor.RED + Symbols.CROSS_STYLIZED_BOLD : new DurationFormatter()
                 .withSeconds(false)
                 .format(account.getSettings().getLanguage(), playedTime);
     }
 
     private RTFStatistics.Data getStatistics(RTFGameType gameType, IHyriPlayer account) {
         return ((RTFGamePlayer) this.game.getPlayer(account.getUniqueId())).getStatistics().getData(gameType);
-    }
-
-    private static Config createConfig() {
-        return new Config(new LocationWrapper(0.5, 170.5, 0.5, -90, 0), new LocationWrapper(30, 222, -18), new LocationWrapper(-22, 160, 22), new LocationWrapper(5.5F, 170, -2.5F, 90, 0));
     }
 
 }

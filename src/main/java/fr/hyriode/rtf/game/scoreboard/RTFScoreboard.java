@@ -2,6 +2,7 @@ package fr.hyriode.rtf.game.scoreboard;
 
 import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.game.scoreboard.HyriGameScoreboard;
+import fr.hyriode.hyrame.utils.Symbols;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGame;
 import fr.hyriode.rtf.game.RTFGamePlayer;
@@ -16,11 +17,13 @@ import org.bukkit.entity.Player;
  */
 public class RTFScoreboard extends HyriGameScoreboard<RTFGame> {
 
+    private final RTFGamePlayer gamePlayer;
     private final HyriRTF plugin;
 
     public RTFScoreboard(HyriRTF plugin, Player player) {
         super(plugin, plugin.getGame(), player, "rushtheflag");
         this.plugin = plugin;
+        this.gamePlayer = this.plugin.getGame().getPlayer(this.player.getUniqueId());
 
         this.addLines();
 
@@ -47,41 +50,36 @@ public class RTFScoreboard extends HyriGameScoreboard<RTFGame> {
         this.updateLines();
     }
 
-    private RTFGamePlayer getGamePlayer() {
-        return this.plugin.getGame().getPlayer(this.player.getUniqueId());
-    }
-
     private String getKillsLine() {
-        return this.getLinePrefix("kills") + ChatColor.AQUA + this.getGamePlayer().getKills();
+        return this.getLinePrefix("kills") + ChatColor.AQUA + (this.gamePlayer != null ? this.gamePlayer.getKills() : ChatColor.RED + Symbols.CROSS_STYLIZED_BOLD);
     }
 
     private String getDeathsLine() {
-        return this.getLinePrefix("deaths") + ChatColor.AQUA + this.getGamePlayer().getDeaths();
+        return this.getLinePrefix("deaths") + ChatColor.AQUA + (this.gamePlayer != null ? this.gamePlayer.getDeaths() : ChatColor.RED + Symbols.CROSS_STYLIZED_BOLD);
     }
 
     private String getFinalKillsLine() {
-        return this.getLinePrefix("final-kills") + ChatColor.AQUA + this.getGamePlayer().getFinalKills();
+        return this.getLinePrefix("final-kills") + ChatColor.AQUA + (this.gamePlayer != null ? this.gamePlayer.getFinalKills() : ChatColor.RED + Symbols.CROSS_STYLIZED_BOLD);
     }
 
     private String getTeamLine(RTFGameTeam team) {
         final String teamDisplay = team.getColor().getChatColor() + team.getDisplayName().getValue(this.player) + ChatColor.RESET;
-        final String colon = ChatColor.WHITE + HyriLanguageMessage.get("character.colon").getValue(this.player);
 
-        if (this.getGamePlayer().getTeam().equals(team)) {
+        if (this.gamePlayer != null && this.gamePlayer.getTeam().equals(team)) {
             if(team.hasLife()) {
-                return teamDisplay + colon + ChatColor.GREEN + "✔" + this.getLinePrefix("you");
+                return teamDisplay + ": " + ChatColor.GREEN + "✔" + this.getLinePrefix("you");
             } else if(team.hasPlayersPlaying()) {
-                return teamDisplay + colon + ChatColor.AQUA + team.getPlayersPlaying().size() + this.getLinePrefix("you");
+                return teamDisplay + ": " + ChatColor.AQUA + team.getPlayersPlaying().size() + this.getLinePrefix("you");
             } else {
-                return teamDisplay + colon + ChatColor.RED + "✘" + this.getLinePrefix("you");
+                return teamDisplay + ": " + ChatColor.RED + "✘" + this.getLinePrefix("you");
             }
         } else {
-            if(team.hasLife()) {
-                return teamDisplay + colon + ChatColor.GREEN + "✔";
+            if (team.hasLife()) {
+                return teamDisplay + ": " + ChatColor.GREEN + "✔";
             } else if(team.hasPlayersPlaying()) {
-                return teamDisplay + colon + ChatColor.AQUA + team.getPlayersPlaying().size();
+                return teamDisplay + ": " + ChatColor.AQUA + team.getPlayersPlaying().size();
             } else {
-                return teamDisplay + colon + ChatColor.RED + "✘";
+                return teamDisplay + ": " + ChatColor.RED + "✘";
             }
         }
     }

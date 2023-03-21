@@ -2,7 +2,7 @@ package fr.hyriode.rtf.game.ability;
 
 import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.ability.RTFAbilityModel;
+import fr.hyriode.rtf.api.RTFAbilityModel;
 import fr.hyriode.rtf.game.ability.attack.RTFShooterAbility;
 import fr.hyriode.rtf.game.ability.attack.RTFTankAbility;
 import fr.hyriode.rtf.game.ability.effect.RTFBarbarianAbility;
@@ -12,7 +12,6 @@ import fr.hyriode.rtf.game.ability.movement.RTFAstronautAbility;
 import fr.hyriode.rtf.game.ability.movement.RTFKangarooAbility;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,7 +51,7 @@ public abstract class RTFAbility {
     public abstract void use(Player player);
 
     public static void init(HyriRTF pl) {
-        HyriRTF.log("Registering challenges...");
+        HyriRTF.log("Registering abilities...");
 
         /*  Add challenges here  */
         registerAbility(new RTFAstronautAbility(pl));

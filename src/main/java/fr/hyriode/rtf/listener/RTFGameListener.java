@@ -1,6 +1,7 @@
 package fr.hyriode.rtf.listener;
 
 import fr.hyriode.api.event.HyriEventHandler;
+import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.HyriGameSpectator;
 import fr.hyriode.hyrame.game.event.player.HyriGameDeathEvent;
 import fr.hyriode.hyrame.game.event.player.HyriGameReconnectEvent;
@@ -11,7 +12,9 @@ import fr.hyriode.hyrame.listener.HyriListener;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGame;
 import fr.hyriode.rtf.game.RTFGamePlayer;
+import fr.hyriode.rtf.game.scoreboard.RTFScoreboard;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
+import org.bukkit.entity.Player;
 
 /**
  * Project: Hyriode
@@ -25,11 +28,11 @@ public class RTFGameListener extends HyriListener<HyriRTF> {
     }
 
     @HyriEventHandler
-    public void onReconnection(HyriGameReconnectEvent event) {
+    public void onReconnect(HyriGameReconnectEvent event) {
         final RTFGamePlayer player = (RTFGamePlayer) event.getGamePlayer();
-        final RTFGameTeam team = player.getTeam();
+        final RTFGameTeam team = (RTFGameTeam) player.getTeam();
 
-        if(team.hasLife()) {
+        if (team.hasLife()) {
             event.allow();
         } else {
             event.disallow();
@@ -37,7 +40,7 @@ public class RTFGameListener extends HyriListener<HyriRTF> {
     }
 
     @HyriEventHandler
-    public void onReconnection(HyriGameReconnectedEvent event) {
+    public void onReconnected(HyriGameReconnectedEvent event) {
         final RTFGamePlayer player = (RTFGamePlayer) event.getGamePlayer();
         final RTFGame game = this.plugin.getGame();
 
@@ -48,8 +51,13 @@ public class RTFGameListener extends HyriListener<HyriRTF> {
     public void onSpectator(HyriGameSpectatorEvent event) {
         final RTFGame game = (RTFGame) event.getGame();
         final HyriGameSpectator spectator = event.getSpectator();
+        final Player player = spectator.getPlayer();
 
-        spectator.getPlayer().teleport(game.getWaitingRoom().getConfig().getSpawn().asBukkit());
+        if (!(spectator instanceof HyriGamePlayer)) { // Player is an outside spectator
+            player.teleport(game.getWaitingRoom().getConfig().getSpawn().asBukkit());
+
+            new RTFScoreboard(HyriRTF.get(), player).show();
+        }
     }
 
 }

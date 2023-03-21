@@ -1,32 +1,41 @@
 package fr.hyriode.rtf.config;
 
+import fr.hyriode.api.config.IHyriConfig;
 import fr.hyriode.hyrame.game.waitingroom.HyriWaitingRoom;
-import fr.hyriode.hyrame.utils.Area;
+import fr.hyriode.hyrame.utils.AreaWrapper;
 import fr.hyriode.hyrame.utils.LocationWrapper;
-import fr.hyriode.hyrame.utils.block.Cuboid;
-import fr.hyriode.hystia.api.config.IConfig;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Project: HyriRushTheFlag
  * Created by Akkashi
  * on 22/04/2022 at 16:28
  */
-public class RTFConfig implements IConfig {
-    private final GameArea area;
+public class RTFConfig implements IHyriConfig {
+
+    private final HyriWaitingRoom.Config waitingRoom;
+
+    private final AreaWrapper area;
+
     private final Team firstTeam;
     private final Team secondTeam;
 
-    public RTFConfig(GameArea area, Team firstTeam, Team secondTeam) {
+    public RTFConfig(HyriWaitingRoom.Config waitingRoom, AreaWrapper area, Team firstTeam, Team secondTeam) {
+        this.waitingRoom = waitingRoom;
         this.area = area;
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
     }
 
-    public GameArea getArea() {
+    public HyriWaitingRoom.Config getWaitingRoom() {
+        return this.waitingRoom;
+    }
+
+    public AreaWrapper getArea() {
         return area;
     }
 
@@ -41,37 +50,24 @@ public class RTFConfig implements IConfig {
     public static class Team {
 
         private final LocationWrapper spawn;
+        private final AreaWrapper spawnArea;
 
-        private final LocationWrapper spawnAreaFirst;
-        private final LocationWrapper spawnAreaSecond;
         private final List<LocationWrapper> flags;
 
-        private final List<Location> flagsBukkit;
+        private List<Location> flagsBukkit;
 
-        public Team(LocationWrapper spawn, LocationWrapper spawnAreaFirst, LocationWrapper spawnAreaSecond, List<LocationWrapper> flags) {
+        public Team(LocationWrapper spawn, AreaWrapper spawnArea, List<LocationWrapper> flags) {
             this.spawn = spawn;
-            this.spawnAreaFirst = spawnAreaFirst;
-            this.spawnAreaSecond = spawnAreaSecond;
+            this.spawnArea = spawnArea;
             this.flags = flags;
-
-            this.flagsBukkit = new ArrayList<>();
-            this.flags.forEach(flag -> flagsBukkit.add(flag.asBukkit()));
         }
 
         public LocationWrapper getSpawn() {
             return this.spawn;
         }
 
-        public LocationWrapper getSpawnAreaFirst() {
-            return this.spawnAreaFirst;
-        }
-
-        public LocationWrapper getSpawnAreaSecond() {
-            return this.spawnAreaSecond;
-        }
-
-        public Area getArea() {
-            return new Area(this.spawnAreaFirst.asBukkit(), this.spawnAreaSecond.asBukkit());
+        public AreaWrapper getSpawnArea() {
+            return this.spawnArea;
         }
 
         public List<LocationWrapper> getFlags() {
@@ -79,31 +75,9 @@ public class RTFConfig implements IConfig {
         }
 
         public List<Location> getFlagsAsBukkit() {
-            return this.flagsBukkit == null ? new ArrayList<>() : this.flagsBukkit;
-        }
-    }
-
-    public static class GameArea {
-
-        private final LocationWrapper areaFirst;
-        private final LocationWrapper areaSecond;
-
-        public GameArea(LocationWrapper areaFirst, LocationWrapper areaSecond) {
-            this.areaFirst = areaFirst;
-            this.areaSecond = areaSecond;
-        }
-
-        public LocationWrapper getAreaFirst() {
-            return this.areaFirst;
-        }
-
-        public LocationWrapper getAreaSecond() {
-            return this.areaSecond;
-        }
-
-        public Area asArea() {
-            return new Area(this.areaFirst.asBukkit(), this.areaSecond.asBukkit());
+            return this.flagsBukkit == null ? this.flagsBukkit = this.flags.stream().map(LocationWrapper::asBukkit).collect(Collectors.toList()) : this.flagsBukkit;
         }
 
     }
+
 }

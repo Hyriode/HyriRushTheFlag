@@ -1,7 +1,10 @@
 package fr.hyriode.rtf.game;
 
 import fr.hyriode.api.HyriAPI;
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.api.player.IHyriPlayer;
+import fr.hyriode.api.player.IHyriPlayerSession;
+import fr.hyriode.hyggdrasil.api.server.HyggServer;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.game.HyriGame;
 import fr.hyriode.hyrame.game.HyriGameState;
@@ -12,18 +15,20 @@ import fr.hyriode.hyrame.game.protocol.HyriLastHitterProtocol;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.game.util.HyriGameMessages;
 import fr.hyriode.hyrame.game.util.HyriRewardAlgorithm;
-import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.utils.Pair;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.player.RTFPlayer;
-import fr.hyriode.rtf.api.statistics.RTFStatistics;
+import fr.hyriode.rtf.api.RTFData;
+import fr.hyriode.rtf.api.RTFStatistics;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.item.RTFChooseAbilityItem;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.game.team.RTFTeam;
 import fr.hyriode.rtf.util.RTFMessage;
 import fr.hyriode.rtf.util.RTFValues;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -45,7 +50,10 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     private boolean flagsAvailable;
 
     public RTFGame(IHyrame hyrame, HyriRTF plugin) {
-        super(hyrame, plugin, HyriAPI.get().getGameManager().getGameInfo("rushtheflag"), RTFGamePlayer.class, HyriGameType.getFromData(RTFGameType.values()));
+        super(hyrame, plugin,
+                HyriAPI.get().getConfig().isDevEnvironment() ? HyriAPI.get().getGameManager().createGameInfo("rushtheflag", "RushTheFlag") : HyriAPI.get().getGameManager().getGameInfo("rushtheflag"),
+                RTFGamePlayer.class,
+                HyriAPI.get().getConfig().isDevEnvironment() ? RTFGameType.SOLO : HyriGameType.getFromData(RTFGameType.values()));
         this.plugin = plugin;
         this.description = HyriLanguageMessage.get("message.game.description");
         this.reconnectionTime = 120;
@@ -69,10 +77,10 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     public void start() {
         super.start();
 
-        this.firstTeam.getFlag().place();
-        this.secondTeam.getFlag().place();
         this.firstTeam.setLives(RTFValues.LIVES.get());
         this.secondTeam.setLives(RTFValues.LIVES.get());
+        this.firstTeam.getFlag().place();
+        this.secondTeam.getFlag().place();
 
         for (RTFGamePlayer player : this.players) {
             player.startGame();
@@ -116,34 +124,40 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             return;
         }
 
-        gamePlayer.setPlugin(this.plugin);
-
-        final RTFPlayer account = RTFPlayer.getPlayer(uuid);
+        final RTFData data = RTFData.get(uuid);
         final RTFStatistics statistics = RTFStatistics.get(uuid);
 
         gamePlayer.setStatistics(statistics);
-        gamePlayer.setAccount(account);
+        gamePlayer.setData(data);
         gamePlayer.setCooldown(false);
 
-        RTFAbility.getWithModel(account.getLastAbility()).filter(RTFAbility::isEnabled).ifPresent(gamePlayer::setAbility);
+        RTFAbility.getWithModel(data.getLastAbility())
+                .filter(RTFAbility::isEnabled)
+                .ifPresent(gamePlayer::setAbility);
 
         this.hyrame.getItemManager().giveItem(player, 4, RTFChooseAbilityItem.class);
 
-        player.sendMessage(RTFMessage.LAST_ABILITY_MESSAGE.asString(player).replace("%ability%", gamePlayer.getAbility().getName(player)));
+        if (gamePlayer.getAbility() != null) {
+            player.sendMessage(RTFMessage.LAST_ABILITY_MESSAGE.asString(player).replace("%ability%", gamePlayer.getAbility().getName(player)));
+        }
     }
 
     @Override
     public void handleLogout(Player player) {
-        super.handleLogout(player);
-
         final UUID uuid = player.getUniqueId();
         final RTFGamePlayer gamePlayer = this.getPlayer(uuid);
 
         this.refreshAPIPlayer(gamePlayer);
 
+        super.handleLogout(player);
+
+        if (this.getState().isAccessible()) {
+            return;
+        }
+
         if (this.getState() == HyriGameState.PLAYING) {
-            if (!gamePlayer.getTeam().hasOnlinePlayers()) {
-                this.win(gamePlayer.getTeam().getOppositeTeam());
+            if (!gamePlayer.getTeam().hasPlayersPlaying()) {
+                this.win(((RTFGameTeam) gamePlayer.getTeam()).getOppositeTeam());
             }
         }
     }
@@ -167,6 +181,10 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
             this.refreshAPIPlayer(gamePlayer);
 
+            if (!gamePlayer.isOnline()) {
+                continue;
+            }
+
             final Player player = gamePlayer.getPlayer();
             final List<String> killsLines = new ArrayList<>();
             final List<RTFGamePlayer> topKillers = new ArrayList<>(this.players);
@@ -174,35 +192,31 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             topKillers.sort((o1, o2) -> (int) (o2.getKills() - o1.getKills()));
 
             for (int i = 0; i <= 2; i++) {
-                final RTFGamePlayer endPlayer = topKillers.size() > i ? topKillers.get(i) : null;
+                final RTFGamePlayer topKiller = topKillers.size() > i ? topKillers.get(i) : null;
                 final String line = HyriLanguageMessage.get("message.game.end.kills").getValue(player).replace("%position%", HyriLanguageMessage.get("message.game.end." + (i + 1)).getValue(player));
 
-                if (endPlayer == null) {
+                if (topKiller == null) {
                     killsLines.add(line.replace("%player%", HyriLanguageMessage.get("message.game.end.nobody").getValue(player))
                             .replace("%kills%", "0"));
                     continue;
                 }
 
-                final IHyriPlayer account = IHyriPlayer.get(endPlayer.getUniqueId());
+                final IHyriPlayerSession session = IHyriPlayerSession.get(topKiller.getUniqueId());
+                final String name = session != null ? session.getNameWithRank() : topKiller.asHyriPlayer().getNameWithRank();
 
                 killsLines.add(line
-                        .replace("%player%", account.hasNickname() ? account.getNickname().getName() : account.getNameWithRank())
-                        .replace("%kills%", String.valueOf(endPlayer.getKills())));
+                        .replace("%player%", name)
+                        .replace("%kills%", String.valueOf(topKiller.getKills())));
             }
 
             final int kills = (int) gamePlayer.getKills();
             final boolean isWinner = winner.contains(gamePlayer);
-            final long hyris = HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayedTime(), isWinner);
-            final long xp = HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayedTime(), isWinner);
+            final IHyriPlayer account = gamePlayer.asHyriPlayer();
             final List<String> rewards = new ArrayList<>();
 
-            rewards.add(ChatColor.LIGHT_PURPLE + String.valueOf(hyris) + " Hyris");
-            rewards.add(ChatColor.GREEN + String.valueOf(xp) + " XP");
+            rewards.add(ChatColor.LIGHT_PURPLE + String.valueOf(account.getHyris().add(HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayTime(), isWinner)).withMessage(false).exec()) + " Hyris");
+            rewards.add(ChatColor.GREEN + String.valueOf(account.getNetworkLeveling().addExperience(HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayTime(), isWinner))) + " XP");
 
-            final IHyriPlayer account = gamePlayer.asHyriode();
-
-            account.getHyris().add(hyris).withMessage(false).exec();
-            account.getNetworkLeveling().addExperience(xp);
             account.update();
 
             player.spigot().sendMessage(HyriGameMessages.createWinMessage(this, player, winner, killsLines, rewards));
@@ -254,7 +268,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     }
 
     public void endingGame(int minutesLeft) {
-        this.sendMessageToAll(player -> " \n" + RTFMessage.ENDING_GAME_MESSAGE.asString(player).replace("%time%", String.valueOf(minutesLeft)) + "\n ");
+        this.players.forEach(player -> player.getPlayer().sendMessage(" \n" + RTFMessage.ENDING_GAME_MESSAGE.asString(player.getPlayer()).replace("%time%", String.valueOf(minutesLeft)) + "\n "));
 
         if (minutesLeft == 1) {
             for (RTFGamePlayer player : players) {
@@ -272,12 +286,13 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             return;
         }
 
-        this.sendMessageToAll(player -> " \n" + RTFMessage.END_GAME_MESSAGE.asString(player) + "\n ");
+        this.getPlayers().forEach(player -> player.getPlayer().sendMessage(" \n" + RTFMessage.END_GAME_MESSAGE.asString(player.getPlayer()) + "\n "));
         this.reconnectionTime = -1;
 
         for (HyriGameTeam gameTeam : this.teams) {
             RTFGameTeam team = (RTFGameTeam) gameTeam;
             team.getFlag().resetHolder();
+
             if(team.hasLife()) {
                 team.getFlag().getBlocks().forEach(block -> block.setType(Material.AIR));
                 team.removeLife();
@@ -305,25 +320,24 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     }
 
     private void refreshAPIPlayer(RTFGamePlayer gamePlayer) {
-        final RTFPlayer account = gamePlayer.getAccount();
+        final RTFData data = gamePlayer.getData();
         final RTFStatistics statistics = gamePlayer.getStatistics();
-        final RTFStatistics.Data data = statistics.getData(this.getType());
+        final RTFStatistics.Data statisticsData = statistics.getData(this.getType());
 
-        account.setLastAbility(gamePlayer.getAbility().getModel());
+        data.setLastAbility(gamePlayer.getAbility().getModel());
 
-        if (this.getState() != HyriGameState.READY && this.getState() != HyriGameState.WAITING && !HyriAPI.get().getServer().isHost()) {
-            data.setPlayedTime(data.getPlayedTime() + gamePlayer.getPlayedTime());
-            data.addGamesPlayed(1);
-            data.addKills(gamePlayer.getKills());
-            data.addFinalKills(gamePlayer.getFinalKills());
-            data.addDeaths(gamePlayer.getDeaths());
-            data.addCapturedFlags(gamePlayer.getCapturedFlags());
-            data.addFlagsBroughtBack(gamePlayer.getFlagsBroughtBack());
+        if (!this.getState().isAccessible() && !HyriAPI.get().getServer().getAccessibility().equals(HyggServer.Accessibility.HOST)) {
+            statisticsData.addGamesPlayed(1);
+            statisticsData.addKills(gamePlayer.getKills());
+            statisticsData.addFinalKills(gamePlayer.getFinalKills());
+            statisticsData.addDeaths(gamePlayer.getDeaths());
+            statisticsData.addCapturedFlags(gamePlayer.getCapturedFlags());
+            statisticsData.addFlagsBroughtBack(gamePlayer.getFlagsBroughtBack());
 
-            statistics.update(account.getUniqueId());
+            statistics.update(gamePlayer.getUniqueId());
         }
 
-        RTFPlayer.updatePlayer(account);
+        data.update(gamePlayer.getUniqueId());
     }
 
     @Override
