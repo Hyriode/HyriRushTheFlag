@@ -1,6 +1,5 @@
 package fr.hyriode.rtf.game;
 
-import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.actionbar.ActionBar;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
@@ -13,7 +12,8 @@ import fr.hyriode.rtf.api.RTFData;
 import fr.hyriode.rtf.api.RTFStatistics;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.item.RTFAbilityItem;
-import fr.hyriode.rtf.game.scoreboard.RTFScoreboard;
+import fr.hyriode.rtf.game.ui.RTFAbilityBar;
+import fr.hyriode.rtf.game.ui.scoreboard.RTFScoreboard;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.util.RTFMessage;
 import org.bukkit.GameMode;
@@ -39,6 +39,9 @@ public class RTFGamePlayer extends HyriGamePlayer {
     private RTFAbility ability;
 
     private boolean cooldown = false;
+    private int cooldownTime = -1;
+
+    private RTFAbilityBar abilityBar;
 
     private RTFData data;
     private RTFStatistics statistics;
@@ -61,9 +64,12 @@ public class RTFGamePlayer extends HyriGamePlayer {
             final List<RTFAbility> enabledAbilities = RTFAbility.getEnabledAbilities();
 
             if (enabledAbilities.size() != 0) {
-                this.ability = enabledAbilities.get(ThreadLocalRandom.current().nextInt(0, enabledAbilities.size()));
+                this.ability = enabledAbilities.get(ThreadLocalRandom.current().nextInt(enabledAbilities.size()));
             }
         }
+
+        this.abilityBar = new RTFAbilityBar(this);
+        this.abilityBar.runTaskTimer(HyriRTF.get(), 0, 20L);
 
         this.spawn(true);
     }
@@ -73,7 +79,8 @@ public class RTFGamePlayer extends HyriGamePlayer {
             return;
         }
 
-        PlayerUtil.resetPlayer(this.player, true);
+        PlayerUtil.resetPlayer(this.player, false);
+        PlayerUtil.resetPlayerInventory(this.player);
 
         this.player.setGameMode(GameMode.SURVIVAL);
 
@@ -114,47 +121,13 @@ public class RTFGamePlayer extends HyriGamePlayer {
         inventory.setBoots(this.getArmorPiece(Material.LEATHER_BOOTS));
     }
 
-    public void handleCooldown(final int i) {
-        if (!this.isOnline()) {
+    public void handleCooldown(final int time) {
+        if (this.cooldown || !this.isOnline()) {
             return;
         }
 
-        if (!this.isCooldown()) {
-            this.setCooldown(true);
-        }
-
-        new BukkitRunnable() {
-            private int index = i;
-
-            @Override
-            public void run() {
-                if (!isOnline()) {
-                    return;
-                }
-
-                final ActionBar bar = new ActionBar(RTFMessage.ABILITY_WAITING_BAR.asString(player).replace("%time%", this.index + "s"));
-
-                bar.send(player);
-                player.setLevel(this.index);
-
-                if (isDead()) {
-                    player.setLevel(0);
-                    bar.remove(player);
-                    this.cancel();
-                }
-
-                if (index == 0) {
-                    final ActionBar finishedBar = new ActionBar(RTFMessage.ABILITY_READY_BAR.asString(player));
-                    setCooldown(false);
-                    player.setLevel(0);
-                    bar.remove(player);
-                    finishedBar.send(player);
-                    player.playSound(player.getLocation(), Sound.NOTE_PLING, 0.8F, 2.0F);
-                    this.cancel();
-                }
-                index--;
-            }
-        }.runTaskTimer(HyriRTF.get(), 0, 20);
+        this.cooldown = true;
+        this.cooldownTime = time;
     }
 
     public boolean kill() {
@@ -279,6 +252,22 @@ public class RTFGamePlayer extends HyriGamePlayer {
 
     public void setCooldown(boolean cooldown) {
         this.cooldown = cooldown;
+
+        if (!cooldown) {
+            this.cooldownTime = -1;
+        }
+    }
+
+    public int getCooldownTime() {
+        return this.cooldownTime;
+    }
+
+    public void setCooldownTime(int cooldownTime) {
+        if (!this.cooldown) {
+            return;
+        }
+
+        this.cooldownTime = cooldownTime;
     }
 
     public RTFAbility getAbility() {

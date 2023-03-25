@@ -26,13 +26,13 @@
   "scoreboard.time.display": "Temps: ",
   "scoreboard.you.display": " &7(VOUS)",
 
-  "bar.waiting.display": "&cCapacité en attente : %time%",
+  "bar.waiting.display": "&cCapacité en attente : %time%s",
   "bar.ready.display": "&aCapacité disponible",
 
   "message.flag-captured.display": "&7Le drapeau de l'équipe %team%&7 a été capturé par %player%&7 !",
   "message.flag-respawn.display": "&7Le drapeau de l'équipe %team%&7 vient de réapparaître !",
   "message.flag-brought-back.display": "%player%&7 a ramené le drapeau de l'équipe %team%&7 à sa base !",
-  "message.ending-game.display": "&7Tous les drapeaux seront détruits dans &3%time% minute(s)&7 !",
+  "message.ending-game.display": "&7Tous les drapeaux seront détruits dans &b%time% minute(s)&7 !",
   "message.end-game.display": "&cTous les drapeaux ont été détruits !",
 
   "message.error-place-block.display": "&cVous ne pouvez pas poser de blocs ici !",

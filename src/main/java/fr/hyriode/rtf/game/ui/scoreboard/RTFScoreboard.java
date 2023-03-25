@@ -1,4 +1,4 @@
-package fr.hyriode.rtf.game.scoreboard;
+package fr.hyriode.rtf.game.ui.scoreboard;
 
 import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.game.scoreboard.HyriGameScoreboard;

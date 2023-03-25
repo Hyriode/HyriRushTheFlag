@@ -21,7 +21,7 @@ import fr.hyriode.rtf.api.RTFData;
 import fr.hyriode.rtf.api.RTFStatistics;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.item.RTFChooseAbilityItem;
-import fr.hyriode.rtf.game.scoreboard.RTFScoreboard;
+import fr.hyriode.rtf.game.ui.scoreboard.RTFScoreboard;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.game.team.RTFTeam;
 import fr.hyriode.rtf.util.RTFMessage;

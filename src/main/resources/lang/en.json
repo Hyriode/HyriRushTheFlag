@@ -20,21 +20,19 @@
 
   "message.eliminated": "&cEliminated!",
 
-  "character.colon": ": ",
-
   "scoreboard.kills.display": "Kills: ",
   "scoreboard.deaths.display": "Deaths: ",
   "scoreboard.final-kills.display": "Final Kills: ",
   "scoreboard.time.display": "Time: ",
   "scoreboard.you.display": " &7(YOU)",
 
-  "bar.waiting.display": "&cAbility in cooldown : %time%",
+  "bar.waiting.display": "&cAbility in cooldown : %time%s",
   "bar.ready.display": "&aAbility available",
 
   "message.flag-captured.display": "%team%&7 team flag has been captured by %player%&7!",
   "message.flag-respawn.display": "%team%&7 team flag just respawned!",
   "message.flag-brought-back.display": "%player%&7 has brought back the %team%&7 team flag to his base!",
-  "message.ending-game.display": "&7All the flags will be destroyed in &3%time% minute(s)&f!",
+  "message.ending-game.display": "&7All the flags will be destroyed in &b%time% minute(s)&f!",
   "message.end-game.display": "&cAll the flags has been destroyed!",
 
   "message.error-place-block.display": "&cYou cannot place blocks here!",
