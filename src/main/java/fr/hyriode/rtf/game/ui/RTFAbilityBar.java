@@ -31,7 +31,7 @@ public class RTFAbilityBar extends BukkitRunnable {
         if (this.gamePlayer.isCooldown()) {
             final int cooldownTime = this.gamePlayer.getCooldownTime();
 
-            bar = new ActionBar(RTFMessage.ABILITY_WAITING_BAR.asString(player).replace("%time%", cooldownTime + "s"));
+            bar = new ActionBar(RTFMessage.ABILITY_WAITING_BAR.asString(player).replace("%time%", String.valueOf(cooldownTime)));
 
             player.setLevel(cooldownTime);
 
