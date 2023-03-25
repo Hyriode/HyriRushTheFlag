@@ -31,19 +31,19 @@
   "bar.waiting.display": "&cAbility in cooldown : %time%",
   "bar.ready.display": "&aAbility available",
 
-  "message.flag-captured.display": "%team%&f team flag has been captured by %player%&f!",
-  "message.flag-respawn.display": "%team%&f team flag just respawned!",
-  "message.flag-brought-back.display": "%player%&f has brought back the %team%&f team flag to his base!",
-  "message.ending-game.display": "&fAll the flags will be destroyed in &3%time% minute(s)&f!",
+  "message.flag-captured.display": "%team%&7 team flag has been captured by %player%&7!",
+  "message.flag-respawn.display": "%team%&7 team flag just respawned!",
+  "message.flag-brought-back.display": "%player%&7 has brought back the %team%&7 team flag to his base!",
+  "message.ending-game.display": "&7All the flags will be destroyed in &3%time% minute(s)&f!",
   "message.end-game.display": "&cAll the flags has been destroyed!",
 
   "message.error-place-block.display": "&cYou cannot place blocks here!",
   "message.spleef.display": "&cDo not try to spleef your teammates!",
   "message.error-break-flag.display": "&cYou cannot break your own flag!",
 
-  "message.power-used.display": "&fYou used the ability: %ability%&f!",
+  "message.power-used.display": "&7You used the ability: %ability%&7!",
   "message.power-in-cooldown.display": "&cThe ability is in cooldown.",
-  "message.last-ability.display": "&fYour actual ability is: %ability%&f.",
+  "message.last-ability.display": "&7Your actual ability is: %ability%&7.",
 
   "waiting-room.npc.data.kills": "Kills",
   "waiting-room.npc.data.final-kills": "Final Kills",
