@@ -2,6 +2,7 @@ package fr.hyriode.rtf.game;
 
 import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.language.HyriLanguageMessage;
+import fr.hyriode.api.leveling.NetworkLeveling;
 import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.api.player.IHyriPlayerSession;
 import fr.hyriode.hyggdrasil.api.server.HyggServer;
@@ -33,6 +34,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -180,45 +182,51 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
             this.refreshAPIPlayer(gamePlayer);
 
-            if (!gamePlayer.isOnline()) {
-                continue;
-            }
+            final IHyriPlayer account = gamePlayer.asHyriPlayer();
 
-            final Player player = gamePlayer.getPlayer();
-            final List<String> killsLines = new ArrayList<>();
-            final List<RTFGamePlayer> topKillers = new ArrayList<>(this.players);
-
-            topKillers.sort((o1, o2) -> (int) (o2.getKills() - o1.getKills()));
-
-            for (int i = 0; i <= 2; i++) {
-                final RTFGamePlayer topKiller = topKillers.size() > i ? topKillers.get(i) : null;
-                final String line = HyriLanguageMessage.get("message.game.end.kills").getValue(player).replace("%position%", HyriLanguageMessage.get("message.game.end." + (i + 1)).getValue(player));
-
-                if (topKiller == null) {
-                    killsLines.add(line.replace("%player%", HyriLanguageMessage.get("message.game.end.nobody").getValue(player))
-                            .replace("%kills%", "0"));
-                    continue;
-                }
-
-                final IHyriPlayerSession session = IHyriPlayerSession.get(topKiller.getUniqueId());
-                final String name = session != null ? session.getNameWithRank() : topKiller.asHyriPlayer().getNameWithRank();
-
-                killsLines.add(line
-                        .replace("%player%", name)
-                        .replace("%kills%", String.valueOf(topKiller.getKills())));
-            }
-
+            // Hyris and XP calculations
             final int kills = (int) gamePlayer.getKills();
             final boolean isWinner = winner.contains(gamePlayer);
-            final IHyriPlayer account = gamePlayer.asHyriPlayer();
-            final List<String> rewards = new ArrayList<>();
+            final long hyris = account.getHyris().add(HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayTime(), isWinner)).withMessage(false).exec();
+            final double xp = account.getNetworkLeveling().addExperience(HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayTime(), isWinner));
 
-            rewards.add(ChatColor.LIGHT_PURPLE + String.valueOf(account.getHyris().add(HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayTime(), isWinner)).withMessage(false).exec()) + " Hyris");
-            rewards.add(ChatColor.GREEN + String.valueOf(account.getNetworkLeveling().addExperience(HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayTime(), isWinner))) + " XP");
+            // Experience leaderboard updates
+            HyriAPI.get().getLeaderboardProvider().getLeaderboard(NetworkLeveling.LEADERBOARD_TYPE, "rushtheflag-experience").incrementScore(gamePlayer.getUniqueId(), xp);
 
             account.update();
 
-            player.spigot().sendMessage(HyriGameMessages.createWinMessage(this, player, winner, killsLines, rewards));
+            // Message handling
+            if (gamePlayer.isOnline()) {
+                final Player player = gamePlayer.getPlayer();
+
+                final List<String> killsLines = new ArrayList<>();
+                final List<RTFGamePlayer> topKillers = new ArrayList<>(this.players);
+
+                topKillers.sort((o1, o2) -> (int) (o2.getKills() - o1.getKills()));
+
+                for (int i = 0; i <= 2; i++) {
+                    final RTFGamePlayer topKiller = topKillers.size() > i ? topKillers.get(i) : null;
+                    final String line = HyriLanguageMessage.get("message.game.end.kills").getValue(player).replace("%position%", HyriLanguageMessage.get("message.game.end." + (i + 1)).getValue(player));
+
+                    if (topKiller == null) {
+                        killsLines.add(line.replace("%player%", HyriLanguageMessage.get("message.game.end.nobody").getValue(player))
+                                .replace("%kills%", "0"));
+                        continue;
+                    }
+
+                    final IHyriPlayerSession session = IHyriPlayerSession.get(topKiller.getUniqueId());
+                    final String name = session != null ? session.getNameWithRank() : topKiller.asHyriPlayer().getNameWithRank();
+
+                    killsLines.add(line
+                            .replace("%player%", name)
+                            .replace("%kills%", String.valueOf(topKiller.getKills())));
+                }
+
+                player.spigot().sendMessage(HyriGameMessages.createWinMessage(this, player, winner, killsLines, Arrays.asList(
+                        ChatColor.LIGHT_PURPLE + "" + hyris + " Hyris",
+                        ChatColor.GREEN + "" + xp + " XP"
+                )));
+            }
         }
     }
 
