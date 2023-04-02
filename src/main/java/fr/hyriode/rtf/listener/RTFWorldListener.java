@@ -25,6 +25,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -81,6 +82,8 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
                 block.breakNaturally();
             }
         }
+
+        event.blockList().clear();
     }
 
     @EventHandler
@@ -142,6 +145,7 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
                     }
                 }
             }
+
             if (playerIsOnTheBlock) {
                 event.setCancelled(true);
                 event.getPlayer().sendMessage(RTFMessage.ERROR_SPLEEF_MESSAGE.asString(player));

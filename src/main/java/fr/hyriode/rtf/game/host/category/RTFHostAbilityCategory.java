@@ -42,20 +42,9 @@ public class RTFHostAbilityCategory extends HostCategory {
                     ability.setEnabled(value);
 
                     if (!value) {
-                        final List<RTFAbility> enabledAbilities = RTFAbility.getEnabledAbilities();
-
-                        if (enabledAbilities.size() == 0) {
-                            for (RTFGamePlayer gamePlayer : HyriRTF.get().getGame().getPlayers()) {
-                                gamePlayer.setAbility(null);
-                            }
-                            return;
-                        }
-
-                        final RTFAbility randomAbility = enabledAbilities.get(ThreadLocalRandom.current().nextInt(0, enabledAbilities.size()));
-
                         for (RTFGamePlayer gamePlayer : HyriRTF.get().getGame().getPlayers()) {
                             if (gamePlayer.getAbility().getId().equals(this.ability.getId())) {
-                                gamePlayer.setAbility(randomAbility);
+                                gamePlayer.setAbility(null);
                             }
                         }
                     }

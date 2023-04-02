@@ -21,7 +21,7 @@ public class RTFTankAbility extends RTFAbility {
         super(RTFAbilityModel.TANK,
                 "tank",
                 Material.IRON_CHESTPLATE,
-                RTFAbilityType.EFFECT,
+                RTFAbilityType.ATTACK,
                 6000,
                 20);
     }

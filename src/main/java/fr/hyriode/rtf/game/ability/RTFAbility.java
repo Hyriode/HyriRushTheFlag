@@ -5,7 +5,7 @@ import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.RTFAbilityModel;
 import fr.hyriode.rtf.game.ability.attack.RTFShooterAbility;
 import fr.hyriode.rtf.game.ability.attack.RTFTankAbility;
-import fr.hyriode.rtf.game.ability.effect.RTFBarbarianAbility;
+import fr.hyriode.rtf.game.ability.attack.RTFBarbarianAbility;
 import fr.hyriode.rtf.game.ability.effect.RTFGhostAbility;
 import fr.hyriode.rtf.game.ability.effect.RTFRunnerAbility;
 import fr.hyriode.rtf.game.ability.movement.RTFAstronautAbility;
