@@ -52,6 +52,11 @@
   "waiting-room.npc.data.games-played": "Parties jouées",
   "waiting-room.npc.data.played-time": "Temps de jeu",
 
+  "leaderboard.experience.display": "&3Expérience &8┃ &7Classement",
+  "leaderboard.kills.display": "&3Kills &8┃ &7Classement",
+  "leaderboard.victories.display": "&3Victoires &8┃ &7Classement",
+  "leaderboard.flags-brought-back.display": "&3Drapeaux ramenés &8┃ &7Classement",
+
   "item.choose.name": "&bChoisir sa capacité",
   "item.choose.lore": "&7Cliquez pour choisir votre capacité !",
   "item.ability.name": "&fCapacité: %ability%",

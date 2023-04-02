@@ -16,6 +16,11 @@ compileJava {
     options.encoding = 'UTF-8'
 }
 
+configurations.all {
+    // Check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 jar {
     manifest {
         attributes 'Specific-Version': project.version

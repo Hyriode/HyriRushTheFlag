@@ -2,6 +2,7 @@ package fr.hyriode.rtf.game;
 
 import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.language.HyriLanguageMessage;
+import fr.hyriode.api.leaderboard.IHyriLeaderboardProvider;
 import fr.hyriode.api.leveling.NetworkLeveling;
 import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.api.player.IHyriPlayerSession;
@@ -175,30 +176,45 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             return;
         }
 
-        for (RTFGamePlayer gamePlayer : this.players) {
-            if (winner.contains(gamePlayer.getUniqueId())) {
-                gamePlayer.getStatistics().getData(this.getType()).addVictories(1);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            final RTFGamePlayer gamePlayer = this.getPlayer(player);
+            final List<String> rewards = new ArrayList<>();
+
+            if (gamePlayer != null) {
+                if (winner.contains(player.getUniqueId())) {
+                    gamePlayer.getStatistics().getData(this.getType()).addVictories(1);
+                }
+
+                this.refreshAPIPlayer(gamePlayer);
+
+                final UUID playerId = gamePlayer.getUniqueId();
+                final IHyriPlayer account = gamePlayer.asHyriPlayer();
+
+                // Hyris and XP calculations
+                final int kills = (int) gamePlayer.getKills();
+                final boolean isWinner = winner.contains(gamePlayer);
+                final long hyris = account.getHyris().add(HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayTime(), isWinner)).withMessage(false).exec();
+                final double xp = account.getNetworkLeveling().addExperience(HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayTime(), isWinner));
+
+                rewards.add(ChatColor.LIGHT_PURPLE + "" + hyris + " Hyris");
+                rewards.add(ChatColor.GREEN + "" + xp + " XP");
+
+                // Experience leaderboard updates
+                final IHyriLeaderboardProvider provider = HyriAPI.get().getLeaderboardProvider();
+
+                provider.getLeaderboard(NetworkLeveling.LEADERBOARD_TYPE, "rushtheflag-experience").incrementScore(playerId, xp);
+                provider.getLeaderboard("rushtheflag", "kills").incrementScore(playerId, kills);
+                provider.getLeaderboard("rushtheflag", "flags-brought-back").incrementScore(playerId, gamePlayer.getFlagsBroughtBack());
+
+                if (isWinner) {
+                    provider.getLeaderboard("rushtheflag", "victories").incrementScore(playerId, 1);
+                }
+
+                account.update();
             }
 
-            this.refreshAPIPlayer(gamePlayer);
-
-            final IHyriPlayer account = gamePlayer.asHyriPlayer();
-
-            // Hyris and XP calculations
-            final int kills = (int) gamePlayer.getKills();
-            final boolean isWinner = winner.contains(gamePlayer);
-            final long hyris = account.getHyris().add(HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayTime(), isWinner)).withMessage(false).exec();
-            final double xp = account.getNetworkLeveling().addExperience(HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayTime(), isWinner));
-
-            // Experience leaderboard updates
-            HyriAPI.get().getLeaderboardProvider().getLeaderboard(NetworkLeveling.LEADERBOARD_TYPE, "rushtheflag-experience").incrementScore(gamePlayer.getUniqueId(), xp);
-
-            account.update();
-
             // Message handling
-            if (gamePlayer.isOnline()) {
-                final Player player = gamePlayer.getPlayer();
-
+            if (gamePlayer == null || gamePlayer.isOnline()) {
                 final List<String> killsLines = new ArrayList<>();
                 final List<RTFGamePlayer> topKillers = new ArrayList<>(this.players);
 
@@ -222,10 +238,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
                             .replace("%kills%", String.valueOf(topKiller.getKills())));
                 }
 
-                player.spigot().sendMessage(HyriGameMessages.createWinMessage(this, player, winner, killsLines, Arrays.asList(
-                        ChatColor.LIGHT_PURPLE + "" + hyris + " Hyris",
-                        ChatColor.GREEN + "" + xp + " XP"
-                )));
+                player.spigot().sendMessage(HyriGameMessages.createWinMessage(this, player, winner, killsLines, rewards));
             }
         }
     }

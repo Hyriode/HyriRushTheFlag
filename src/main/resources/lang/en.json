@@ -52,6 +52,11 @@
   "waiting-room.npc.data.games-played": "Games played",
   "waiting-room.npc.data.played-time": "Played time",
 
+  "leaderboard.experience.display": "&3Experience &8┃ &7Leaderboard",
+  "leaderboard.kills.display": "&3Kills &8┃ &7Leaderboard",
+  "leaderboard.victories.display": "&3Victories &8┃ &7Leaderboard",
+  "leaderboard.flags-brought-back.display": "&3Flags brought back &8┃ &7Leaderboard",
+
   "item.choose.name": "&bChoose your ability",
   "item.ability.name": "&fAbility: %ability%",
 
