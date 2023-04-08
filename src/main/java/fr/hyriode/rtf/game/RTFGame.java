@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * Project: HyriRushTheFlag
@@ -168,77 +169,92 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
     @Override
     public void win(HyriGameTeam winner) {
+        if (winner == null || this.getState() != HyriGameState.PLAYING) {
+            return;
+        }
+
         IHyrame.get().getScoreboardManager().getScoreboards(RTFScoreboard.class).forEach(RTFScoreboard::update);
 
         super.win(winner);
 
-        if (winner == null || this.getState() != HyriGameState.ENDED) {
-            return;
-        }
+        final List<HyriLanguageMessage> positions = Arrays.asList(
+                HyriLanguageMessage.get("message.game.end.1"),
+                HyriLanguageMessage.get("message.game.end.2"),
+                HyriLanguageMessage.get("message.game.end.3")
+        );
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            final RTFGamePlayer gamePlayer = this.getPlayer(player);
-            final List<String> rewards = new ArrayList<>();
+        final List<RTFGamePlayer> topKillers = new ArrayList<>(this.players);
 
-            if (gamePlayer != null) {
-                if (winner.contains(player.getUniqueId())) {
-                    gamePlayer.getStatistics().getData(this.getType()).addVictories(1);
+        topKillers.sort((o1, o2) -> Math.toIntExact(o2.getKills() - o1.getKills()));
+
+        final Function<Player, List<String>> killersLineProvider = player -> {
+            final List<String> killersLine = new ArrayList<>();
+
+            for (int i = 0; i <= 2; i++) {
+                final String killerLine = HyriLanguageMessage.get("message.game.end.kills").getValue(player).replace("%position%", positions.get(i).getValue(player));
+
+                if (topKillers.size() > i){
+                    final RTFGamePlayer topKiller = topKillers.get(i);
+
+                    killersLine.add(killerLine.replace("%player%", topKiller.formatNameWithTeam()).replace("%kills%", String.valueOf(topKiller.getKills())));
+                    continue;
                 }
 
-                this.refreshAPIPlayer(gamePlayer);
-
-                final UUID playerId = gamePlayer.getUniqueId();
-                final IHyriPlayer account = gamePlayer.asHyriPlayer();
-
-                // Hyris and XP calculations
-                final int kills = (int) gamePlayer.getKills();
-                final boolean isWinner = winner.contains(gamePlayer);
-                final long hyris = account.getHyris().add(HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayTime(), isWinner)).withMessage(false).exec();
-                final double xp = account.getNetworkLeveling().addExperience(HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayTime(), isWinner));
-
-                rewards.add(ChatColor.LIGHT_PURPLE + "" + hyris + " Hyris");
-                rewards.add(ChatColor.GREEN + "" + xp + " XP");
-
-                // Experience leaderboard updates
-                final IHyriLeaderboardProvider provider = HyriAPI.get().getLeaderboardProvider();
-
-                provider.getLeaderboard(NetworkLeveling.LEADERBOARD_TYPE, "rushtheflag-experience").incrementScore(playerId, xp);
-                provider.getLeaderboard("rushtheflag", "kills").incrementScore(playerId, kills);
-                provider.getLeaderboard("rushtheflag", "flags-brought-back").incrementScore(playerId, gamePlayer.getFlagsBroughtBack());
-
-                if (isWinner) {
-                    provider.getLeaderboard("rushtheflag", "victories").incrementScore(playerId, 1);
-                }
-
-                account.update();
+                killersLine.add(killerLine.replace("%player%", HyriLanguageMessage.get("message.game.end.nobody").getValue(player)).replace("%kills%", "0"));
             }
 
-            // Message handling
-            if (gamePlayer == null || gamePlayer.isOnline()) {
-                final List<String> killsLines = new ArrayList<>();
-                final List<RTFGamePlayer> topKillers = new ArrayList<>(this.players);
+            return killersLine;
+        };
 
-                topKillers.sort((o1, o2) -> (int) (o2.getKills() - o1.getKills()));
+        // Send message to not-playing players
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (this.getPlayer(player) == null) {
+                player.spigot().sendMessage(HyriGameMessages.createWinMessage(this, player, winner, killersLineProvider.apply(player), null));
+            }
+        }
 
-                for (int i = 0; i <= 2; i++) {
-                    final RTFGamePlayer topKiller = topKillers.size() > i ? topKillers.get(i) : null;
-                    final String line = HyriLanguageMessage.get("message.game.end.kills").getValue(player).replace("%position%", HyriLanguageMessage.get("message.game.end." + (i + 1)).getValue(player));
+        for (RTFGamePlayer gamePlayer : this.players) {
+            final UUID playerId = gamePlayer.getUniqueId();
+            final IHyriPlayer account = gamePlayer.asHyriPlayer();
 
-                    if (topKiller == null) {
-                        killsLines.add(line.replace("%player%", HyriLanguageMessage.get("message.game.end.nobody").getValue(player))
-                                .replace("%kills%", "0"));
-                        continue;
-                    }
+            // Hyris and XP calculations
+            final int kills = (int) gamePlayer.getKills();
+            final boolean isWinner = winner.contains(gamePlayer);
+            final long hyris = account.getHyris().add(
+                    HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayTime(), isWinner)
+                            + gamePlayer.getCapturedFlags() * 10L
+                            + gamePlayer.getFlagsBroughtBack() * 20L).
+                    withMessage(false)
+                    .exec();
+            final double xp = account.getNetworkLeveling().addExperience(
+                    HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayTime(), isWinner)
+                            + gamePlayer.getCapturedFlags() * 10D
+                            + gamePlayer.getFlagsBroughtBack() * 20D);
 
-                    final IHyriPlayerSession session = IHyriPlayerSession.get(topKiller.getUniqueId());
-                    final String name = session != null ? session.getNameWithRank() : topKiller.asHyriPlayer().getNameWithRank();
+            // Experience leaderboard updates
+            final IHyriLeaderboardProvider provider = HyriAPI.get().getLeaderboardProvider();
 
-                    killsLines.add(line
-                            .replace("%player%", name)
-                            .replace("%kills%", String.valueOf(topKiller.getKills())));
-                }
+            provider.getLeaderboard(NetworkLeveling.LEADERBOARD_TYPE, "rushtheflag-experience").incrementScore(playerId, xp);
+            provider.getLeaderboard("rushtheflag", "kills").incrementScore(playerId, kills);
+            provider.getLeaderboard("rushtheflag", "flags-brought-back").incrementScore(playerId, gamePlayer.getFlagsBroughtBack());
 
-                player.spigot().sendMessage(HyriGameMessages.createWinMessage(this, player, winner, killsLines, rewards));
+            if (isWinner) {
+                provider.getLeaderboard("rushtheflag", "victories").incrementScore(playerId, 1);
+
+                gamePlayer.getStatistics().getData(this.getType()).addVictories(1);
+            }
+
+            this.refreshAPIPlayer(gamePlayer);
+
+            // Send message
+            final String rewardsLine = ChatColor.LIGHT_PURPLE + "+" + hyris + " Hyris " + ChatColor.GREEN + "+" + xp + " XP";
+
+            if (gamePlayer.isOnline()) {
+                final Player player = gamePlayer.getPlayer();
+
+                player.spigot().sendMessage(HyriGameMessages.createWinMessage(this, gamePlayer.getPlayer(), winner, killersLineProvider.apply(player), rewardsLine));
+            } else if (HyriAPI.get().getPlayerManager().isOnline(playerId)) {
+                HyriAPI.get().getPlayerManager().sendMessage(playerId, HyriGameMessages.createOfflineWinMessage(this, account, rewardsLine));
             }
         }
     }
