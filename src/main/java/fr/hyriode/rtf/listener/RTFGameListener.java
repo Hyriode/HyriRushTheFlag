@@ -1,5 +1,6 @@
 package fr.hyriode.rtf.listener;
 
+import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.event.HyriEventHandler;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.HyriGameSpectator;
@@ -25,6 +26,8 @@ public class RTFGameListener extends HyriListener<HyriRTF> {
 
     public RTFGameListener(HyriRTF plugin) {
         super(plugin);
+
+        HyriAPI.get().getEventBus().register(this);
     }
 
     @HyriEventHandler

@@ -62,7 +62,6 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             if (block.getType().equals(Material.SANDSTONE)) {
                 block.setType(Material.STAINED_GLASS);
                 block.setData((byte) 14);
-                block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(plugin, true));
 
                 Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
                     if (block.getType().equals(Material.STAINED_GLASS)) {
@@ -119,7 +118,11 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             }
         } else if (!block.hasMetadata(SANDSTONE_METADATA_KEY)) {
             event.setCancelled(true);
-        } else if (!RTFValues.SPLEEF.get()){
+        } else {
+            block.removeMetadata(SANDSTONE_METADATA_KEY, this.plugin);
+        }
+
+        if (!RTFValues.SPLEEF.get()){
             final RTFGamePlayer gamePlayer = this.plugin.getGame().getPlayer(event.getPlayer().getUniqueId());
 
             if (gamePlayer == null) {
