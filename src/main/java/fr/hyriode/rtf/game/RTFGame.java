@@ -218,20 +218,21 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             final IHyriPlayer account = gamePlayer.asHyriPlayer();
 
             // Hyris and XP calculations
+            final boolean host = HyriAPI.get().getServer().getAccessibility() != HyggServer.Accessibility.HOST;
             final int kills = (int) gamePlayer.getKills();
             final boolean isWinner = winner.contains(gamePlayer);
-            final long hyris = account.getHyris().add(
+            final long hyris = host ? 0 : account.getHyris().add(
                     HyriRewardAlgorithm.getHyris(kills, gamePlayer.getPlayTime(), isWinner)
                             + gamePlayer.getCapturedFlags() * 10L
                             + gamePlayer.getFlagsBroughtBack() * 20L).
                     withMessage(false)
                     .exec();
-            final double xp = account.getNetworkLeveling().addExperience(
+            final double xp = host ? 0.0D : account.getNetworkLeveling().addExperience(
                     HyriRewardAlgorithm.getXP(kills, gamePlayer.getPlayTime(), isWinner)
                             + gamePlayer.getCapturedFlags() * 10D
                             + gamePlayer.getFlagsBroughtBack() * 20D);
 
-            if (HyriAPI.get().getServer().getAccessibility() != HyggServer.Accessibility.HOST) {
+            if (host) {
                 // Experience leaderboard updates
                 final IHyriLeaderboardProvider provider = HyriAPI.get().getLeaderboardProvider();
 
@@ -328,7 +329,8 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
         this.reconnectionTime = -1;
 
         for (HyriGameTeam gameTeam : this.teams) {
-            RTFGameTeam team = (RTFGameTeam) gameTeam;
+            final RTFGameTeam team = (RTFGameTeam) gameTeam;
+
             team.getFlag().resetHolder();
 
             if (team.hasLife()) {
