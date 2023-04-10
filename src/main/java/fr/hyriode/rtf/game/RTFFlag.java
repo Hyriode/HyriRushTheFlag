@@ -3,16 +3,14 @@ package fr.hyriode.rtf.game;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.hyrame.utils.ThreadUtil;
+import fr.hyriode.hyrame.utils.block.BlockUtil;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.RTFHotBar;
 import fr.hyriode.rtf.game.item.RTFAbilityItem;
 import fr.hyriode.rtf.game.ui.scoreboard.RTFScoreboard;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.util.RTFMessage;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -21,6 +19,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Project: HyriRushTheFlag
@@ -33,8 +33,8 @@ public class RTFFlag {
 
     private Player holder;
 
-    private final List<Block> blocks;
-    private final List<Location> locations;
+    private final Supplier<List<Block>> blocks;
+    private final Supplier<List<Location>> locations;
 
     private final RTFGameTeam team;
     private final HyriRTF plugin;
@@ -42,9 +42,8 @@ public class RTFFlag {
     public RTFFlag(HyriRTF plugin, RTFGameTeam team) {
         this.plugin = plugin;
         this.team = team;
-        this.locations = team.getConfig().getFlagsAsBukkit();
-        this.blocks = new ArrayList<>();
-        this.locations.forEach(location -> this.blocks.add(IHyrame.WORLD.get().getBlockAt(location)));
+        this.locations = () -> team.getConfig().getFlagsAsBukkit();
+        this.blocks = () -> this.locations.get().stream().map(location -> IHyrame.WORLD.get().getBlockAt(location)).collect(Collectors.toList());
     }
 
     @SuppressWarnings("deprecation")
@@ -53,18 +52,11 @@ public class RTFFlag {
             return;
         }
 
-        ThreadUtil.backOnMainThread(HyriRTF.get(), () -> {
-            this.blocks.forEach(block -> {
-                System.out.println(block.getType());
-                block.setType(Material.WOOL);
-                block.setData(this.team.getColor().getDyeColor().getWoolData());
-                block.setMetadata(METADATA_KEY, new FixedMetadataValue(this.plugin, this.team.getName()));
-
-                System.out.println(block.getType());
-
-                block.getRelative(BlockFace.DOWN).setType(Material.AIR);
-            });
-        });
+        ThreadUtil.backOnMainThread(HyriRTF.get(), () -> this.blocks.get().forEach(block -> {
+            block.setType(Material.WOOL);
+            block.setData(this.team.getColor().getDyeColor().getWoolData());
+            block.setMetadata(METADATA_KEY, new FixedMetadataValue(this.plugin, this.team.getName()));
+        }));
     }
 
     public void respawn() {
@@ -142,7 +134,7 @@ public class RTFFlag {
         player.setGameMode(GameMode.ADVENTURE);
 
         this.holder = player;
-        this.blocks.forEach(block -> block.setType(Material.AIR));
+        this.blocks.get().forEach(block -> block.setType(Material.AIR));
 
         gamePlayer.addCapturedFlag();
 
@@ -158,7 +150,7 @@ public class RTFFlag {
                         .replace("%team%", this.team.getColor().getChatColor() + this.team.getDisplayName().getValue(target))
                         .replace("%player%", this.getFormattedHolderName())
                 + " \n "));
-        this.locations.forEach(location -> location.getWorld().strikeLightningEffect(location));
+        this.locations.get().forEach(location -> location.getWorld().strikeLightningEffect(location));
 
         if (gamePlayer.getAbility() != null) {
             this.plugin.getHyrame().getItemManager().giveItem(player, gamePlayer.getData().getHotBar().getSlot(RTFHotBar.Item.ABILITY_ITEM), RTFAbilityItem.class);
@@ -181,7 +173,7 @@ public class RTFFlag {
     }
 
     public List<Block> getBlocks() {
-        return this.blocks;
+        return this.blocks.get();
     }
 
 }

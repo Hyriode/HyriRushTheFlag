@@ -59,15 +59,19 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
         }
 
         Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-            if (block.getType().equals(Material.SANDSTONE)) {
-                block.setType(Material.STAINED_GLASS);
-                block.setData((byte) 14);
+            if (block.getType().equals(Material.SANDSTONE) && block.hasMetadata(SANDSTONE_METADATA_KEY)) {
+                final long createdDate = block.getMetadata(SANDSTONE_METADATA_KEY).get(0).asLong();
 
-                Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-                    if (block.getType().equals(Material.STAINED_GLASS)) {
-                        block.breakNaturally();
-                    }
-                }, 3 * 20L);
+                if (System.currentTimeMillis() - createdDate >= 175 * 1000L) {
+                    block.setType(Material.STAINED_GLASS);
+                    block.setData((byte) 14);
+
+                    Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+                        if (block.getType().equals(Material.STAINED_GLASS)) {
+                            block.breakNaturally();
+                        }
+                    }, 3 * 20L);
+                }
             }
         }, 177 * 20L);
     }
@@ -163,7 +167,7 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
         final RTFConfig.Team secondTeamConfig = config.getSecondTeam();
 
         if (block.getType() == Material.SANDSTONE) {
-            block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(this.plugin, true));
+            block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(this.plugin, System.currentTimeMillis()));
 
             player.getItemInHand().setAmount(64);
         } else {

@@ -8,6 +8,8 @@ import fr.hyriode.rtf.game.RTFFlag;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.function.Supplier;
+
 /**
  * Project: HyriRushTheFlag
  * Created by Akkashi
@@ -18,10 +20,10 @@ public class RTFGameTeam extends HyriGameTeam {
     private int lives;
     private final HyriRTF plugin;
 
-    private final RTFConfig.Team config;
+    private final Supplier<RTFConfig.Team> config;
     private final RTFFlag flag;
 
-    public RTFGameTeam(HyriRTF plugin, RTFTeam team, RTFConfig.Team config, int teamSize) {
+    public RTFGameTeam(HyriRTF plugin, RTFTeam team, Supplier<RTFConfig.Team> config, int teamSize) {
         super(team.getName(), team.getDisplayName(), team.getColor(), teamSize);
         this.plugin = plugin;
         this.config = config;
@@ -34,7 +36,7 @@ public class RTFGameTeam extends HyriGameTeam {
 
     public boolean isInBase(Player player) {
         if (this.contains(player.getUniqueId())) {
-            return this.config.getSpawnArea().asArea().isInArea(player.getLocation());
+            return this.config.get().getSpawnArea().asArea().isInArea(player.getLocation());
         }
         return false;
     }
@@ -48,7 +50,7 @@ public class RTFGameTeam extends HyriGameTeam {
     }
 
     public RTFConfig.Team getConfig() {
-        return this.config;
+        return this.config.get();
     }
 
     public RTFFlag getFlag() {
@@ -76,7 +78,7 @@ public class RTFGameTeam extends HyriGameTeam {
     }
 
     public Location getSpawnLocation() {
-        return this.config.getSpawn().asBukkit();
+        return this.config.get().getSpawn().asBukkit();
     }
 
 }

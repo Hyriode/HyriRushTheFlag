@@ -71,8 +71,8 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
     private void registerTeams() {
         final Pair<RTFTeam, RTFTeam> teamsPair = RTFTeam.get();
 
-        this.firstTeam = new RTFGameTeam(this.plugin, teamsPair.getKey(), this.plugin.getConfiguration().getFirstTeam(), this.getType().getTeamSize());
-        this.secondTeam = new RTFGameTeam(this.plugin, teamsPair.getValue(), this.plugin.getConfiguration().getSecondTeam(), this.getType().getTeamSize());
+        this.firstTeam = new RTFGameTeam(this.plugin, teamsPair.getKey(), () -> this.plugin.getConfiguration().getFirstTeam(), this.getType().getTeamSize());
+        this.secondTeam = new RTFGameTeam(this.plugin, teamsPair.getValue(), () -> this.plugin.getConfiguration().getSecondTeam(), this.getType().getTeamSize());
 
         this.registerTeam(this.firstTeam);
         this.registerTeam(this.secondTeam);

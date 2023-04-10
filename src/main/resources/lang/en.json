@@ -14,7 +14,7 @@
   "message.game.end.2": "§62nd",
   "message.game.end.3": "§c3th",
   "message.game.end.nobody": "&7Nobody",
-  "message.game.end.kills": "%position% %player% &7- %kills%",
+  "message.game.end.kills": "%position% %player% &7- &b%kills%",
 
   "message.eliminated": "&cEliminated!",
 

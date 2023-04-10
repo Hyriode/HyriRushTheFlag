@@ -91,7 +91,9 @@ public class RTFGamePlayer extends HyriGamePlayer {
             this.player.teleport(((RTFGameTeam) this.getTeam()).getSpawnLocation());
 
             if (this.ability != null) {
-                this.handleCooldown(this.ability.getCooldown() / 2);
+                this.cooldown = false;
+
+                this.handleCooldown(5);
             }
         }
     }
