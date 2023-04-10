@@ -2,6 +2,7 @@ package fr.hyriode.rtf.game;
 
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.item.ItemBuilder;
+import fr.hyriode.hyrame.utils.ThreadUtil;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.RTFHotBar;
 import fr.hyriode.rtf.game.item.RTFAbilityItem;
@@ -13,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -51,10 +53,17 @@ public class RTFFlag {
             return;
         }
 
-        this.blocks.forEach(block -> {
-            block.setType(Material.WOOL);
-            block.setData(this.team.getColor().getDyeColor().getWoolData());
-            block.setMetadata(METADATA_KEY, new FixedMetadataValue(this.plugin, this.team.getName()));
+        ThreadUtil.backOnMainThread(HyriRTF.get(), () -> {
+            this.blocks.forEach(block -> {
+                System.out.println(block.getType());
+                block.setType(Material.WOOL);
+                block.setData(this.team.getColor().getDyeColor().getWoolData());
+                block.setMetadata(METADATA_KEY, new FixedMetadataValue(this.plugin, this.team.getName()));
+
+                System.out.println(block.getType());
+
+                block.getRelative(BlockFace.DOWN).setType(Material.AIR);
+            });
         });
     }
 

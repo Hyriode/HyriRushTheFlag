@@ -231,17 +231,19 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
                             + gamePlayer.getCapturedFlags() * 10D
                             + gamePlayer.getFlagsBroughtBack() * 20D);
 
-            // Experience leaderboard updates
-            final IHyriLeaderboardProvider provider = HyriAPI.get().getLeaderboardProvider();
+            if (HyriAPI.get().getServer().getAccessibility() != HyggServer.Accessibility.HOST) {
+                // Experience leaderboard updates
+                final IHyriLeaderboardProvider provider = HyriAPI.get().getLeaderboardProvider();
 
-            provider.getLeaderboard(NetworkLeveling.LEADERBOARD_TYPE, "rushtheflag-experience").incrementScore(playerId, xp);
-            provider.getLeaderboard("rushtheflag", "kills").incrementScore(playerId, kills);
-            provider.getLeaderboard("rushtheflag", "flags-brought-back").incrementScore(playerId, gamePlayer.getFlagsBroughtBack());
+                provider.getLeaderboard(NetworkLeveling.LEADERBOARD_TYPE, "rushtheflag-experience").incrementScore(playerId, xp);
+                provider.getLeaderboard("rushtheflag", "kills").incrementScore(playerId, kills);
+                provider.getLeaderboard("rushtheflag", "flags-brought-back").incrementScore(playerId, gamePlayer.getFlagsBroughtBack());
 
-            if (isWinner) {
-                provider.getLeaderboard("rushtheflag", "victories").incrementScore(playerId, 1);
+                if (isWinner) {
+                    provider.getLeaderboard("rushtheflag", "victories").incrementScore(playerId, 1);
 
-                gamePlayer.getStatistics().getData(this.getType()).addVictories(1);
+                    gamePlayer.getStatistics().getData(this.getType()).addVictories(1);
+                }
             }
 
             this.refreshAPIPlayer(gamePlayer);

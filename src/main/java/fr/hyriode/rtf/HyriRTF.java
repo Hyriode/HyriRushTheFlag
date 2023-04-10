@@ -117,7 +117,7 @@ public class HyriRTF extends JavaPlugin {
     }
 
     public RTFConfig getConfiguration() {
-        return this.configuration;
+        return HyriAPI.get().getServer().getAccessibility() == HyggServer.Accessibility.HOST ? HyriAPI.get().getServer().getConfig(RTFConfig.class) : this.configuration;
     }
 
     public IHyrame getHyrame() {

@@ -17,6 +17,7 @@ import org.bukkit.util.Vector;
  * on 19/03/2022 at 19:31
  */
 public class RTFShooterAbility extends RTFAbility {
+
     public RTFShooterAbility(HyriRTF pl) {
         super(RTFAbilityModel.SHOOTER,
                 "shooter",
