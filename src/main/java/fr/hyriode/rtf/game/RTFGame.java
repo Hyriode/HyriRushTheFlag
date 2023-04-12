@@ -232,7 +232,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
                             + gamePlayer.getCapturedFlags() * 10D
                             + gamePlayer.getFlagsBroughtBack() * 20D);
 
-            if (host) {
+            if (!host) {
                 // Experience leaderboard updates
                 final IHyriLeaderboardProvider provider = HyriAPI.get().getLeaderboardProvider();
 
