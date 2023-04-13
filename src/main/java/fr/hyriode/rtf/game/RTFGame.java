@@ -218,7 +218,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             final IHyriPlayer account = gamePlayer.asHyriPlayer();
 
             // Hyris and XP calculations
-            final boolean host = HyriAPI.get().getServer().getAccessibility() != HyggServer.Accessibility.HOST;
+            final boolean host = HyriAPI.get().getServer().getAccessibility() == HyggServer.Accessibility.HOST;
             final int kills = (int) gamePlayer.getKills();
             final boolean isWinner = winner.contains(gamePlayer);
             final long hyris = host ? 0 : account.getHyris().add(
