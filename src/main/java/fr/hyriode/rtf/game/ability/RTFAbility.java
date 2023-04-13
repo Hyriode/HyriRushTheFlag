@@ -2,7 +2,7 @@ package fr.hyriode.rtf.game.ability;
 
 import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.ability.RTFAbilityModel;
+import fr.hyriode.rtf.api.RTFAbilityModel;
 import fr.hyriode.rtf.game.ability.attack.RTFShooterAbility;
 import fr.hyriode.rtf.game.ability.attack.RTFTankAbility;
 import fr.hyriode.rtf.game.ability.attack.RTFBarbarianAbility;

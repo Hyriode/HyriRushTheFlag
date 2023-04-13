@@ -4,6 +4,7 @@ import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.inventory.HyriInventory;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.hyrame.utils.Symbols;
+import fr.hyriode.rtf.api.RTFAbilityModel;
 import fr.hyriode.rtf.game.RTFGamePlayer;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.ability.RTFAbilityType;
@@ -104,7 +105,7 @@ public class RTFChooseAbilityGUI extends HyriInventory {
                 } else {
                     this.setItem(availableSlot, this.getAbilityItem(this.gamePlayer, ability, AbilityStatus.SELECT), event -> {
                         this.gamePlayer.setAbility(ability);
-                        this.gamePlayer.getData().setLastAbility(ability.getModel());
+                        this.gamePlayer.getData().setLastAbility(RTFAbilityModel.getByName(ability.getModel().name()).get());
 
                         this.owner.playSound(this.owner.getLocation(), Sound.CLICK, 0.5F, 2.0F);
 

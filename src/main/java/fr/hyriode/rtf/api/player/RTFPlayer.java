@@ -3,8 +3,8 @@ package fr.hyriode.rtf.api.player;
 import fr.hyriode.api.mongodb.MongoDocument;
 import fr.hyriode.api.player.IHyriPlayer;
 import fr.hyriode.api.player.model.IHyriPlayerData;
+import fr.hyriode.rtf.api.RTFHotBar;
 import fr.hyriode.rtf.api.ability.RTFAbilityModel;
-import fr.hyriode.rtf.api.hotbar.RTFHotBar;
 
 import java.util.UUID;
 

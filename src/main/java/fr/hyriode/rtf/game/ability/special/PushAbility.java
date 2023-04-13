@@ -1,6 +1,6 @@
 package fr.hyriode.rtf.game.ability.special;
 
-import fr.hyriode.rtf.api.ability.RTFAbilityModel;
+import fr.hyriode.rtf.api.RTFAbilityModel;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.ability.RTFAbilityType;
 import org.bukkit.Material;
