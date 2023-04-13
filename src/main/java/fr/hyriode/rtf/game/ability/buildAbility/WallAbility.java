@@ -43,8 +43,6 @@ public class WallAbility extends RTFAbility {
 
         final double absoluteYaw = Math.sqrt(Math.pow(player.getLocation().getYaw(), 2)) % 180;
 
-        Bukkit.broadcastMessage("yaw: " + absoluteYaw);
-
         boolean isZ = true;
 
         if (absoluteYaw < 45 || absoluteYaw > 135) {
