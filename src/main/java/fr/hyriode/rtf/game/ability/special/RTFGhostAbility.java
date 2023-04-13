@@ -1,4 +1,4 @@
-package fr.hyriode.rtf.game.ability.effect;
+package fr.hyriode.rtf.game.ability.special;
 
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.utils.PlayerUtil;
@@ -30,7 +30,7 @@ public class RTFGhostAbility extends RTFAbility {
         super(RTFAbilityModel.GHOST,
                 "ghost",
                 Material.GHAST_TEAR,
-                RTFAbilityType.EFFECT,
+                RTFAbilityType.SPECIAL,
                 15000,
                 30);
 

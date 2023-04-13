@@ -18,7 +18,7 @@ public enum RTFAbilityType {
     ATTACK(0, Material.IRON_SWORD),
     MOVEMENT(1, Material.CHAINMAIL_BOOTS),
     SPECIAL(2, Material.EMERALD),
-    EFFECT(3, Material.APPLE),
+    BUILD(3, Material.SANDSTONE)
     ;
 
     private final int id;

@@ -2,12 +2,15 @@ package fr.hyriode.rtf.game.ability;
 
 import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.RTFAbilityModel;
+import fr.hyriode.rtf.api.ability.RTFAbilityModel;
 import fr.hyriode.rtf.game.ability.attack.RTFShooterAbility;
 import fr.hyriode.rtf.game.ability.attack.RTFTankAbility;
 import fr.hyriode.rtf.game.ability.attack.RTFBarbarianAbility;
-import fr.hyriode.rtf.game.ability.effect.RTFGhostAbility;
-import fr.hyriode.rtf.game.ability.effect.RTFRunnerAbility;
+import fr.hyriode.rtf.game.ability.buildAbility.BridgeAbility;
+import fr.hyriode.rtf.game.ability.buildAbility.WallAbility;
+import fr.hyriode.rtf.game.ability.special.PushAbility;
+import fr.hyriode.rtf.game.ability.special.RTFGhostAbility;
+import fr.hyriode.rtf.game.ability.movement.RTFRunnerAbility;
 import fr.hyriode.rtf.game.ability.movement.RTFAstronautAbility;
 import fr.hyriode.rtf.game.ability.movement.RTFKangarooAbility;
 import org.bukkit.Material;
@@ -51,7 +54,7 @@ public abstract class RTFAbility {
     public abstract void use(Player player);
 
     public static void init(HyriRTF pl) {
-        HyriRTF.log("Registering abilities...");
+        HyriRTF.log("Registering challenges...");
 
         /*  Add challenges here  */
         registerAbility(new RTFAstronautAbility(pl));
@@ -61,6 +64,9 @@ public abstract class RTFAbility {
         registerAbility(new RTFGhostAbility(pl));
         registerAbility(new RTFBarbarianAbility(pl));
         registerAbility(new RTFTankAbility(pl));
+        registerAbility(new BridgeAbility(pl));
+        registerAbility(new WallAbility(pl));
+        registerAbility(new PushAbility());
 
         if (!ABILITY.isEmpty()) {
             HyriRTF.log("Registered " + ABILITY.size() + " abilities!");

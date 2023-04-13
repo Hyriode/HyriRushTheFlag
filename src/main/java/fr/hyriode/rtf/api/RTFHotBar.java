@@ -4,6 +4,9 @@ import fr.hyriode.api.mongodb.MongoDocument;
 import fr.hyriode.api.mongodb.MongoSerializable;
 import org.bson.Document;
 
+import fr.hyriode.api.mongodb.MongoDocument;
+import fr.hyriode.api.mongodb.MongoSerializable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +51,16 @@ public class RTFHotBar implements MongoSerializable {
 
     public Map<Item, Integer> getItems() {
         return this.items;
+    }
+
+    @Override
+    public void save(MongoDocument document) {
+
+    }
+
+    @Override
+    public void load(MongoDocument document) {
+
     }
 
     public enum Item {
