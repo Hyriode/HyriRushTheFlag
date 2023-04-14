@@ -33,6 +33,10 @@
   "message.ending-game.display": "&7All the flags will be destroyed in &b%time% minute(s)&f!",
   "message.end-game.display": "&cAll the flags has been destroyed!",
 
+  "title.flag-destroyed": "&c&lFLAG DESTROYED",
+  "subtitle.flag-destroyed": "&fYou won't respawn anymore!",
+  "subtitle.all-flags-destroyed": "&fAll flags have been destroyed!",
+
   "message.error-place-block.display": "&cYou cannot place blocks here!",
   "message.spleef.display": "&cDo not try to spleef your teammates!",
   "message.error-break-flag.display": "&cYou cannot break your own flag!",

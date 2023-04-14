@@ -33,6 +33,10 @@
   "message.ending-game.display": "&7Tous les drapeaux seront détruits dans &b%time% minute(s)&7 !",
   "message.end-game.display": "&cTous les drapeaux ont été détruits !",
 
+  "title.flag-destroyed": "&c&lDRAPEAU DETRUIT",
+  "subtitle.flag-destroyed": "&fVous ne pouvez plus réapparaître!",
+  "subtitle.all-flags-destroyed": "&fTous les drapeaux ont été détruits!",
+
   "message.error-place-block.display": "&cVous ne pouvez pas poser de blocs ici !",
   "message.spleef.display": "&cN'essayez pas de faire tomber vos coéquipiers !",
   "message.error-break-flag.display": "&cVous ne pouvez pas détruire votre propre drapeau !",

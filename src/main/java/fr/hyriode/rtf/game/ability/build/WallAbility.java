@@ -43,19 +43,14 @@ public class WallAbility extends RTFAbility {
 
         final double absoluteYaw = Math.sqrt(Math.pow(player.getLocation().getYaw(), 2)) % 180;
 
-        boolean isZ = true;
+        boolean isZ = !(absoluteYaw < 45) && !(absoluteYaw > 135);
 
-        if (absoluteYaw < 45 || absoluteYaw > 135) {
-            isZ  = false;
-        }
-
-        for (int y = -((ySize-1)/2); y <= ((ySize-1)/2); y++) {
-
+        for (int y = -((ySize - 1) / 2); y <= ((ySize - 1) / 2); y++) {
             final int finalY = y;
             final boolean finalIsZ = isZ;
 
             Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-                for (int x = -((xSize-1)/2); x < ((xSize-1)/2); x++) {
+                for (int x = -((xSize - 1) / 2); x < ((xSize - 1) / 2); x++) {
 
                     if (!finalIsZ) {
                         this.setWallBlock(block, x, finalY, 0);
@@ -66,7 +61,7 @@ public class WallAbility extends RTFAbility {
             }, y  * 5L);
 
             Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-                for (int x = -((xSize-1)/2); x < ((xSize-1)/2); x++) {
+                for (int x = -((xSize - 1) / 2); x < ((xSize - 1) / 2); x++) {
 
                     if (!finalIsZ) {
                         this.removeWallBlock(block, x, finalY, 0);
@@ -75,7 +70,7 @@ public class WallAbility extends RTFAbility {
 
                     this.removeWallBlock(block, 0, finalY, x);
                 }
-            }, (y+60) * 5L);
+            }, (y + 35) * 5L);
         }
     }
 

@@ -17,6 +17,7 @@ import fr.hyriode.hyrame.game.protocol.HyriLastHitterProtocol;
 import fr.hyriode.hyrame.game.team.HyriGameTeam;
 import fr.hyriode.hyrame.game.util.HyriGameMessages;
 import fr.hyriode.hyrame.game.util.HyriRewardAlgorithm;
+import fr.hyriode.hyrame.title.Title;
 import fr.hyriode.hyrame.utils.Pair;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.RTFData;
@@ -341,13 +342,20 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
         IHyrame.get().getScoreboardManager().getScoreboards(RTFScoreboard.class).forEach(RTFScoreboard::update);
 
-        for (RTFGamePlayer player : this.players) {
-            if (player.isSpectator() || player.isDead()) {
+        for (RTFGamePlayer gamePlayer : this.players) {
+            if (gamePlayer.isSpectator() || gamePlayer.isDead()) {
                 continue;
             }
 
-            player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.WITHER_SPAWN, 3f, 3f);
-            player.spawn(false);
+            final Player player = gamePlayer.getPlayer();
+
+            player.playSound(player.getLocation(), Sound.WITHER_SPAWN, 3f, 3f);
+            gamePlayer.spawn(false);
+
+            Title.sendTitle(player.getPlayer(),
+                    HyriLanguageMessage.get("title.flag-destroyed").getValue(player),
+                    HyriLanguageMessage.get("subtitle.all-flags-destroyed").getValue(player),
+                    5, 3 * 20, 10);
         }
     }
 

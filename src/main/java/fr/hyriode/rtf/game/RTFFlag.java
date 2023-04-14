@@ -1,7 +1,10 @@
 package fr.hyriode.rtf.game;
 
+import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.hyrame.IHyrame;
+import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.item.ItemBuilder;
+import fr.hyriode.hyrame.title.Title;
 import fr.hyriode.hyrame.utils.ThreadUtil;
 import fr.hyriode.hyrame.utils.block.BlockUtil;
 import fr.hyriode.rtf.HyriRTF;
@@ -91,6 +94,15 @@ public class RTFFlag {
 
             for (RTFGamePlayer player : game.getPlayers()) {
                 player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 3f, 1f);
+            }
+
+            for (HyriGamePlayer target : this.team.getPlayers()) {
+                final Player player = target.getPlayer();
+
+                Title.sendTitle(player.getPlayer(),
+                        HyriLanguageMessage.get("title.flag-destroyed").getValue(player),
+                        HyriLanguageMessage.get("subtitle.flag-destroyed").getValue(player),
+                        5, 3 * 20, 10);
             }
 
             IHyrame.get().getScoreboardManager().getScoreboards(RTFScoreboard.class).forEach(RTFScoreboard::update);
