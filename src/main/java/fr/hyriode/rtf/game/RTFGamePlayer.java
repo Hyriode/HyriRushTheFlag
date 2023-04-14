@@ -166,8 +166,6 @@ public class RTFGamePlayer extends HyriGamePlayer {
             game.getHoldingFlag(this.player).lost();
         }
 
-        game.win(game.getWinner());
-
         return hasLife;
     }
 

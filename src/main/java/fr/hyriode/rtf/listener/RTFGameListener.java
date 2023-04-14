@@ -62,6 +62,8 @@ public class RTFGameListener extends HyriListener<HyriRTF> {
 
             new RTFScoreboard(HyriRTF.get(), player).show();
         } else {
+            game.win(game.getWinner());
+
             IHyrame.get().getScoreboardManager().getScoreboards(RTFScoreboard.class).forEach(RTFScoreboard::update);
         }
     }
