@@ -23,13 +23,13 @@ public class RTFRunnerAbility extends RTFAbility {
                 Material.SUGAR,
                 RTFAbilityType.MOVEMENT,
                 0,
-                20
+                15
         );
     }
 
     @Override
     public void use(Player player) {
         player.playSound(player.getLocation(), Sound.DRINK, 3f, 1f);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5 * 20, 2), false);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 8 * 20, 1), false);
     }
 }

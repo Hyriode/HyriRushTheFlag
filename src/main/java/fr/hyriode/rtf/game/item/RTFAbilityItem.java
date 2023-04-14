@@ -21,7 +21,7 @@ import org.bukkit.inventory.ItemStack;
 public class RTFAbilityItem extends HyriItem<HyriRTF> {
 
     public RTFAbilityItem(HyriRTF plugin) {
-        super(plugin, "ability_item", () -> HyriLanguageMessage.get("item.ability.name"), () -> HyriLanguageMessage.get("item.ability.lore"), Material.NETHER_STAR);
+        super(plugin, "ability_item", () -> HyriLanguageMessage.get("item.ability.name"), null, Material.NETHER_STAR);
     }
 
     @Override

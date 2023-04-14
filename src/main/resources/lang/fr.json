@@ -56,16 +56,18 @@
   "leaderboard.flags-brought-back.display": "&3Drapeaux ramenés &8┃ &7Classement",
 
   "item.choose.name": "&bChoisir sa capacité",
-  "item.choose.lore": "&7Cliquez pour choisir votre capacité !",
   "item.ability.name": "&fCapacité: %ability%",
-  "item.ability.lore": "&7Cliquez pour utiliser votre capacité !",
 
   "ability.gui.name": "&8Capacité: %ability%",
   "ability.gui.type": "&7Type: %value%",
-  "ability.gui.select": "&cCliquez pour sélectionner",
+  "ability.gui.select": "&3Cliquer pour sélectionner",
   "ability.gui.selected": "&aCapacité sélectionnée",
   "ability.gui.locked": "&cCapacité non débloquée",
   "ability.gui.buy": "&d× Acheter cette capacité: %value% ⛃",
+
+  "ability.buy-gui.name": "&8Confirmation d'achat",
+  "ability.buy-gui.confirm": "&aConfirmer",
+  "ability.buy-gui.cancel": "&cAnnuler",
 
   "ability.type.movement": "&bMouvement",
   "ability.type-lore.movement": "&7Capacités permettant de se mouvoir\n&7de façons différentes sur la carte.",
@@ -73,11 +75,11 @@
   "ability.type.attack": "&bAttaque",
   "ability.type-lore.attack": "&7Capacités permettant de faire\n&7des dégâts sur les adversaires.",
 
-  "ability.type.effect": "&bEffet",
-  "ability.type-lore.effect": "&7Capacités permettant d'obtenir des\n&7effets pendant une durée déterminée.",
-
   "ability.type.special": "&bSpécial",
   "ability.type-lore.special": "&7Capacités spéciales, donnant des\n&7pouvoirs variés aux joueurs.",
+
+  "ability.type.build": "&bConstruction",
+  "ability.type-lore.build": "&7Capacités permettant de manipuler\n&7la carte très facilement.",
 
   "ability.type.lore.list": "Capacités disponibles: ",
   "ability.soon": "&cProchainement",
@@ -89,7 +91,7 @@
   "ability.shooter.lore": "&7Permet de tirer une boule de feu explosive\n&7pour faire tomber vos adversaires dans le vide.",
 
   "ability.runner.name": "&bCoureur",
-  "ability.runner.lore": "&7Permet d'obtenir un effet de\n&7vitesse III pendant cinq secondes.",
+  "ability.runner.lore": "&7Permet d'obtenir un effet de\n&7vitesse II pendant huit secondes.",
 
   "ability.builder.name": "&bArchitecte",
   "ability.builder.lore": "&7Permet de créer un pont temporaire\n&7pour se déplacer rapidement.",
@@ -105,6 +107,15 @@
 
   "ability.barbarian.name": "&bBarbare",
   "ability.barbarian.lore": "&7Permet d'obtenir un effet de\n&7force I pendant trois secondes.",
+
+  "ability.bridge.name": "&bPont",
+  "ability.bridge.lore": "&7Permet de créer un pont temporaire\n&7pour se déplacer rapidement.",
+
+  "ability.wall.name": "&bMur",
+  "ability.wall.lore": "&7Permet de créer un mur temporaire\n&7pour se protéger des attaques.",
+
+  "ability.push.name": "&bPousseur",
+  "ability.push.lore": "&7Permet de repousser les joueurs\n&7autour de vous.",
 
   "gui.host.abilities.name": "&8Capacités",
 

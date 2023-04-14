@@ -2,7 +2,6 @@ package fr.hyriode.rtf.api;
 
 import fr.hyriode.api.mongodb.MongoDocument;
 import fr.hyriode.api.mongodb.MongoSerializable;
-import org.bson.Document;
 
 import java.util.HashMap;
 import java.util.Map;
