@@ -1,0 +1,8 @@
+main: fr.hyriode.rtf.HyriRTF
+version: 1.0.0-xxxxxxx-X
+name: HyriRushTheFlag
+authors:
+  - Akkashi
+  - Calyx
+  - AstFaster
+depend: [Hyrame]

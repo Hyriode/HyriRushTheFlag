@@ -2,6 +2,7 @@ package fr.hyriode.rtf.listener;
 
 import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.event.HyriEventHandler;
+import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.HyriGameSpectator;
 import fr.hyriode.hyrame.game.event.player.HyriGameDeathEvent;
@@ -13,8 +14,8 @@ import fr.hyriode.hyrame.listener.HyriListener;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.game.RTFGame;
 import fr.hyriode.rtf.game.RTFGamePlayer;
-import fr.hyriode.rtf.game.ui.scoreboard.RTFScoreboard;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
+import fr.hyriode.rtf.game.ui.scoreboard.RTFScoreboard;
 import org.bukkit.entity.Player;
 
 /**
@@ -60,6 +61,8 @@ public class RTFGameListener extends HyriListener<HyriRTF> {
             player.teleport(game.getWaitingRoom().getConfig().getSpawn().asBukkit());
 
             new RTFScoreboard(HyriRTF.get(), player).show();
+        } else {
+            IHyrame.get().getScoreboardManager().getScoreboards(RTFScoreboard.class).forEach(RTFScoreboard::update);
         }
     }
 

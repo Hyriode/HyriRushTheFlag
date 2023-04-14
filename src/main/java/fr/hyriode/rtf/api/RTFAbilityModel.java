@@ -15,7 +15,10 @@ public enum RTFAbilityModel {
     KANGAROO,
     GHOST,
     BARBARIAN,
-    TANK
+    TANK,
+    PUSH,
+    BRIDGE,
+    WALL
 
     ;
 

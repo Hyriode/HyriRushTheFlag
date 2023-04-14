@@ -1,4 +1,4 @@
-package fr.hyriode.rtf.game.ability.effect;
+package fr.hyriode.rtf.game.ability.movement;
 
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.RTFAbilityModel;
@@ -21,7 +21,7 @@ public class RTFRunnerAbility extends RTFAbility {
         super(RTFAbilityModel.RUNNER,
                 "runner",
                 Material.SUGAR,
-                RTFAbilityType.EFFECT,
+                RTFAbilityType.MOVEMENT,
                 0,
                 20
         );

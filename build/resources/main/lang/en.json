@@ -1,0 +1,134 @@
+{
+  "team.blue.display": "Blue",
+  "team.red.display": "Red",
+  "team.green.display": "Green",
+  "team.yellow.display": "Yellow",
+  "team.aqua.display": "Aqua",
+  "team.pink.display": "Pink",
+  "team.white.display": "White",
+  "team.black.display": "Black",
+
+  "message.game.description": "&fCapture the opposing team's flag and fight to keep yours.\n&fUse your abilities to play as a team and surprise your\n&fopponents.",
+
+  "message.game.end.1": "§e1st",
+  "message.game.end.2": "§62nd",
+  "message.game.end.3": "§c3th",
+  "message.game.end.nobody": "&7Nobody",
+  "message.game.end.kills": "%position% %player% &7- &b%kills%",
+
+  "message.eliminated": "&cEliminated!",
+
+  "scoreboard.kills.display": "Kills: ",
+  "scoreboard.deaths.display": "Deaths: ",
+  "scoreboard.final-kills.display": "Final Kills: ",
+  "scoreboard.time.display": "Time: ",
+  "scoreboard.you.display": " &7(YOU)",
+
+  "bar.waiting.display": "&cAbility in cooldown : %time%s",
+  "bar.ready.display": "&aAbility available",
+
+  "message.flag-captured.display": "%team%&7 team flag has been captured by %player%&7!",
+  "message.flag-respawn.display": "%team%&7 team flag just respawned!",
+  "message.flag-brought-back.display": "%player%&7 has brought back the %team%&7 team flag to his base!",
+  "message.ending-game.display": "&7All the flags will be destroyed in &b%time% minute(s)&f!",
+  "message.end-game.display": "&cAll the flags has been destroyed!",
+
+  "message.error-place-block.display": "&cYou cannot place blocks here!",
+  "message.spleef.display": "&cDo not try to spleef your teammates!",
+  "message.error-break-flag.display": "&cYou cannot break your own flag!",
+
+  "message.power-used.display": "&7You used the ability: %ability%&7!",
+  "message.power-in-cooldown.display": "&cThe ability is in cooldown.",
+  "message.last-ability.display": "&7Your actual ability is: %ability%&7.",
+
+  "waiting-room.npc.data.kills": "Kills",
+  "waiting-room.npc.data.final-kills": "Final Kills",
+  "waiting-room.npc.data.deaths": "Deaths",
+  "waiting-room.npc.data.captured-flags": "Captured flags",
+  "waiting-room.npc.data.flags-brought-back": "Flags brought back",
+  "waiting-room.npc.data.victories": "Victories",
+  "waiting-room.npc.data.games-played": "Games played",
+  "waiting-room.npc.data.played-time": "Played time",
+
+  "leaderboard.experience.display": "&3Experience &8┃ &7Leaderboard",
+  "leaderboard.kills.display": "&3Kills &8┃ &7Leaderboard",
+  "leaderboard.victories.display": "&3Victories &8┃ &7Leaderboard",
+  "leaderboard.flags-brought-back.display": "&3Flags brought back &8┃ &7Leaderboard",
+
+  "item.choose.name": "&bChoose your ability",
+  "item.ability.name": "&fAbility: %ability%",
+
+  "ability.gui.name": "&8Ability: %ability%",
+  "ability.gui.type": "&7Type: %value%",
+  "ability.gui.select" : "&cClick to select",
+  "ability.gui.selected" : "&aSelected ability",
+  "ability.gui.locked" : "&cLocked ability",
+  "ability.gui.buy" : "&d× Buy this ability: %value% ⛃",
+
+  "ability.buy-gui.name": "&8Confirmation of purchase",
+  "ability.buy-gui.confirm": "&aConfirm",
+  "ability.buy-gui.cancel": "&cCancel",
+
+  "ability.type.movement": "&bMovement",
+  "ability.type-lore.movement": "&7Abilities to move in\n&7different ways on the map",
+
+  "ability.type.attack": "&bAttack",
+  "ability.type-lore.attack": "&7Abilities to do\n&7damage on the opponents.",
+
+  "ability.type.effect": "&bEffect",
+  "ability.type-lore.effect": "&7Abilities to obtain effects\n&7for a specific period of time.",
+
+  "ability.type.special": "&bSpecial",
+  "ability.type-lore.special": "&7Special abilities, giving\n&7various powers to players.",
+
+  "ability.type.lore.list": "Available abilities: ",
+  "ability.soon": "&cSoon",
+
+  "ability.astronaut.name": "&bAstronaut",
+  "ability.astronaut.lore": "&7Allows you to propel yourself\n&7forward to surprise your opponents.",
+
+  "ability.shooter.name": "&bShooter",
+  "ability.shooter.lore": "&7Allows you to shoot an explosive fireball\n&7to knock your opponents into the void.",
+
+  "ability.runner.name": "&bRunner",
+  "ability.runner.lore": "&7Grants a speed III effect\n&7for five seconds.",
+
+  "ability.builder.name": "&bBuilder",
+  "ability.builder.lore": "&7Allows you to create a temporary\n&7bridge to move quickly.",
+
+  "ability.kangaroo.name": "&bKangaroo",
+  "ability.kangaroo.lore": "&7Allows you to make a vertical jump\n&7to go up quickly.",
+
+  "ability.ghost.name": "&bGhost",
+  "ability.ghost.lore": "&7Allows you to be invisible\n&7for 4 seconds...",
+
+  "ability.tank.name": "&bTank",
+  "ability.tank.lore": "&7Grants a resistance II effect\n&7for five seconds.",
+
+  "ability.barbarian.name": "&bBarbare",
+  "ability.barbarian.lore": "&7Grants a strength I effect\n&7for three seconds.",
+
+  "gui.host.abilities.name": "&8Abilities",
+
+  "ability.host.category.lore": "\n&8Information:\n&8▪ &7Enabled: %enabled%\n&8▪ &7Cooldown: &b%cooldown%s\n\n&3Click to edit",
+
+  "host.category.rtf-main.name": "&bRushTheFlag",
+  "host.category.rtf-main.description": "&7Edit the settings linked\n&7to the game.",
+  "host.category.rtf-abilities.name": "&bAbilities",
+  "host.category.rtf-abilities.description": "&7Edit how each capacity\n&7works.",
+
+  "host.option.lives.name": "&bLives",
+  "host.option.lives.description": "&7Set the amount of lives\n&7of each team.",
+  "host.option.respawn-time.name": "&bRespawn time",
+  "host.option.respawn-time.description": "&7Set the time before respawing\n&7when a player dies.",
+  "host.option.game-time.name": "&bGame time",
+  "host.option.game-time.description": "&7Set the maximum time that\n&7will last the game.",
+  "host.option.remove-blocks.name": "&bBlocks removing",
+  "host.option.remove-blocks.description": "&7Set whether blocks will be\n&7removed after a given time or not.",
+  "host.option.spleef.name": "&bSpleef",
+  "host.option.spleef.description": "&7Set whether players can\n&7break blocks under their\n&7teammates or not.",
+  "host.option.rtf-ability-enabled.name": "&bState",
+  "host.option.rtf-ability-enabled.description": "&7Set whether the ability\n&7is enabled or not.",
+  "host.option.rtf-ability-cooldown.name": "&bCooldown",
+  "host.option.rtf-ability-cooldown.description": "&7Set the time between each\n&7use of the ability."
+}
