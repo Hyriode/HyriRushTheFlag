@@ -104,6 +104,11 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
         final Block block = event.getBlock();
 
         if (block.hasMetadata(RTFFlag.METADATA_KEY)) {
+            if (this.plugin.getGame().getPlayer(player.getUniqueId()) == null) {
+                event.setCancelled(true);
+                return;
+            }
+
             final List<MetadataValue> values = block.getMetadata(RTFFlag.METADATA_KEY);
 
             if (values != null) {
