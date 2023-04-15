@@ -11,7 +11,7 @@ import org.bukkit.util.Vector;
 public class PushAbility extends RTFAbility {
 
     public PushAbility() {
-        super(RTFAbilityModel.PUSH, "push", Material.PISTON_BASE, RTFAbilityType.SPECIAL, 3000, 20);
+        super(RTFAbilityModel.PUSH, "push", Material.PISTON_BASE, RTFAbilityType.SPECIAL, 20);
     }
 
     @Override

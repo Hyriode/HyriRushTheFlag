@@ -3,16 +3,16 @@ package fr.hyriode.rtf.game.ability;
 import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.RTFAbilityModel;
-import fr.hyriode.rtf.game.ability.attack.RTFShooterAbility;
-import fr.hyriode.rtf.game.ability.attack.RTFTankAbility;
-import fr.hyriode.rtf.game.ability.attack.RTFBarbarianAbility;
+import fr.hyriode.rtf.game.ability.attack.ShooterAbility;
+import fr.hyriode.rtf.game.ability.attack.TankAbility;
+import fr.hyriode.rtf.game.ability.attack.BarbarianAbility;
 import fr.hyriode.rtf.game.ability.build.BridgeAbility;
 import fr.hyriode.rtf.game.ability.build.WallAbility;
 import fr.hyriode.rtf.game.ability.special.PushAbility;
-import fr.hyriode.rtf.game.ability.special.RTFGhostAbility;
-import fr.hyriode.rtf.game.ability.movement.RTFRunnerAbility;
-import fr.hyriode.rtf.game.ability.movement.RTFAstronautAbility;
-import fr.hyriode.rtf.game.ability.movement.RTFKangarooAbility;
+import fr.hyriode.rtf.game.ability.special.GhostAbility;
+import fr.hyriode.rtf.game.ability.movement.RunnerAbility;
+import fr.hyriode.rtf.game.ability.movement.AstronautAbility;
+import fr.hyriode.rtf.game.ability.movement.KangarooAbility;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -34,18 +34,16 @@ public abstract class RTFAbility {
     protected final String id;
     protected final Material icon;
     protected final RTFAbilityType type;
-    protected final int price;
     protected int cooldown;
 
     protected final HyriLanguageMessage name;
     protected final HyriLanguageMessage lore;
 
-    public RTFAbility(RTFAbilityModel model, String id, Material icon, RTFAbilityType type, int price, int cooldown) {
+    public RTFAbility(RTFAbilityModel model, String id, Material icon, RTFAbilityType type, int cooldown) {
         this.model = model;
         this.id = id;
         this.icon = icon;
         this.type = type;
-        this.price = price;
         this.cooldown = cooldown;
         this.name = HyriLanguageMessage.get("ability." + this.id + ".name");
         this.lore = HyriLanguageMessage.get("ability." + this.id + ".lore");
@@ -57,13 +55,13 @@ public abstract class RTFAbility {
         HyriRTF.log("Registering challenges...");
 
         /*  Add challenges here  */
-        registerAbility(new RTFAstronautAbility(pl));
-        registerAbility(new RTFShooterAbility(pl));
-        registerAbility(new RTFRunnerAbility(pl));
-        registerAbility(new RTFKangarooAbility(pl));
-        registerAbility(new RTFGhostAbility(pl));
-        registerAbility(new RTFBarbarianAbility(pl));
-        registerAbility(new RTFTankAbility(pl));
+        registerAbility(new AstronautAbility(pl));
+        registerAbility(new ShooterAbility());
+        registerAbility(new RunnerAbility(pl));
+        registerAbility(new KangarooAbility(pl));
+        registerAbility(new GhostAbility(pl));
+        registerAbility(new BarbarianAbility());
+        registerAbility(new TankAbility(pl));
         registerAbility(new BridgeAbility(pl));
         registerAbility(new WallAbility(pl));
         registerAbility(new PushAbility());
@@ -146,10 +144,6 @@ public abstract class RTFAbility {
 
     public RTFAbilityType getType() {
         return this.type;
-    }
-
-    public int getPrice() {
-        return this.price;
     }
 
     public int getCooldown() {

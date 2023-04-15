@@ -22,17 +22,16 @@ import org.bukkit.scheduler.BukkitRunnable;
  * Created by Akkashi
  * on 21/05/2022 at 11:34
  */
-public class RTFGhostAbility extends RTFAbility {
+public class GhostAbility extends RTFAbility {
 
     private final HyriRTF plugin;
 
-    public RTFGhostAbility(HyriRTF pl) {
+    public GhostAbility(HyriRTF pl) {
         super(RTFAbilityModel.GHOST,
                 "ghost",
                 Material.GHAST_TEAR,
                 RTFAbilityType.SPECIAL,
-                15000,
-                30);
+                25);
 
         this.plugin = pl;
     }
@@ -80,7 +79,8 @@ public class RTFGhostAbility extends RTFAbility {
             PlayerUtil.hideArmor(player, oppositePlayer);
         }
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2, false, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false));
         this.plugin.getHyrame().getTabListManager().hideNameTag(player);
 
         player.playSound(player.getLocation(), Sound.FIZZ, 1f, 4f);
@@ -96,6 +96,7 @@ public class RTFGhostAbility extends RTFAbility {
         }
 
         player.removePotionEffect(PotionEffectType.INVISIBILITY);
+        player.removePotionEffect(PotionEffectType.SPEED);
         this.plugin.getHyrame().getTabListManager().showNameTag(player);
 
         player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 1f, 4f);

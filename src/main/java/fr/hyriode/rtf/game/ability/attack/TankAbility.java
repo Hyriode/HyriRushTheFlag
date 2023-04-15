@@ -15,20 +15,19 @@ import org.bukkit.potion.PotionEffectType;
  * Created by Akkashi
  * on 21/05/2022 at 11:42
  */
-public class RTFBarbarianAbility extends RTFAbility {
+public class TankAbility extends RTFAbility {
 
-    public RTFBarbarianAbility(HyriRTF pl) {
-        super(RTFAbilityModel.BARBARIAN,
-                "barbarian",
-                Material.IRON_SWORD,
+    public TankAbility(HyriRTF pl) {
+        super(RTFAbilityModel.TANK,
+                "tank",
+                Material.IRON_CHESTPLATE,
                 RTFAbilityType.ATTACK,
-                6000,
-                24);
+                20);
     }
 
     @Override
     public void use(Player player) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 3 * 20, 0), false);
-        player.playSound(player.getLocation(), Sound.IRONGOLEM_HIT, 3f, 1f);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 5 * 20, 1), false);
+        player.playSound(player.getLocation(), Sound.ANVIL_LAND, 3f, 1f);
     }
 }

@@ -14,20 +14,19 @@ import org.bukkit.util.Vector;
  * Created by Akkashi
  * on 21/05/2022 at 11:21
  */
-public class RTFKangarooAbility extends RTFAbility {
+public class KangarooAbility extends RTFAbility {
 
-    public RTFKangarooAbility(HyriRTF pl) {
+    public KangarooAbility(HyriRTF pl) {
         super(RTFAbilityModel.KANGAROO,
                 "kangaroo",
                 Material.RABBIT_FOOT,
                 RTFAbilityType.MOVEMENT,
-                8000,
                 28);
     }
 
     @Override
     public void use(Player player) {
-        player.setVelocity(new Vector(player.getVelocity().getX(), 2.0, player.getVelocity().getZ()));
+        player.setVelocity(new Vector(player.getVelocity().getX(), 1.5, player.getVelocity().getZ()));
         player.playSound(player.getLocation(), Sound.FALL_BIG, 3f, 1f);
     }
 }

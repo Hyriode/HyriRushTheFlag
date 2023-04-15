@@ -15,14 +15,13 @@ import org.bukkit.potion.PotionEffectType;
  * Created by Akkashi
  * on 19/03/2022 at 19:31
  */
-public class RTFRunnerAbility extends RTFAbility {
+public class RunnerAbility extends RTFAbility {
 
-    public RTFRunnerAbility(HyriRTF pl) {
+    public RunnerAbility(HyriRTF pl) {
         super(RTFAbilityModel.RUNNER,
                 "runner",
                 Material.SUGAR,
                 RTFAbilityType.MOVEMENT,
-                0,
                 15
         );
     }

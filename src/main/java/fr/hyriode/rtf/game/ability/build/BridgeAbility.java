@@ -19,7 +19,6 @@ public class BridgeAbility extends RTFAbility {
                 "bridge",
                 Material.GLASS,
                 RTFAbilityType.BUILD,
-                3000,
                 15);
 
         this.plugin = plugin;
@@ -27,7 +26,7 @@ public class BridgeAbility extends RTFAbility {
 
     @Override
     public void use(Player player) {
-        final BlockIterator iterator = new BlockIterator(player, 15);
+        final BlockIterator iterator = new BlockIterator(player.getLocation(), 0.0f, 15);
 
         int i = 0;
         while (i < 2) {
@@ -58,4 +57,5 @@ public class BridgeAbility extends RTFAbility {
     private Block getBlockBelow(Block block) {
         return block.getWorld().getBlockAt(block.getX(), block.getY() - 1, block.getZ());
     }
+
 }

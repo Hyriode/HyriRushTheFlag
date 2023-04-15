@@ -19,7 +19,6 @@ public class WallAbility extends RTFAbility {
                 "wall",
                 Material.BRICK,
                 RTFAbilityType.BUILD,
-                3000,
                 20);
         this.plugin = plugin;
     }

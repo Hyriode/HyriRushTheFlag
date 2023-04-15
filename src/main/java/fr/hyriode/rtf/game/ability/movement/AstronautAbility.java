@@ -14,14 +14,13 @@ import org.bukkit.util.Vector;
  * Created by Akkashi
  * on 11/03/2022 at 19:19
  */
-public class RTFAstronautAbility extends RTFAbility {
+public class AstronautAbility extends RTFAbility {
 
-    public RTFAstronautAbility(HyriRTF pl) {
+    public AstronautAbility(HyriRTF pl) {
         super(RTFAbilityModel.ASTRONAUT,
                 "astronaut",
                 Material.FIREWORK,
                 RTFAbilityType.MOVEMENT,
-                20000,
                 22);
     }
 
