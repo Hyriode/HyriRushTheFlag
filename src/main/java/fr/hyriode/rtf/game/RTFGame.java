@@ -248,6 +248,8 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
                 }
             }
 
+            account.update();
+
             this.refreshAPIPlayer(gamePlayer);
 
             // Send message
