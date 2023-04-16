@@ -137,7 +137,7 @@
   "host.option.game-time.name": "&bGame time",
   "host.option.game-time.description": "&7Set the maximum time that\n&7will last the game.",
   "host.option.remove-blocks.name": "&bBlocks removing",
-  "host.option.remove-blocks.description": "&7Set whether blocks will be\n&7removed after a given time or not.",
+  "host.option.remove-blocks.description": "&7Set whether blocks will be\n&7removed after a given amount of\n&7time or not.",
   "host.option.spleef.name": "&bSpleef",
   "host.option.spleef.description": "&7Set whether players can\n&7break blocks under their\n&7teammates or not.",
   "host.option.rtf-ability-enabled.name": "&bState",

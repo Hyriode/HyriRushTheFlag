@@ -43,6 +43,8 @@ public class ShooterAbility extends RTFAbility implements Listener {
         fireball.setYield(2.25F);
         fireball = this.setFireballDirection(fireball, direction);
         fireball.setVelocity(fireball.getDirection().multiply(3.5));
+        fireball.setFireTicks(0);
+        fireball.setIsIncendiary(false);
     }
 
     private Fireball setFireballDirection(Fireball fireball, Vector vector) {
