@@ -84,20 +84,6 @@ public class RTFPlayerListener extends HyriListener<HyriRTF> {
     }
 
     @EventHandler
-    public void onDamageByEntity(EntityDamageByEntityEvent event) {
-        final RTFGame game = this.plugin.getGame();
-
-        if (game == null) {
-            return;
-        }
-
-        if (event.getEntity() instanceof Fireball) {
-            event.getEntity().remove();
-            event.getEntity().getLocation().getWorld().createExplosion(event.getEntity().getLocation(), 3);
-        }
-    }
-
-    @EventHandler
     public void onClick(InventoryClickEvent event) {
         final ItemStack currentItem = event.getCurrentItem();
 

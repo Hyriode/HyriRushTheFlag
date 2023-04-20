@@ -8,11 +8,14 @@ import net.minecraft.server.v1_8_R3.EntityFireball;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftFireball;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
@@ -57,10 +60,14 @@ public class ShooterAbility extends RTFAbility implements Listener {
         return (Fireball) fb.getBukkitEntity();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageByEntityEvent event) {
         final Entity entity = event.getEntity();
         final Entity damager = event.getDamager();
+
+        if (entity instanceof Fireball) {
+            event.setCancelled(true);
+        }
 
         if (damager instanceof Fireball && entity instanceof Player) {
             final ProjectileSource source = ((Fireball) damager).getShooter();
@@ -69,6 +76,7 @@ public class ShooterAbility extends RTFAbility implements Listener {
                 final Player player = (Player) source;
 
                 if (HyriRTF.get().getGame().getPlayerTeam(player).contains(entity.getUniqueId())) { // Cancel damage for team's member
+                    event.setDamage(0.0D);
                     event.setCancelled(true);
                 }
             }
