@@ -250,8 +250,6 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
             account.update();
 
-            this.refreshAPIPlayer(gamePlayer);
-
             // Send message
             final String rewardsLine = ChatColor.LIGHT_PURPLE + "+" + hyris + " Hyris " + ChatColor.GREEN + "+" + xp + " XP";
 
