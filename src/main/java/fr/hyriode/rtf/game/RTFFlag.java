@@ -93,7 +93,7 @@ public class RTFFlag {
             this.holder = null;
 
             for (RTFGamePlayer player : game.getPlayers()) {
-                if (p!layer.isOnline()) {
+                if (!player.isOnline()) {
                     return;
                 }
 
