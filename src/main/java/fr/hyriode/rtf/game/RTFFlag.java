@@ -93,6 +93,10 @@ public class RTFFlag {
             this.holder = null;
 
             for (RTFGamePlayer player : game.getPlayers()) {
+                if (p!layer.isOnline()) {
+                    return;
+                }
+
                 player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENDERDRAGON_GROWL, 3f, 1f);
             }
 
