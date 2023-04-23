@@ -149,6 +149,10 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             );
 
             for (HyriGamePlayer teammate : gamePlayer.getTeam().getPlayers()) {
+                if (!teammate.isOnline()) {
+                    continue;
+                }
+
                 if (!teammate.equals(gamePlayer)) {
                     for (Location location : locations) {
                         if (LocationUtil.roundLocation(teammate.getPlayer().getLocation().subtract(0, 1, 0), 0).equals(location)) {

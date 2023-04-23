@@ -312,10 +312,18 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
 
         if (minutesLeft == 1) {
             for (RTFGamePlayer player : players) {
+                if (!player.isOnline()) {
+                    continue;
+                }
+
                 player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.NOTE_PLING, 3f, 3f);
             }
         } else {
             for (RTFGamePlayer player : players) {
+                if (!player.isOnline()) {
+                    continue;
+                }
+
                 player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.CLICK, 3f, 3f);
             }
         }
@@ -326,7 +334,13 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
             return;
         }
 
-        this.getPlayers().forEach(player -> player.getPlayer().sendMessage(" \n" + RTFMessage.END_GAME_MESSAGE.asString(player.getPlayer()) + "\n "));
+        this.getPlayers().forEach(player -> {
+            if (!player.isOnline()) {
+                return;
+            }
+
+            player.getPlayer().sendMessage(" \n" + RTFMessage.END_GAME_MESSAGE.asString(player.getPlayer()) + "\n ");
+        });
         this.reconnectionTime = -1;
 
         for (HyriGameTeam gameTeam : this.teams) {
