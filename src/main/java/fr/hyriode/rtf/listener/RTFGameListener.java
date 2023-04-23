@@ -36,7 +36,7 @@ public class RTFGameListener extends HyriListener<HyriRTF> {
         final RTFGamePlayer player = (RTFGamePlayer) event.getGamePlayer();
         final RTFGameTeam team = (RTFGameTeam) player.getTeam();
 
-        if (team.hasLife()) {
+        if (team != null && team.hasLife()) {
             event.allow();
         } else {
             event.disallow();

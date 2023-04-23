@@ -68,6 +68,10 @@ public class RTFFlag {
         this.place();
 
         for (RTFGamePlayer player : game.getPlayers()) {
+            if (!player.isOnline()) {
+                continue;
+            }
+
             player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.PISTON_EXTEND, 5f, 1f);
         }
 
