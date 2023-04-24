@@ -27,7 +27,7 @@ public class BarbarianAbility extends RTFAbility implements Listener {
                 "barbarian",
                 Material.IRON_SWORD,
                 RTFAbilityType.ATTACK,
-                24);
+                30);
 
         HyriRTF.get().getServer().getPluginManager().registerEvents(this, HyriRTF.get());
     }
@@ -38,7 +38,7 @@ public class BarbarianAbility extends RTFAbility implements Listener {
         player.playSound(player.getLocation(), Sound.IRONGOLEM_HIT, 3f, 1f);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
         final Entity entity = event.getEntity();
         final Entity damager = event.getDamager();
@@ -47,7 +47,7 @@ public class BarbarianAbility extends RTFAbility implements Listener {
             final Player player = (Player) damager;
 
             if (player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
-                event.setDamage(event.getDamage() / 0.75);
+                event.setDamage(event.getDamage() / 0.6);
             }
         }
     }
