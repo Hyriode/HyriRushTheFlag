@@ -4,6 +4,7 @@ import fr.hyriode.api.HyriAPI;
 import fr.hyriode.hyggdrasil.api.server.HyggServer;
 import fr.hyriode.hyrame.HyrameLoader;
 import fr.hyriode.hyrame.IHyrame;
+import fr.hyriode.hyrame.game.waitingroom.HyriWaitingRoom;
 import fr.hyriode.hyrame.utils.AreaWrapper;
 import fr.hyriode.hyrame.utils.LocationWrapper;
 import fr.hyriode.rtf.config.RTFConfig;
@@ -26,6 +27,7 @@ import java.util.logging.Level;
 public class HyriRTF extends JavaPlugin {
 
     public static final String NAME = "RTF";
+    public static final String ID = "rushtheflag";
 
     private static HyriRTF instance;
 
@@ -88,8 +90,17 @@ public class HyriRTF extends JavaPlugin {
     }
 
     private RTFConfig createDevConfig() {
+        final HyriWaitingRoom.Config waitingRoomConfig = new HyriWaitingRoom.Config(
+                new LocationWrapper(0.5, 190, 0.5, 90, 0),
+                new LocationWrapper(24, 250, -54),
+                new LocationWrapper(-78, 180, 50),
+                new LocationWrapper(-9.5D, 190, 5.5D, -117.5F, 0));
+        waitingRoomConfig.addLeaderboard(new HyriWaitingRoom.Config.Leaderboard(HyriRTF.ID, "rushtheflag-experience", new LocationWrapper(-5.5, 189, -12.5)));
+        waitingRoomConfig.addLeaderboard(new HyriWaitingRoom.Config.Leaderboard(HyriRTF.ID, "kills", new LocationWrapper(-1.5, 189, -6.5)));
+        waitingRoomConfig.addLeaderboard(new HyriWaitingRoom.Config.Leaderboard(HyriRTF.ID, "victories", new LocationWrapper(-1.5, 189, 7.5)));
+        waitingRoomConfig.addLeaderboard(new HyriWaitingRoom.Config.Leaderboard(HyriRTF.ID, "flags-brought-back", new LocationWrapper(-5.5, 189, 13.5)));
         return new RTFConfig(
-                null, new AreaWrapper(
+                waitingRoomConfig, new AreaWrapper(
                 new LocationWrapper(-40.0f, 90.0f, -20.0f),
                 new LocationWrapper(85.0f, 125.0f, 25.0f)),
                 new RTFConfig.Team(

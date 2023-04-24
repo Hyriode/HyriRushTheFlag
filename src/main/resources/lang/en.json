@@ -121,6 +121,9 @@
   "ability.push.name": "&bPush",
   "ability.push.lore": "&7Allows you to push your opponents\n&7away from you.",
 
+  "ability.scaffold.name": "&bScaffold",
+  "ability.scaffold.lore": "&7Place a square of glass blocks under your\n&7feet allowing you crazy movements.",
+
   "gui.host.abilities.name": "&8Abilities",
 
   "ability.host.category.lore": "\n&8Information:\n&8▪ &7Enabled: %enabled%\n&8▪ &7Cooldown: &b%cooldown%s\n\n&3Click to edit",

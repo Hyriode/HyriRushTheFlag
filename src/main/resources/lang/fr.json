@@ -121,6 +121,9 @@
   "ability.push.name": "&bPousseur",
   "ability.push.lore": "&7Permet de repousser les joueurs\n&7autour de vous.",
 
+  "ability.scaffold.name": "&bScaffold",
+  "ability.scaffold.lore": "&7Fait apparaitre des blocs de verre sous vos\n&7pieds vous permettant des mouvements fous.",
+
   "gui.host.abilities.name": "&8Capacités",
 
   "ability.host.category.lore": "\n&8Informations:\n&8▪ &7Activée: %enabled%\n&8▪ &7Cooldown: &b%cooldown%s\n\n&3Cliquer pour modifier",
