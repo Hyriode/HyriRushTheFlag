@@ -38,7 +38,7 @@ public class BarbarianAbility extends RTFAbility implements Listener {
         player.playSound(player.getLocation(), Sound.IRONGOLEM_HIT, 3f, 1f);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent event) {
         final Entity entity = event.getEntity();
         final Entity damager = event.getDamager();
@@ -47,7 +47,7 @@ public class BarbarianAbility extends RTFAbility implements Listener {
             final Player player = (Player) damager;
 
             if (player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
-                event.setDamage(event.getDamage() / 0.6);
+                event.setDamage(event.getDamage() * 0.6);
             }
         }
     }
