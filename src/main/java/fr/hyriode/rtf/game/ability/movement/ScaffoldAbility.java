@@ -18,7 +18,7 @@ import java.util.*;
 public class ScaffoldAbility extends RTFAbility implements Listener {
 
     private final static byte[] COLORS = {0, 4, 1, 14, 15};
-    private final static double SECONDS = 2.5; //the double of this number must be an integer
+    private final static double SECONDS = 2.0; //the double of this number must be an integer
 
     private final HyriRTF plugin;
     private final Map<UUID, Integer> states = new HashMap<>();
