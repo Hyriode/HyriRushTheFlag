@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -32,6 +34,8 @@ public class ScaffoldAbility extends RTFAbility implements Listener {
 
     @Override
     public void use(Player player) {
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (20*SECONDS), 0, true, false));
+
         for (int i = 0; i < SECONDS *2 + 1; i++) {
             final int finalI = i;
 
