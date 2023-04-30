@@ -34,7 +34,7 @@ public class ScaffoldAbility extends RTFAbility implements Listener {
 
     @Override
     public void use(Player player) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (20*SECONDS), 0, true, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (20*SECONDS), 1, true, false));
 
         for (int i = 0; i < SECONDS *2 + 1; i++) {
             final int finalI = i;
@@ -45,16 +45,19 @@ public class ScaffoldAbility extends RTFAbility implements Listener {
         }
     }
 
-    private List<Location> getCarpetLocations(Location playerLocation) {
+    private List<Location> getBlocksLocations(Location playerLocation) {
         final List<Location> carpetLocations = new ArrayList<>();
 
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
-                carpetLocations.add(
-                        new Location(playerLocation.getWorld(),
+                final Location location = new Location(playerLocation.getWorld(),
                         playerLocation.clone().getX() + x,
                         playerLocation.clone().getY() - 1,
-                        playerLocation.clone().getZ() + z));
+                        playerLocation.clone().getZ() + z);
+
+                if (location.getBlock().getType() == Material.AIR) {
+                    carpetLocations.add(location);
+                }
             }
         }
 
@@ -65,10 +68,8 @@ public class ScaffoldAbility extends RTFAbility implements Listener {
         for (Location carpetLocation : carpetsLoc) {
             final Block block = carpetLocation.clone().getBlock();
 
-            if (block.getType() == Material.AIR) {
-                block.setType(Material.STAINED_GLASS);
-                block.setData(COLORS[state]);
-            }
+            block.setType(Material.STAINED_GLASS);
+            block.setData(COLORS[state]);
         }
     }
 
@@ -85,17 +86,14 @@ public class ScaffoldAbility extends RTFAbility implements Listener {
             return;
         }
 
-        final List<Location> carpetsLoc = this.getCarpetLocations(event.getPlayer().getLocation());
+        final List<Location> carpetsLoc = this.getBlocksLocations(event.getPlayer().getLocation());
 
         this.spawnCarpets(carpetsLoc, this.states.get(uuid));
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
             for (Location carpetLocation : carpetsLoc) {
                 final Block block = carpetLocation.clone().getBlock();
-
-                if (block.getType() == Material.STAINED_GLASS) {
-                    block.setType(Material.AIR);
-                }
+                block.setType(Material.AIR);
             }
         }, 20L);
     }
