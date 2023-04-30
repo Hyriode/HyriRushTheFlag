@@ -67,6 +67,14 @@ public class BridgeAbility extends RTFAbility {
                     continue;
                 }
 
+                if (this.plugin.getConfiguration().getFirstTeam().getSpawnArea().asArea().isInArea(belowBlock.getLocation())) {
+                    continue;
+                }
+
+                if (this.plugin.getConfiguration().getSecondTeam().getSpawnArea().asArea().isInArea(belowBlock.getLocation())) {
+                    continue;
+                }
+
                 blocks.add(belowBlock);
             }
         }
