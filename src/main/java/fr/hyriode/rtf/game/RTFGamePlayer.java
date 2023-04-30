@@ -1,29 +1,25 @@
 package fr.hyriode.rtf.game;
 
 import fr.hyriode.hyrame.IHyrame;
-import fr.hyriode.hyrame.actionbar.ActionBar;
 import fr.hyriode.hyrame.game.HyriGamePlayer;
 import fr.hyriode.hyrame.game.protocol.HyriLastHitterProtocol;
 import fr.hyriode.hyrame.item.ItemBuilder;
 import fr.hyriode.hyrame.utils.PlayerUtil;
 import fr.hyriode.rtf.HyriRTF;
-import fr.hyriode.rtf.api.RTFHotBar;
 import fr.hyriode.rtf.api.RTFData;
+import fr.hyriode.rtf.api.RTFHotBar;
 import fr.hyriode.rtf.api.RTFStatistics;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.item.RTFAbilityItem;
+import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.game.ui.RTFAbilityBar;
 import fr.hyriode.rtf.game.ui.scoreboard.RTFScoreboard;
-import fr.hyriode.rtf.game.team.RTFGameTeam;
-import fr.hyriode.rtf.util.RTFMessage;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -57,9 +53,6 @@ public class RTFGamePlayer extends HyriGamePlayer {
     }
 
     public void startGame() {
-        this.scoreboard = new RTFScoreboard(HyriRTF.get(), this.player);
-        this.scoreboard.show();
-
         if (this.ability == null) {
             final List<RTFAbility> enabledAbilities = RTFAbility.getEnabledAbilities();
 
@@ -68,10 +61,17 @@ public class RTFGamePlayer extends HyriGamePlayer {
             }
         }
 
-        this.abilityBar = new RTFAbilityBar(this);
-        this.abilityBar.runTaskTimer(HyriRTF.get(), 0, 20L);
+        this.initUI();
 
         this.spawn(true);
+    }
+
+    public void initUI() {
+        this.scoreboard = new RTFScoreboard(HyriRTF.get(), this.player);
+        this.scoreboard.show();
+
+        this.abilityBar = new RTFAbilityBar(this);
+        this.abilityBar.runTaskTimer(HyriRTF.get(), 0, 20L);
     }
 
     public void spawn(boolean teleport) {
