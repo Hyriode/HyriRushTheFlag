@@ -113,7 +113,7 @@
   "ability.barbarian.lore": "&7Grants a strength I effect\n&7for three seconds.",
 
   "ability.bridge.name": "&bBridge",
-  "ability.bridge.lore": "&7Allows you to create a temporary\n&7bridge to move quickly.",
+  "ability.bridge.lore": "&7Allows you to create a 3x3\n&7bridge that will stay forever.",
 
   "ability.wall.name": "&bWall",
   "ability.wall.lore": "&7Allows you to create a temporary\n&7wall to protect yourself.",
