@@ -34,7 +34,7 @@ public class ScaffoldAbility extends RTFAbility implements Listener {
 
     @Override
     public void use(Player player) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (20*SECONDS), 1, true, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (20*SECONDS), 2, true, false));
 
         for (int i = 0; i < SECONDS *2 + 1; i++) {
             final int finalI = i;
