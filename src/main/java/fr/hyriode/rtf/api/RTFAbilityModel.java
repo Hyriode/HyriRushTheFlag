@@ -18,7 +18,8 @@ public enum RTFAbilityModel {
     TANK,
     PUSH,
     BRIDGE,
-    WALL
+    WALL,
+    SCAFFOLD,
 
     ;
 

@@ -4,11 +4,16 @@ import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.RTFAbilityModel;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.ability.RTFAbilityType;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.BlockIterator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static fr.hyriode.rtf.listener.RTFWorldListener.SANDSTONE_METADATA_KEY;
 
 public class BridgeAbility extends RTFAbility {
 
@@ -17,9 +22,9 @@ public class BridgeAbility extends RTFAbility {
     public BridgeAbility(HyriRTF plugin) {
         super(RTFAbilityModel.BRIDGE,
                 "bridge",
-                Material.GLASS,
+                Material.SANDSTONE,
                 RTFAbilityType.BUILD,
-                15);
+                22);
 
         this.plugin = plugin;
     }
@@ -36,26 +41,45 @@ public class BridgeAbility extends RTFAbility {
 
         int j = 0;
         while (iterator.hasNext()) {
-            final Block blockBelow = this.getBlockBelow(iterator.next());
-
-            if (blockBelow.getType() != Material.AIR) {
-                continue;
-            }
-
-            Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-                blockBelow.setType(Material.GLASS);
-            }, j * 6L);
-
-            Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-                blockBelow.setType(Material.AIR);
-            }, (j+20) * 6L);
+            //Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
+                for (Block block : this.getBlocksBelow(iterator.next())) {
+                    block.setType(Material.SANDSTONE);
+                    block.setMetadata(SANDSTONE_METADATA_KEY, new FixedMetadataValue(this.plugin, System.currentTimeMillis()));
+                }
+            //}, j * 6L);
 
             j++;
         }
     }
 
-    private Block getBlockBelow(Block block) {
-        return block.getWorld().getBlockAt(block.getX(), block.getY() - 1, block.getZ());
+    private List<Block> getBlocksBelow(Block block) {
+        final List<Block> blocks = new ArrayList<>();
+
+        for (int x = -1; x < 2; x++) {
+            for (int z = -1; z < 2; z++) {
+                final Block belowBlock = block.getWorld().getBlockAt(block.getX() + x, block.getY() - 1, block.getZ() + z);
+
+                if (belowBlock.getType() != Material.AIR) {
+                    continue;
+                }
+
+                if (!this.plugin.getConfiguration().getArea().asArea().isInArea(belowBlock.getLocation())) {
+                    continue;
+                }
+
+                if (this.plugin.getConfiguration().getFirstTeam().getSpawnArea().asArea().isInArea(belowBlock.getLocation())) {
+                    continue;
+                }
+
+                if (this.plugin.getConfiguration().getSecondTeam().getSpawnArea().asArea().isInArea(belowBlock.getLocation())) {
+                    continue;
+                }
+
+                blocks.add(belowBlock);
+            }
+        }
+
+        return blocks;
     }
 
 }

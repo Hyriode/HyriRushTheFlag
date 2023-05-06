@@ -29,6 +29,7 @@ public class RTFAbilityItem extends HyriItem<HyriRTF> {
         return new ItemBuilder(itemStack)
                 .withName(this.display.get().getValue(player)
                         .replace("%ability%", this.plugin.getGame().getPlayer(player).getAbility().getName(player)))
+                .withLore(this.plugin.getGame().getPlayer(player).getAbility().getLore(player))
                 .build();
     }
 

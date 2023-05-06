@@ -5,7 +5,6 @@ import fr.hyriode.api.language.HyriLanguageMessage;
 import fr.hyriode.api.leaderboard.IHyriLeaderboardProvider;
 import fr.hyriode.api.leveling.NetworkLeveling;
 import fr.hyriode.api.player.IHyriPlayer;
-import fr.hyriode.api.player.IHyriPlayerSession;
 import fr.hyriode.hyggdrasil.api.server.HyggServer;
 import fr.hyriode.hyrame.IHyrame;
 import fr.hyriode.hyrame.game.HyriGame;
@@ -24,9 +23,9 @@ import fr.hyriode.rtf.api.RTFData;
 import fr.hyriode.rtf.api.RTFStatistics;
 import fr.hyriode.rtf.game.ability.RTFAbility;
 import fr.hyriode.rtf.game.item.RTFChooseAbilityItem;
-import fr.hyriode.rtf.game.ui.scoreboard.RTFScoreboard;
 import fr.hyriode.rtf.game.team.RTFGameTeam;
 import fr.hyriode.rtf.game.team.RTFTeam;
+import fr.hyriode.rtf.game.ui.scoreboard.RTFScoreboard;
 import fr.hyriode.rtf.util.RTFMessage;
 import fr.hyriode.rtf.util.RTFValues;
 import org.bukkit.Bukkit;
@@ -124,6 +123,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
         super.handleLogin(player);
 
         final UUID uuid = player.getUniqueId();
+
         final RTFGamePlayer gamePlayer = this.getPlayer(uuid);
 
         if (gamePlayer == null) {
@@ -136,6 +136,10 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
         gamePlayer.setStatistics(statistics);
         gamePlayer.setData(data);
         gamePlayer.setCooldown(false);
+
+        if (this.getState() != HyriGameState.WAITING && this.getState() != HyriGameState.READY) {
+            return;
+        }
 
         RTFAbility.getWithModel(data.getLastAbility())
                 .filter(RTFAbility::isEnabled)

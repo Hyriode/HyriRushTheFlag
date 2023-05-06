@@ -113,13 +113,16 @@
   "ability.barbarian.lore": "&7Permet d'obtenir un effet de\n&7force I pendant trois secondes.",
 
   "ability.bridge.name": "&bPont",
-  "ability.bridge.lore": "&7Permet de créer un pont temporaire\n&7pour se déplacer rapidement.",
+  "ability.bridge.lore": "&7Permet de créer instantanément un pont\n&7 modulable de 3x3 blocks définitif.",
 
   "ability.wall.name": "&bMur",
   "ability.wall.lore": "&7Permet de créer un mur temporaire\n&7pour se protéger des attaques.",
 
   "ability.push.name": "&bPousseur",
   "ability.push.lore": "&7Permet de repousser les joueurs\n&7autour de vous.",
+
+  "ability.scaffold.name": "&bScaffold",
+  "ability.scaffold.lore": "&7Fait apparaitre des blocs de verre sous vos\n&7pieds vous permettant des mouvements fous.",
 
   "gui.host.abilities.name": "&8Capacités",
 

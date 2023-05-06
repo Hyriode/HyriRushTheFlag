@@ -48,6 +48,7 @@ public class RTFGameListener extends HyriListener<HyriRTF> {
         final RTFGamePlayer player = (RTFGamePlayer) event.getGamePlayer();
         final RTFGame game = this.plugin.getGame();
 
+        player.initUI();
         game.getProtocolManager().getProtocol(HyriDeathProtocol.class).runDeath(HyriGameDeathEvent.Reason.VOID, player.getPlayer());
     }
 

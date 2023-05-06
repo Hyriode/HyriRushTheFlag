@@ -113,13 +113,16 @@
   "ability.barbarian.lore": "&7Grants a strength I effect\n&7for three seconds.",
 
   "ability.bridge.name": "&bBridge",
-  "ability.bridge.lore": "&7Allows you to create a temporary\n&7bridge to move quickly.",
+  "ability.bridge.lore": "&7Allows you to create a 3x3\n&7bridge that will stay forever.",
 
   "ability.wall.name": "&bWall",
   "ability.wall.lore": "&7Allows you to create a temporary\n&7wall to protect yourself.",
 
   "ability.push.name": "&bPush",
   "ability.push.lore": "&7Allows you to push your opponents\n&7away from you.",
+
+  "ability.scaffold.name": "&bScaffold",
+  "ability.scaffold.lore": "&7Place a square of glass blocks under your\n&7feet allowing you crazy movements.",
 
   "gui.host.abilities.name": "&8Abilities",
 
