@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Project: HyriRushTheFlag
@@ -100,7 +101,7 @@ public class RTFChooseAbilityGUI extends HyriInventory {
                     continue;
                 }
 
-                if (this.gamePlayer.getAbility().equals(ability)) {
+                if (Objects.equals(this.gamePlayer.getAbility(), ability)) {
                     this.setItem(availableSlot, this.getAbilityItem(this.gamePlayer, ability, AbilityStatus.SELECTED));
                 } else {
                     this.setItem(availableSlot, this.getAbilityItem(this.gamePlayer, ability, AbilityStatus.SELECT), event -> {
