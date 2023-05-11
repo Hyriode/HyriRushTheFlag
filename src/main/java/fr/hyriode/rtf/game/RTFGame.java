@@ -361,7 +361,7 @@ public class RTFGame extends HyriGame<RTFGamePlayer> {
         IHyrame.get().getScoreboardManager().getScoreboards(RTFScoreboard.class).forEach(RTFScoreboard::update);
 
         for (RTFGamePlayer gamePlayer : this.players) {
-            if (gamePlayer.isSpectator() || gamePlayer.isDead()) {
+            if (gamePlayer.isSpectator() || gamePlayer.isDead() || !gamePlayer.isOnline()) {
                 continue;
             }
 
