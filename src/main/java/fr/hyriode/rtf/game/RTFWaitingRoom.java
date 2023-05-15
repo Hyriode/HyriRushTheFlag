@@ -13,6 +13,7 @@ import fr.hyriode.rtf.HyriRTF;
 import fr.hyriode.rtf.api.RTFStatistics;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Function;
 
@@ -26,7 +27,7 @@ public class RTFWaitingRoom extends HyriWaitingRoom {
     private static final Function<String, HyriLanguageMessage> LANG_DATA = name -> HyriLanguageMessage.get("waiting-room.npc.data." + name);
 
     public RTFWaitingRoom(HyriGame<?> game) {
-        super(game, Material.BANNER, () -> HyriRTF.get().getConfiguration().getWaitingRoom());
+        super(game, new ItemStack(Material.BANNER, 1, (short) 15), () -> HyriRTF.get().getConfiguration().getWaitingRoom());
 
         this.addLeaderboard(new Leaderboard(NetworkLeveling.LEADERBOARD_TYPE, "rushtheflag-experience",
                 player -> HyriLanguageMessage.get("leaderboard.experience.display").getValue(player))
