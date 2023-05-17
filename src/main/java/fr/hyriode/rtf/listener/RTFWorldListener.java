@@ -149,7 +149,7 @@ public class RTFWorldListener extends HyriListener<HyriRTF> {
             );
 
             for (HyriGamePlayer teammate : gamePlayer.getTeam().getPlayers()) {
-                if (!teammate.isOnline()) {
+                if (!teammate.isOnline() || teammate.isDead() || teammate.isSpectator()) {
                     continue;
                 }
 

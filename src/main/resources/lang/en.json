@@ -41,8 +41,8 @@
   "message.spleef.display": "&cDo not try to spleef your teammates!",
   "message.error-break-flag.display": "&cYou cannot break your own flag!",
 
-  "message.power-used.display": "&7You used the ability: %ability%&7!",
-  "message.power-in-cooldown.display": "&cThe ability is in cooldown.",
+  "message.ability-used.display": "&7You have used the ability: %ability%&7!",
+  "message.ability-in-cooldown.display": "&cThe ability is in cooldown.",
   "message.last-ability.display": "&7Your actual ability is: %ability%&7.",
 
   "waiting-room.npc.data.kills": "Kills",
